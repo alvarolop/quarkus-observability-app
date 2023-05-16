@@ -1,0 +1,51 @@
+= Quarkus Observability App
+Álvaro López Medina <alopezme@redhat.com>
+v1.0, 2023-05
+// Metadata
+:description: This application was created to showcase how to configure Logging, Metrics, and Tracing in a Quarkus and collect and manage them using the supported infrastructure of Openshift
+:keywords: openshift, Quarkus, logging, metrics, tracing, red hat
+// Create TOC wherever needed
+:toc: macro
+:sectanchors:
+:sectnumlevels: 2
+:sectnums: 
+:source-highlighter: pygments
+:imagesdir: images
+// Start: Enable admonition icons
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+// Icons for GitHub
+:yes: :heavy_check_mark:
+:no: :x:
+endif::[]
+ifndef::env-github[]
+:icons: font
+// Icons not for GitHub
+:yes: icon:check[]
+:no: icon:times[]
+endif::[]
+
+// Create the Table of contents here
+toc::[]
+
+== Introduction
+
+This application was created to showcase how to configure Logging, Metrics, and Tracing in a Quarkus and collect and manage them using the supported infrastructure of Openshift.
+
+
+== How to run locally
+
+
+
+== How to deploy on Openshift
+
+
+
+== References
+
+
+
