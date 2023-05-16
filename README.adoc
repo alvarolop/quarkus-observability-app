@@ -69,7 +69,7 @@ In order to collect the logs, metrics, and traces from our application, we are g
 | Collect and display distributed traces. It is based on https://www.jaegertracing.io/[Jaeger] and https://opentelemetry.io/[OpenTelemetry].
 
 | https://docs.openshift.com/container-platform/4.12/monitoring/monitoring-overview.html[User Workload Monitoring]
-| Collect metrics from user workloads and present it in the build-in dashboard. It also allows to create alerts based on metrics.
+| Collect metrics in https://github.com/OpenObservability/OpenMetrics[OpenMetrics] format from user workloads and present it in the built-in dashboard. It also allows the creation of alerts based on metrics.
 
 | https://docs.openshift.com/container-platform/4.12/logging/cluster-logging.html[Cluster Logging Operator]
 | Collect, store, and visualize logs from workloads.
