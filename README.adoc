@@ -36,6 +36,25 @@ toc::[]
 
 This application was created to showcase how to configure Logging, Metrics, and Tracing in a Quarkus and collect and manage them using the supported infrastructure of Openshift.
 
+The application was built using https://quarkus.io/[Quarkus], a Container-First framework for writing Java applications.
+
+.Used Quarkus extensions
+[cols="2*",options="header",width=100%]
+|===
+| Extension Name
+| Purpose
+
+| https://quarkus.io/extensions/io.quarkus/quarkus-micrometer-registry-prometheus[Micrometer Registry Prometheus]
+| Expose Metrics
+
+| https://quarkus.io/extensions/io.quarkus/quarkus-logging-json[Logging JSON]
+| Format Logs in JSON
+
+| https://quarkus.io/guides/opentelemetry[OpenTelemetry]
+| Distributed Tracing
+
+|===
+
 
 == How to run locally
 
