@@ -10,7 +10,7 @@ v1.0, 2023-05
 :sectnumlevels: 2
 :sectnums: 
 :source-highlighter: pygments
-:imagesdir: images
+:imagesdir: docs/images
 // Start: Enable admonition icons
 ifdef::env-github[]
 :tip-caption: :bulb:
@@ -53,6 +53,9 @@ The application was built using https://quarkus.io/[Quarkus], a Container-First 
 | https://quarkus.io/guides/opentelemetry[OpenTelemetry]
 | Distributed Tracing
 
+| https://quarkus.io/extensions/io.quarkus/quarkus-smallrye-health[SmallRye Health]
+| Live and Running endpoints
+
 |===
 
 === Openshift Components
@@ -77,7 +80,24 @@ In order to collect the logs, metrics, and traces from our application, we are g
 |===
 
 
+=== How to start?
+
+Access the https://code.quarkus.io/?g=org.example&a=quarkus-observability-app[Code Quarkus] site that will help you to generate the application quickstart with the Quarkus extensions:
+
+image::quarkus-quickstart.png[]
+
+Generate the application and download it as `.zip`.
+
+
 == How it works?
+
+The application is so similar to the downloaded version, but with the following customizations:
+
+* I've added a new endpoint to count something using the https://quarkus.io/guides/openapi-swaggerui[Swagger OpenApi library].
+* I've used the https://quarkus.io/guides/micrometer[Micrometer metrics library] to generate custom metrics that I will expose in the Prometheus endpoint. I've created three new metrics:
+    ** *Gauges* measure a value that can increase or decrease over time, like the speedometer on a car.
+    ** *Counters* are used to measure values that only increase.
+    ** *Distribution summaries* record an observed value, which will be aggregated with other recorded values and stored as a sum
 
 
 == How to run it?
@@ -86,11 +106,40 @@ In order to collect the logs, metrics, and traces from our application, we are g
 === Locally
 
 
+You can run your application in dev mode that enables live coding using:
+
+[source, bash]
+----
+mvn compile quarkus:dev
+----
+
+> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+
+
+
+===  Packaging and running the application
+
+The application can be packaged using:
+
+[source, bash]
+----
+mvn package
+----
+It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
+Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+
+The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+
+If you want to build an _über-jar_, execute the following command:
+
+[source, bash]
+----
+mvn package -Dquarkus.package.type=uber-jar
+----
+
+The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+
+
 === On Openshift
-
-
-
-== References
-
 
 
