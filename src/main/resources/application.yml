@@ -1,0 +1,28 @@
+app:
+  greeting:
+    message: "Hello from RESTEasy Reactive"
+quarkus:
+  log:
+    console:
+      json:
+        ~: true
+        # pretty-print: true
+  micrometer:
+    export:
+      json: 
+        enabled: true
+        path: metrics-json
+      prometheus: 
+        path: metrics
+  otel:
+    enabled: true
+  swagger-ui:
+    always-include: true
+  smallrye-openapi:
+    path: /q/swagger
+    info-title: Quarkus Observability App
+    info-version: 1.0.0
+    info-description: Just a simple app to test Metrics, Logging, Tracing, etc.
+    info-contact-name: Alvaro Lopez Medina
+    info-license-name: GNU General Public License v3.0
+    info-license-url: https://github.com/alvarolop/quarkus-observability-app/blob/main/LICENSE

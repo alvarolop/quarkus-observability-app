@@ -1,0 +1,10 @@
+quarkus:
+  log:
+    console:
+      json: 
+        ~: false
+  otel:
+    exporter:
+      otlp:
+        traces:
+          endpoint: http://localhost:4317
