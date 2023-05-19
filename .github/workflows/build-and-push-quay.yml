@@ -80,6 +80,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: native-executable
+          path: target
 
       - name: Login to Quay.io
         uses: docker/login-action@v2
@@ -88,8 +89,11 @@ jobs:
           username: ${{ secrets.QUAY_REPO_USERNAME }}
           password: ${{ secrets.QUAY_REPO_TOKEN }}
 
-      - name: Build native executable
+      - name: Check files in ./
         run: ls -la
+
+      - name: Check files in ./target
+        run: ls -la target
 
       - name: Build and push image
         uses: docker/build-push-action@v4
