@@ -43,7 +43,11 @@ jobs:
       # - name: Verify Semver
 
       - name: Check image tag
-        run: echo "${{ env.IMAGE_BASE_NAME }}:${{ fromJSON('[github.ref_name, "latest"]')[github.ref_name == 'main'] }}"
+        run: echo "${{ fromJSON('[github.ref_name, latest"]')[github.ref_name == 'main'] }}"
+
+      - name: Sets env vars for tag releases
+        run: echo "IMAGE_TAG=${{ github.ref_name }}" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/tags/')      
 
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -92,9 +96,6 @@ jobs:
           username: ${{ secrets.QUAY_REPO_USERNAME }}
           password: ${{ secrets.QUAY_REPO_TOKEN }}
 
-      - name: Check image value
-        run: echo "${{ env.IMAGE_BASE_NAME }}:${{ fromJSON('[github.ref_name, "latest"]')[github.ref_name == 'main'] }}"
-
       - name: Build and push image
         uses: docker/build-push-action@v4
         with:
@@ -103,5 +104,5 @@ jobs:
           file: src/main/docker/Dockerfile.native
           # Hack for pseudo ternary expression: If no tag => Latest, if not, tag value
           # Source: https://github.com/orgs/community/discussions/25725#discussioncomment-3248924
-          tags: ${{ env.IMAGE_BASE_NAME }}:${{ fromJSON('[github.ref_name, "latest"]')[github.ref_name == 'main'] }}
+          tags: ${{ env.IMAGE_BASE_NAME }}:${{ env.IMAGE_TAG || latest }}
 
