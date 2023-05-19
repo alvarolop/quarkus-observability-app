@@ -143,3 +143,17 @@ The application, packaged as an _über-jar_, is now runnable using `java -jar ta
 === On Openshift
 
 
+Manual steps to generate Container image:
+
+[source, bash]
+----
+mvn package -Pnative -Dquarkus.native.container-runtime=podman -Dquarkus.native.remote-container-build=true -Dquarkus.container-image.build=true
+
+podman build -f src/main/docker/Dockerfile.native -t quarkus/quarkus-observability-app .
+
+podman run -i --rm -p 8080:8080 quarkus/quarkus-observability-app
+----
+
+
+
+TODO: Create a web UI with `Qute`: https://quarkus.io/guides/qute
