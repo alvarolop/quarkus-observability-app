@@ -4,10 +4,10 @@ run-name: Build and Push Container image to Quay.io 🚀
 
 env:
   IMAGE_BASE_NAME: "quay.io/alopezme/quarkus-observability-app"
-  IMAGE_TAG: "1.0.0"
   NATIVE_JAVA_VERSION: "17"
 
 # This section allows the workflow to create a Release
+# https://github.com/softprops/action-gh-release/issues/236#issuecomment-1150530128
 permissions:
   contents: write
 
@@ -36,6 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     name: "Build Native Package"
     steps:
+
       - name: Checkout the code
         uses: actions/checkout@v3
       # https://github.com/orgs/community/discussions/55854
@@ -57,7 +58,7 @@ jobs:
         with:
           files: target/*-runner
           body: This release is still part of the tests of the CI/CD pipeline!
-          draft: true
+
       - name: Upload native executable
         uses: actions/upload-artifact@v3
         with:
@@ -71,23 +72,29 @@ jobs:
       - build-native-artifact
     name: "Build Native Image"
     steps:
+
       - name: Checkout the code
         uses: actions/checkout@v3
+
       - name: Download the native executable
         uses: actions/download-artifact@v3
         with:
           name: native-executable
+
       - name: Login to Quay.io
         uses: docker/login-action@v2
         with:
           registry: quay.io
           username: ${{ secrets.QUAY_REPO_USERNAME }}
           password: ${{ secrets.QUAY_REPO_TOKEN }}
+
+      - name: Build native executable
+        run: ls -la
+
       - name: Build and push image
         uses: docker/build-push-action@v4
         with:
           push: true
           context: .
           file: src/main/docker/Dockerfile.native
-          tags: ${{ env.IMAGE_BASE_NAME }}:${{  github.ref_name }}
-# # https://github.com/ishworkh/docker-image-artifact-upload
+          tags: ${{ env.IMAGE_BASE_NAME }}:${{ github.ref_name || 'latest' }}
