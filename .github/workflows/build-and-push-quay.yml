@@ -56,12 +56,13 @@ jobs:
       - name: Build native executable
         run: ./mvnw install --no-transfer-progress -Dnative -DskipTests -Dquarkus.native.remote-container-build=true
 
-      - name: Release if is a new tag
+      - name: Release if it is a new tag
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: target/*-runner
-          body: This release is still part of the tests of the CI/CD pipeline!
+          generate_release_notes: true
+          # body: This release is still part of the tests of the CI/CD pipeline!
 
       - name: Upload native executable
         uses: actions/upload-artifact@v3
