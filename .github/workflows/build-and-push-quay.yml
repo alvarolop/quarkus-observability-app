@@ -8,7 +8,7 @@ env:
   # MANDREL_IMAGE: "quay.io/quarkus/ubi-quarkus-mandrel-builder-image"
   # MANDREL_VERSION: "22.3"
   # LATEST_IMAGE_TAG: "latest"
-  # NATIVE_JAVA_VERSION: "17"
+  NATIVE_JAVA_VERSION: "17"
 
 on:
   schedule:
@@ -41,6 +41,12 @@ jobs:
       # https://github.com/orgs/community/discussions/55854
       # - name: Verify Semver
 
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.NATIVE_JAVA_VERSION }}
+          distribution: temurin
+          cache: maven
 
       - name: Build native executable
         run: ./mvnw install --no-transfer-progress -Dnative -DskipTests -Dquarkus.native.remote-container-build=true -Dquarkus.container-image.build=true
