@@ -15,7 +15,7 @@ on:
   push:
     branches:
       - 'releases/**'
-      - 'releases/v*'
+      - 'main'
     tags:
       - 'v*'
     paths-ignore:
