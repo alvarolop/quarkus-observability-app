@@ -42,6 +42,9 @@ jobs:
       # https://github.com/orgs/community/discussions/55854
       # - name: Verify Semver
 
+      - name: Check image tag
+        run: echo "${{ env.IMAGE_BASE_NAME }}:${{ fromJSON('[github.ref_name, "latest"]')[github.ref_name == 'main'] }}"
+
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
@@ -89,11 +92,8 @@ jobs:
           username: ${{ secrets.QUAY_REPO_USERNAME }}
           password: ${{ secrets.QUAY_REPO_TOKEN }}
 
-      - name: Check files in ./
-        run: ls -la
-
-      - name: Check files in ./target
-        run: ls -la target
+      - name: Check image value
+        run: echo "${{ env.IMAGE_BASE_NAME }}:${{ fromJSON('[github.ref_name, "latest"]')[github.ref_name == 'main'] }}"
 
       - name: Build and push image
         uses: docker/build-push-action@v4
