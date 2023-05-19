@@ -49,7 +49,7 @@ jobs:
           cache: maven
 
       - name: Build native executable
-        run: ./mvnw install --no-transfer-progress -Dnative -DskipTests -Dquarkus.native.remote-container-build=true -Dquarkus.container-image.build=true
+        run: ./mvnw install --no-transfer-progress -Dnative -DskipTests -Dquarkus.native.remote-container-build=true
 
       # https://github.com/softprops/action-gh-release
       # - name: Release if is a new tag
