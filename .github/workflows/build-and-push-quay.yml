@@ -104,5 +104,5 @@ jobs:
           file: src/main/docker/Dockerfile.native
           # Hack for pseudo ternary expression: If no tag => Latest, if not, tag value
           # Source: https://github.com/orgs/community/discussions/25725#discussioncomment-3248924
-          tags: ${{ env.IMAGE_BASE_NAME }}:${{ env.IMAGE_TAG || latest }}
+          tags: ${{ env.IMAGE_BASE_NAME }}:${{ env.IMAGE_TAG || 'latest' }}
 
