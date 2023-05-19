@@ -34,24 +34,11 @@ jobs:
     runs-on: ubuntu-latest
     name: "Build Native Package"
     steps:
-      # https://github.com/orgs/community/discussions/55854
-      - name: Verify Semver
-        run: |
-          # Regex pattern for Semver 2.0.0
-          semver_regex="^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
-          
-          # Example version to check against the regex
-          version="1.2.3"
-
-          if [[ "$version" =~ $semver_regex ]]; then
-            echo "Valid Semver"
-          else
-            echo "Invalid Semver"
-            exit 1
-          fi
       # https://github.com/actions/checkout
       - name: Checkout the code
         uses: actions/checkout@v3
+      # https://github.com/orgs/community/discussions/55854
+      # - name: Verify Semver
       - name: Build native executable
         uses: maxday/quarkus-native-build-docker-action@13bf5c4ae6942143cf43a5663a6c7f847ac3163c
         with:
