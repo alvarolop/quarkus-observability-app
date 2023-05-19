@@ -53,7 +53,7 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v3
       - name: Build native executable
-        uses: maxday/quarkus-native-build-docker-action
+        uses: maxday/quarkus-native-build-docker-action@13bf5c4ae6942143cf43a5663a6c7f847ac3163c
         with:
           outputName: app-runner
       # https://github.com/softprops/action-gh-release
