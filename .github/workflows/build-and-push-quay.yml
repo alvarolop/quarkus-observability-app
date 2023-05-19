@@ -61,6 +61,8 @@ jobs:
 
   build-and-push-image:
     runs-on: ubuntu-latest
+    needs: 
+      - build-native-artifact
     name: "Build Native Image"
     steps:
       - name: Checkout the code
