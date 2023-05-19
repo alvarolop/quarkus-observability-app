@@ -101,4 +101,7 @@ jobs:
           push: true
           context: .
           file: src/main/docker/Dockerfile.native
-          tags: ${{ env.IMAGE_BASE_NAME }}:${{ github.ref_name || 'latest' }}
+          # Hack for pseudo ternary expression: If no tag => Latest, if not, tag value
+          # Source: https://github.com/orgs/community/discussions/25725#discussioncomment-3248924
+          tags: ${{ env.IMAGE_BASE_NAME }}:${{ fromJSON('[github.ref_name, "latest"]')[github.ref_name == 'main'] }}
+
