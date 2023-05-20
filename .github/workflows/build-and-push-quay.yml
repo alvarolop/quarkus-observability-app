@@ -40,11 +40,7 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v3
       # https://github.com/orgs/community/discussions/55854
-      # - name: Verify Semver
-
-      - name: Sets env vars for tag releases
-        run: echo "IMAGE_TAG=${{ github.ref_name }}" >> $GITHUB_ENV
-        if: startsWith(github.ref, 'refs/tags/')      
+      # - name: Verify Semver  
 
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -87,6 +83,10 @@ jobs:
           name: native-executable
           path: target
 
+      - name: Sets env vars for tag releases
+        run: echo "IMAGE_TAG=${{ github.ref_name }}" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/tags/')    
+
       - name: Login to Quay.io
         uses: docker/login-action@v2
         with:
@@ -102,5 +102,6 @@ jobs:
           file: src/main/docker/Dockerfile.native
           # Hack for pseudo ternary expression: If no tag => Latest, if not, tag value
           # Source: https://github.com/orgs/community/discussions/25725#discussioncomment-3248924
+          # TODO: The value is not IMAGE_TAG
           tags: ${{ env.IMAGE_BASE_NAME }}:${{ env.IMAGE_TAG || 'latest' }}
 
