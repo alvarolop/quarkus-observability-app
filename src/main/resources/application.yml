@@ -2,6 +2,9 @@ app:
   greeting:
     message: "Hello from RESTEasy Reactive"
 quarkus:
+  health:
+    openapi:
+      included: true
   log:
     console:
       json:
