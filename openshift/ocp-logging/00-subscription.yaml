@@ -1,0 +1,31 @@
+---
+apiVersion: project.openshift.io/v1
+kind: Project
+metadata:
+  labels:
+    kubernetes.io/metadata.name: openshift-logging
+    openshift.io/cluster-monitoring: "true"
+  name: openshift-logging
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: cluster-logging
+  namespace: openshift-logging
+spec:
+  targetNamespaces:
+    - openshift-logging 
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: cluster-logging
+  namespace: openshift-logging
+  labels:
+    operators.coreos.com/cluster-logging.openshift-logging: ''
+spec:
+  channel: stable
+  installPlanApproval: Automatic
+  name: cluster-logging
+  source: redhat-operators 
+  sourceNamespace: openshift-marketplace

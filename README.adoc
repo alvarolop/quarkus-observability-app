@@ -226,8 +226,59 @@ oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml | oc apply -f -
 
 === Logging
 
+The logging subsystem aggregates infrastructure and applications logs from throughout your cluster and stores them in a default log store.
+
+.Logging Operator
+[source, bash]
+----
+oc apply -f openshift/ocp-logging/00-subscription.yaml
+----
+
+==== Migration to the new Logging stack
+
+Currently, the Openshift Logging team decided to move from EFK to Vector+Loki. The original Openshift Logging Stack was split into three products: ElasticSearch ( Log Store and Search), Fluentd (Collection and Transportation), and Kibana (Visualization). Now, there will be only two: Vector (Collection) and Loki (Store).
+
+In order to keep up to date and age better, this repo explores both implementations.
+
+==== Logging backend 1: ElasticSearch
+
+[WARNING]
+====
+As of logging version 5.4.3 the OpenShift Elasticsearch Operator is deprecated and is planned to be removed in a future release. As of logging version 5.6 Fluentd is deprecated and is planned to be removed in a future release.
+====
+
+.Option 1: ElasticSearch installation and deployment
+[source, bash]
+----
+# Install the Elastic operator
+oc apply -f openshift/ocp-logging/elasticsearch/10-operator.yaml
+
+# Create the Logging instance
+oc apply -f openshift/ocp-logging/elasticsearch/20-instance.yaml
+----
+
+After installing and configuring the indexing pattern, you will be able to perform queries for the logs:
+
+.Kibana dashboard
+image::kibana-search-dashboard.png["Kibana dashboard"]
 
 
+
+==== Logging backend 2: Loki
+
+.Option 2: Loki installation and deployment
+[source, bash]
+----
+# Install the Elastic operator
+oc apply -f openshift/ocp-logging/loki/10-operator.yaml
+
+# Create the Logging instance
+oc apply -f openshift/ocp-logging/loki/20-instance.yaml
+
+# Enable the console plugin
+# -> This plugin adds the logging view into the 'observe' menu in the OpenShift console. It requires OpenShift 4.10.
+oc patch console.operator cluster --type json -p '[{"op": "add", "path": "/spec/plugins", "value": ["logging-view-plugin"]}]'
+----
 
 
 
