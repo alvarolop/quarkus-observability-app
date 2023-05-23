@@ -118,6 +118,16 @@
                 text-decoration: none;
                 text-transform: uppercase;
             }
+            .left-column .api-button {
+                margin: 20px 0;
+                display: inline-block;
+                padding: 1rem 2rem;
+                background-color: #209215;
+                font-weight: 600;
+                color: white;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
             .right-column {
                 grid-column: span 4;
                 margin-top: 1rem;
@@ -251,17 +261,11 @@
                     <h1>You just made a Quarkus application.</h1>
                     <p>This page is served by Quarkus.</p>
                     <a href="/q/dev-ui/" class="cta-button">Visit the Dev UI</a>
-                    <p>This page: <code>src/main/resources/META-INF/resources/index.html</code></p>
-                    <p>App configuration: <code>src/main/resources/application.yml</code></p>
-                    <p>Static assets: <code>src/main/resources/META-INF/resources/</code></p>
-                    <p>Code: <code>src/main/java</code></p>
-                    <p>Dev UI V1: <a href="/q/dev-v1/">/q/dev-v1</a></p>
-                    <p>Generated starter code:</p>
-                    <ul class="provided-code">
-                                <li class="provided-code">
-            <b>RESTEasy Reactive</b>&nbsp;Easily start your Reactive RESTful Web Services
-            <br />&rsaquo; <code>@Path: <a href="/hello" class="path-link" target="_blank">/hello</a></code>
-            <br />&rsaquo; <a href="https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources" class="guide-link" target="_blank">Related guide</a>
+                    <a href="/q/swagger-ui/" class="api-button">Visit the SWAGGER UI</a>
+                    <p>We basically have two API Endpoints, you can try them from here:</p>
+                    <a href="/api/hello" class="api-button">Hello</a>
+                    <a href="/api/hello-delayed" class="api-button">Hello Delayed</a>
+                    
         </li>
 
                     </ul>
