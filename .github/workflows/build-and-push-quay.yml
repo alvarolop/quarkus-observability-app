@@ -25,12 +25,12 @@ on:
       - 'main'
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'
-    paths-ignore:
+    paths:
       - 'docs/**'
       - 'openshift/**'
       - 'LICENSE'
       - '*.yaml'
-      - 'README.md'
+      - 'README.adoc'
 
 jobs:
   build-native-artifact:
