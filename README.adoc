@@ -226,7 +226,11 @@ oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml | oc apply -f -
 
 === Logging
 
-The logging subsystem aggregates infrastructure and applications logs from throughout your cluster and stores them in a default log store.
+The logging subsystem aggregates infrastructure and applications logs from throughout your cluster and stores them in a default log store. Logging installation section consists of sections:
+
+* Installation of the Openshift logging operator. Always needed.
+* Installation of the ElasticSearch operator as the logging backend. This is mutually exclusive with section 3).
+* Installation of the Loki operator as the logging backend. This is mutually exclusive with section 2).
 
 .Logging Operator
 [source, bash]
