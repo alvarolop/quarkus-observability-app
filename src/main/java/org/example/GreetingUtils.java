@@ -6,7 +6,7 @@ import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class GreetingMethods {
+public class GreetingUtils {
 
     @WithSpan(value = "executeSubprocess", kind = SpanKind.SERVER)
     public void evaluate() {
