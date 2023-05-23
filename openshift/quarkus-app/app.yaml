@@ -62,6 +62,22 @@ objects:
                 requests:
                   cpu: 100m
                   memory: 50Mi
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                  - ALL
+              volumeMounts:
+                - name: app-config
+                  mountPath: "${MOUNT_PATH}"
+          volumes:
+            - name: app-config
+              configMap:
+                name: ${APP_NAME}-config
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
 
   - kind: Service
     apiVersion: v1
@@ -108,3 +124,7 @@ parameters:
     description: "The name of the application."
     required: false
     value: app
+  - name: MOUNT_PATH
+    description: "The path where the configuration file of the application is mounted."
+    value: "/work/config"
+    required: true

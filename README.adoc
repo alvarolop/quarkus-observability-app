@@ -164,14 +164,18 @@ podman run -i --rm -p 8080:8080 quarkus/quarkus-observability-app
 === Quarkus App
 
 Deploy the app in a new namespace using the following command:
+
 [source, bash]
 ----
-# Install the operator
+# Create a ConfigMap to mount in the application to configure without rebuilding
+oc create configmap app-config --from-file=application.yml=src/main/resources/application-ocp.yml -n quarkus-observability
+
+# Install the application
 oc process -f openshift/quarkus-app/app.yaml | oc apply -f -
+
 # After that, you can access the Swagger UI using the following link
 oc get route app -n quarkus-observability  --template='https://{{ .spec.host }}/q/swagger-ui'
 ----
-
 
 
 === Distributed Tracing
