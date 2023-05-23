@@ -7,7 +7,7 @@ v1.0, 2023-05
 // Create TOC wherever needed
 :toc: macro
 :sectanchors:
-:sectnumlevels: 2
+:sectnumlevels: 3
 :sectnums: 
 :source-highlighter: pygments
 :imagesdir: docs/images
