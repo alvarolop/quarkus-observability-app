@@ -1,0 +1,33 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+
+  - apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      name: monitor-${APP_NAME}
+      namespace: ${APP_NAMESPACE}
+      labels:
+        app: ${APP_NAME}
+    spec:
+      endpoints:
+        - interval: 10s
+          targetPort: 8080
+          path: /q/metrics
+          scheme: http
+      namespaceSelector:
+        matchNames:
+          - ${APP_NAMESPACE}
+      selector:
+        matchLabels:
+          app: ${APP_NAME}
+
+parameters:
+  - name: APP_NAMESPACE
+    description: "The project where the application will be deployed."
+    required: false
+    value: quarkus-observability
+  - name: APP_NAME
+    description: "The name of the application."
+    required: false
+    value: app

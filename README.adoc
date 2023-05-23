@@ -186,6 +186,7 @@ Red Hat OpenShift distributed tracing lets you perform distributed tracing, whic
 ----
 # Install the operator
 oc apply -f openshift/ocp-distributed-tracing/10-subscription.yaml
+
 # Deploy Jaeger
 oc process -f openshift/ocp-distributed-tracing/20-jaeger.yaml | oc apply -f -
 ----
@@ -201,7 +202,12 @@ In OpenShift Container Platform 4.12, you can enable monitoring for user-defined
 ----
 # Enable user workload monitoring
 oc apply -f openshift/ocp-monitoring/10-cm-user-workload-monitoring.yaml
+
+# Add Service Monitor to collect metrics from the App
+oc process -f openshift/ocp-monitoring/20-service-monitor.yaml | oc apply -f -
 ----
+
+
 
 For more information, check the https://docs.openshift.com/container-platform/4.12/monitoring/enabling-monitoring-for-user-defined-projects.html[official documentation]. 
 
