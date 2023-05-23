@@ -1,0 +1,35 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+  - apiVersion: project.openshift.io/v1
+    kind: Project
+    metadata:
+      name: ${TRACING_PROJECT}
+      annotations:
+        openshift.io/description: "Project to deploy Distributed Tracing components"
+        openshift.io/display-name: "Tracing System"
+  - apiVersion: jaegertracing.io/v1
+    kind: Jaeger
+    metadata:
+      name: ${DEPLOYMENT_NAME}
+      namespace: ${TRACING_PROJECT}
+    spec:
+      # OPTION 1: All together for testing purposes
+      strategy: allInOne
+
+      # OPTION 2: Split ElasticSearch from Jaeger to have persistance
+      # strategy: production
+      # Extra config ...
+
+      # OPTION 3: ElasticSearch + AMQ Streams (Kafka) + Jaeger 
+      # strategy: streaming
+      # Extra config ...
+parameters:
+  - name: TRACING_PROJECT
+    description: "The project where Jaeger will be deployed."
+    required: false
+    value: tracing-system
+  - name: DEPLOYMENT_NAME
+    description: "The name of the Jaeger instance."
+    required: false
+    value: jaeger

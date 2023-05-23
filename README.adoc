@@ -140,20 +140,63 @@ mvn package -Dquarkus.package.type=uber-jar
 The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
 
 
-=== On Openshift
+=== On a Container
 
 
-Manual steps to generate Container image:
+Manual steps to generate Container image locally:
 
 [source, bash]
 ----
+# Generate the Native executable
 mvn package -Pnative -Dquarkus.native.container-runtime=podman -Dquarkus.native.remote-container-build=true -Dquarkus.container-image.build=true
 
+# Add the executable to a container image
 podman build -f src/main/docker/Dockerfile.native -t quarkus/quarkus-observability-app .
 
+# Launch the application
 podman run -i --rm -p 8080:8080 quarkus/quarkus-observability-app
 ----
 
 
+== Deploy on Openshift
 
-TODO: Create a web UI with `Qute`: https://quarkus.io/guides/qute
+
+=== Quarkus App
+
+
+=== Distributed Tracing
+
+Red Hat OpenShift distributed tracing lets you perform distributed tracing, which records the path of a request through various microservices that make up an application.
+
+[source, bash]
+----
+# Install the operator
+oc apply -f openshift/ocp-distributed-tracing/10-subscription.yaml
+# Deploy Jaeger
+oc process -f openshift/ocp-distributed-tracing/20-jaeger.yaml | oc apply -f -
+----
+
+For more information, check the https://docs.openshift.com/container-platform/4.12/distr_tracing/distr_tracing_arch/distr-tracing-architecture.html[official documentation].
+
+
+=== Monitoring 
+
+In OpenShift Container Platform 4.12, you can enable monitoring for user-defined projects in addition to the default platform monitoring. You can monitor your own projects in OpenShift Container Platform without the need for an additional monitoring solution.
+
+[source, bash]
+----
+# Enable user workload monitoring
+oc apply -f openshift/ocp-monitoring/10-cm-user-workload-monitoring.yaml
+----
+
+For more information, check the https://docs.openshift.com/container-platform/4.12/monitoring/enabling-monitoring-for-user-defined-projects.html[official documentation]. 
+
+
+=== Logging
+
+
+
+
+
+
+
