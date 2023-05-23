@@ -1,0 +1,33 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+
+  - apiVersion: monitoring.coreos.com/v1
+    kind: PrometheusRule
+    metadata:
+      name: rules-${APP_NAME}
+      namespace: ${APP_NAMESPACE}
+      labels:
+        app: ${APP_NAME}
+    spec:
+      groups:
+      - name: too-many-hellos
+        rules:
+        - alert: TooManyHellos
+          annotations:
+            description: "Quarkus app \"{{ $labels.pod }}\" received too many `/hello` reqs"
+            summary: "Quarkus app \"{{ $labels.pod }}\" received too many /hello reqs in the last minute"
+          expr: 'rate(app_hello_counter_total{namespace="${CLUSTER_NAMESPACE}"}[1m]) > 0.1' 
+          for: 5s
+          labels:
+            severity: warning
+
+parameters:
+  - name: APP_NAMESPACE
+    description: "The project where the application will be deployed."
+    required: false
+    value: quarkus-observability
+  - name: APP_NAME
+    description: "The name of the application."
+    required: false
+    value: app

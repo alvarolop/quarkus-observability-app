@@ -207,9 +207,20 @@ oc apply -f openshift/ocp-monitoring/10-cm-user-workload-monitoring.yaml
 oc process -f openshift/ocp-monitoring/20-service-monitor.yaml | oc apply -f -
 ----
 
-
-
 For more information, check the https://docs.openshift.com/container-platform/4.12/monitoring/enabling-monitoring-for-user-defined-projects.html[official documentation]. 
+
+
+==== Alerting
+
+Using Openshift Metrics, it is really simple to add alerts based on those Prometheus Metrics:
+
+[source, bash]
+----
+# Add Alert to monitorize requests to the API
+oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml | oc apply -f -
+----
+
+==== Grafana Dashboards
 
 // TO DO: Missing the Grafana Deployment
 
