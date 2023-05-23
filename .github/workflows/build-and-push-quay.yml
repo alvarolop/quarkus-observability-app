@@ -94,7 +94,7 @@ jobs:
           username: ${{ secrets.QUAY_REPO_USERNAME }}
           password: ${{ secrets.QUAY_REPO_TOKEN }}
 
-      - name: Build and push image
+      - name: Build and push image - Mini
         uses: docker/build-push-action@v4
         with:
           push: true
@@ -103,3 +103,13 @@ jobs:
           # Hack for pseudo ternary expression: If no tag => Latest, if not, tag value
           # Source: https://github.com/orgs/community/discussions/25725#discussioncomment-3248924
           tags: ${{ env.IMAGE_BASE_NAME }}:${{ env.IMAGE_TAG || 'latest' }}
+
+      - name: Build and push image - Micro
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: .
+          file: src/main/docker/Dockerfile.native-micro
+          # Hack for pseudo ternary expression: If no tag => Latest, if not, tag value
+          # Source: https://github.com/orgs/community/discussions/25725#discussioncomment-3248924
+          tags: ${{ env.IMAGE_BASE_NAME }}:${{ env.IMAGE_TAG || 'latest' }}-micro
