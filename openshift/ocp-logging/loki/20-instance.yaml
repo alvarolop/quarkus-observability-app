@@ -1,42 +1,70 @@
----
-apiVersion: logging.openshift.io/v1
-kind: ClusterLogging
-metadata:
-  name: instance
-  namespace: openshift-logging
-spec:
-  managementState: Managed
-  logStore:
-    type: elasticsearch 
-    retentionPolicy: 
-      application:
-        maxAge: 1d
-      infra:
-        maxAge: 7d
-      audit:
-        maxAge: 7d
-    elasticsearch:
-      nodeCount: 3 
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: ${LOKISTACK_NAME}-s3
+      namespace: ${LOGGING_NAMESPACE}
+    stringData:
+      access_key_id: "${AWS_ACCESS_KEY_ID}"
+      access_key_secret: "${AWS_SECRET_ACCESS_KEY}"
+      bucketnames: ${AWS_S3_BUCKET}
+      endpoint: https://s3.${AWS_DEFAULT_REGION}.amazonaws.com
+      region: "${AWS_DEFAULT_REGION}"
+
+  - apiVersion: loki.grafana.com/v1
+    kind: LokiStack
+    metadata:
+      name: ${LOKISTACK_NAME}
+      namespace: ${LOGGING_NAMESPACE}
+    spec:
+      size: 1x.extra-small
       storage:
-        # storageClassName: "<storage-class-name>" 
-        size: 200G
-      resources: 
-        limits:
-          memory: 16Gi
-        requests:
-          memory: 16Gi
-      proxy: 
-        resources:
-          limits:
-            memory: 256Mi
-          requests:
-             memory: 256Mi
-      redundancyPolicy: SingleRedundancy
-  visualization:
-    type: kibana 
-    kibana:
-      replicas: 1
-  collection:
-    logs:
-      type: fluentd
-      fluentd: {}
+        schemas:
+        - version: v12
+          effectiveDate: "2022-06-01"
+        secret:
+          name: ${LOKISTACK_NAME}-s3
+          type: s3
+      storageClassName: gp3-csi 
+      tenants:
+        mode: ${LOGGING_NAMESPACE}
+
+  - apiVersion: logging.openshift.io/v1
+    kind: ClusterLogging
+    metadata:
+      name: instance
+      namespace: ${LOGGING_NAMESPACE}
+    spec:
+      managementState: Managed
+      logStore:
+        type: lokistack
+        lokistack:
+          name: ${LOKISTACK_NAME}
+      collection:
+        type: vector
+
+parameters:
+  - name: LOGGING_NAMESPACE
+    description: "The project where the logging stack is deployed."
+    required: false
+    value: openshift-logging
+  - name: LOKISTACK_NAME
+    description: "Name of the Loki Stack."
+    required: false
+    value: logging-loki
+  - name: AWS_ACCESS_KEY_ID
+    description: "AWS access_key_id."
+    required: true
+  - name: AWS_SECRET_ACCESS_KEY
+    description: "AWS access_key_secret."
+    required: true
+  - name: AWS_DEFAULT_REGION
+    description: "AWS region."
+    required: true
+  - name: AWS_S3_BUCKET
+    description: "S3 Bucket name (You can modify it in the script)."
+    required: false
+    value: logging-loki-s3-bucket

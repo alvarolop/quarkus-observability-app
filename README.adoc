@@ -264,7 +264,7 @@ oc apply -f openshift/ocp-logging/elasticsearch/20-instance.yaml
 After installing and configuring the indexing pattern, you will be able to perform queries for the logs:
 
 .Kibana dashboard
-image::kibana-search-dashboard.png["Kibana dashboard"]
+image::kibana-dashboard.png["Kibana dashboard"]
 
 
 
@@ -273,17 +273,22 @@ image::kibana-search-dashboard.png["Kibana dashboard"]
 .Option 2: Loki installation and deployment
 [source, bash]
 ----
-# Install the Elastic operator
+# Install the Loki operator
 oc apply -f openshift/ocp-logging/loki/10-operator.yaml
 
+# Create an AWS S3 Bucket to store the logs
+./openshift/ocp-logging/loki/aws-create-bucket.sh ./aws-env-vars
+
 # Create the Logging instance
-oc apply -f openshift/ocp-logging/loki/20-instance.yaml
+oc process -f openshift/ocp-logging/loki/20-instance.yaml \
+    --param-file aws-env-vars --ignore-unknown-parameters=true | oc apply -f -
 
 # Enable the console plugin
 # -> This plugin adds the logging view into the 'observe' menu in the OpenShift console. It requires OpenShift 4.10.
 oc patch console.operator cluster --type json -p '[{"op": "add", "path": "/spec/plugins", "value": ["logging-view-plugin"]}]'
 ----
 
-
+.Loki dashboard
+image::loki-dashboard.png["Loki dashboard"]
 
 
