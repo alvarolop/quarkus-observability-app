@@ -29,7 +29,7 @@ on:
       - 'docs/**'
       - 'LICENSE'
       - '*.yaml'
-      # - 'README.md'
+      - 'README.md'
 
 jobs:
   build-native-artifact:
@@ -39,6 +39,7 @@ jobs:
 
       - name: Checkout the code
         uses: actions/checkout@v3
+
       # https://github.com/orgs/community/discussions/55854
       # - name: Verify Semver  
 
@@ -58,7 +59,6 @@ jobs:
         with:
           files: target/*-runner
           generate_release_notes: true
-          # body: This release is still part of the tests of the CI/CD pipeline!
 
       - name: Upload native executable
         uses: actions/upload-artifact@v3
@@ -102,6 +102,4 @@ jobs:
           file: src/main/docker/Dockerfile.native
           # Hack for pseudo ternary expression: If no tag => Latest, if not, tag value
           # Source: https://github.com/orgs/community/discussions/25725#discussioncomment-3248924
-          # TODO: The value is not IMAGE_TAG
           tags: ${{ env.IMAGE_BASE_NAME }}:${{ env.IMAGE_TAG || 'latest' }}
-
