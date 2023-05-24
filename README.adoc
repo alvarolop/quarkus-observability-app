@@ -251,7 +251,10 @@ oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/graf
     -p DASHBOARD_KEY=dashboard.json | oc apply -f -
 ----
 
+After installing, you can access the Grafana UI and see the following dashboard:
 
+.Grafana dashboard
+image::grafana-dashboard.png["Grafana dashboard"]
 
 
 === Logging
