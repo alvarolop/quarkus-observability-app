@@ -222,11 +222,41 @@ oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml | oc apply -f -
 
 ==== Grafana Dashboards
 
-// TO DO: Missing the Grafana Deployment
+[source, bash]
+----
+# Install the Grafana Operator
+oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-01-operator.yaml | oc apply -f -
+
+# Deploy a Grafana Config
+oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-config.yaml | oc apply -f -
+
+# Deploy a Grafana Instance
+oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-instance.yaml | oc apply -f -
+
+# Configure Grafana DataSource
+oc adm policy add-cluster-role-to-user cluster-monitoring-view -z grafana-serviceaccount -n grafana
+
+oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-03-datasource.yaml \
+    -p BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-serviceaccount -n grafana | awk '/Tokens/{ print $2 }') -n grafana --template='{{ .data.token | base64decode }}') \
+    | oc apply -f -
+
+# Configure Grafana Dashboard for the quarkus-observability-app
+oc create configmap quarkus-observability-dashboard \
+    --from-file=dashboard.json=openshift/ocp-monitoring/grafana/dashboard.json -n grafana
+
+oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-04-dashboard.yaml \
+    -p DASHBOARD_NAME=quarkus-observability-dashboard \
+    -p OPERATOR_NAMESPACE=grafana \
+    -p CUSTOM_FOLDER_NAME="Quarkus Observability" \
+    -p DASHBOARD_KEY=dashboard.json | oc apply -f -
+----
+
+
+
 
 === Logging
 
-The logging subsystem aggregates infrastructure and applications logs from throughout your cluster and stores them in a default log store. Logging installation section consists of sections:
+The logging subsystem aggregates infrastructure and applications logs from throughout your cluster and stores them in a default log store. The Openshift Logging installation section consists of sections:
 
 * Installation of the Openshift logging operator. Always needed.
 * Installation of the ElasticSearch operator as the logging backend. This is mutually exclusive with section 3).
