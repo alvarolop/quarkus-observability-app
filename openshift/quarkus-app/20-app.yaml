@@ -2,14 +2,6 @@ apiVersion: template.openshift.io/v1
 kind: Template
 objects:
 
-  - apiVersion: project.openshift.io/v1
-    kind: Project
-    metadata:
-      name: ${APP_NAMESPACE}
-      annotations:
-        openshift.io/description: "Project to deploy the observability app"
-        openshift.io/display-name: "Observability Test Environment"
-
   - kind: Deployment
     apiVersion: apps/v1
     metadata:
