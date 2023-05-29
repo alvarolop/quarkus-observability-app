@@ -120,55 +120,55 @@ oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml \
 
 
 
-# ##
-# # 4) Grafana
-# ## 
+##
+# 4) Grafana
+## 
 
-# # Deploy the Grafana Operator
-# echo -e "\n[4/12]Deploying the Grafana operator"
-# oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-01-operator.yaml \
-#     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
+# Deploy the Grafana Operator
+echo -e "\n[4/12]Deploying the Grafana operator"
+oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-01-operator.yaml \
+    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
-# echo -n "Waiting for pods ready..."
-# while [[ $(oc get pods -l control-plane=controller-manager -n $GRAFANA_NAMESPACE -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo -n "." && sleep 1; done; echo -n -e "  [OK]\n"
+echo -n "Waiting for pods ready..."
+while [[ $(oc get pods -l control-plane=controller-manager -n $GRAFANA_NAMESPACE -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo -n "." && sleep 1; done; echo -n -e "  [OK]\n"
 
-# # Create Grafana configuration
-# echo -e "\n[4.5/12]Creating Grafana config"
-# oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-config.yaml \
-#     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
+# Create Grafana configuration
+echo -e "\n[4.5/12]Creating Grafana config"
+oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-config.yaml \
+    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
-# sleep 5
+sleep 5
 
-# # Create a Grafana instance
-# echo -e "\n[5/12]Creating a grafana instance"
-# oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-instance.yaml \
-#     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
+# Create a Grafana instance
+echo -e "\n[5/12]Creating a grafana instance"
+oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-instance.yaml \
+    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
-# echo -n "Waiting for ServiceAccount ready..."
-# while ! oc get sa grafana-serviceaccount -n $GRAFANA_NAMESPACE &> /dev/null; do   echo -n "." && sleep 1; done; echo -n -e " [OK]\n"
+echo -n "Waiting for ServiceAccount ready..."
+while ! oc get sa grafana-serviceaccount -n $GRAFANA_NAMESPACE &> /dev/null; do   echo -n "." && sleep 1; done; echo -n -e " [OK]\n"
 
-# # --- In OCP 4.11 or higher ---
-# BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-serviceaccount -n $GRAFANA_NAMESPACE | awk '/Tokens/{ print $2 }') -n $GRAFANA_NAMESPACE --template='{{ .data.token | base64decode }}')
+# --- In OCP 4.11 or higher ---
+BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-serviceaccount -n $GRAFANA_NAMESPACE | awk '/Tokens/{ print $2 }') -n $GRAFANA_NAMESPACE --template='{{ .data.token | base64decode }}')
 
-# # Create a Grafana data source
-# echo -e "\n[6/12]Creating the Grafana data source"
-# oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-03-datasource.yaml \
-#     -p BEARER_TOKEN=$BEARER_TOKEN \
-#     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
+# Create a Grafana data source
+echo -e "\n[6/12]Creating the Grafana data source"
+oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-03-datasource.yaml \
+    -p BEARER_TOKEN=$BEARER_TOKEN \
+    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
-# # Create the Grafana dashboard
-# echo -e "\n[7/12]Creating the Grafana dashboard"
-# if oc get cm $GRAFANA_DASHBOARD_NAME -n $GRAFANA_NAMESPACE &> /dev/null; then
-#     echo -e "Check. Deleting previous configuration..."
-#     oc delete configmap $GRAFANA_DASHBOARD_NAME -n $GRAFANA_NAMESPACE
-# fi
-# oc create configmap $GRAFANA_DASHBOARD_NAME --from-file=$GRAFANA_DASHBOARD_KEY=grafana/$GRAFANA_DASHBOARD_NAME.json -n $GRAFANA_NAMESPACE
+# Create the Grafana dashboard
+echo -e "\n[7/12]Creating the Grafana dashboard"
+if oc get cm $GRAFANA_DASHBOARD_NAME -n $GRAFANA_NAMESPACE &> /dev/null; then
+    echo -e "Check. Deleting previous configuration..."
+    oc delete configmap $GRAFANA_DASHBOARD_NAME -n $GRAFANA_NAMESPACE
+fi
+oc create configmap $GRAFANA_DASHBOARD_NAME --from-file=$GRAFANA_DASHBOARD_KEY=openshift/ocp-monitoring/grafana/$GRAFANA_DASHBOARD_NAME.json -n $GRAFANA_NAMESPACE
 
-# oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-04-dashboard.yaml \
-#     -p DASHBOARD_NAME=$GRAFANA_DASHBOARD_NAME \
-#     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
-#     -p CUSTOM_FOLDER_NAME="Quarkus Observability" \
-#     -p DASHBOARD_KEY=$GRAFANA_DASHBOARD_KEY | oc apply -f -
+oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-04-dashboard.yaml \
+    -p DASHBOARD_NAME=$GRAFANA_DASHBOARD_NAME \
+    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
+    -p CUSTOM_FOLDER_NAME="Quarkus Observability" \
+    -p DASHBOARD_KEY=$GRAFANA_DASHBOARD_KEY | oc apply -f -
 
 
 
@@ -226,7 +226,7 @@ oc process -f openshift/ocp-distributed-tracing/20-jaeger.yaml \
 ## 
 
 # URLs
-QUARKUS_ROUTE=$(oc get route $APP_NAME -n $APP_NAMESPACE --template='https://{{ .spec.host }}/q/swagger-ui')
+QUARKUS_ROUTE=$(oc get route $APP_NAME -n $APP_NAMESPACE --template='https://{{ .spec.host }}')
 TRACING_ROUTE=$(oc get route -l app=$TRACING_DEPLOYMENT -n $TRACING_PROJECT --template='https://{{(index .items 0).spec.host }}')
 LOKI_ROUTE=$(oc whoami --show-console)/monitoring/logs
 GRAFANA_ROUTE=$(oc get routes -l app=grafana -n $GRAFANA_NAMESPACE --template='https://{{(index .items 0).spec.host }}')
@@ -235,8 +235,12 @@ GRAFANA_ROUTE=$(oc get routes -l app=grafana -n $GRAFANA_NAMESPACE --template='h
 GRAFANA_ADMIN=$(oc get secret grafana-admin-credentials -n $GRAFANA_NAMESPACE -o jsonpath='{.data.GF_SECURITY_ADMIN_USER}' | base64 --decode)
 GRAFANA_PASSW=$(oc get secret grafana-admin-credentials -n $GRAFANA_NAMESPACE -o jsonpath='{.data.GF_SECURITY_ADMIN_PASSWORD}' | base64 --decode)
 
+# TODO: Init the Grafana Dashboard. Needs to change the dashboard logic
+echo -e "\nInitializing the Grafana dashbaord with the first API request..."
+curl $QUARKUS_ROUTE/api/hello
+
 echo -e "\nURLS:"
-echo -e " * Quarkus: $QUARKUS_ROUTE"
+echo -e " * Quarkus: $QUARKUS_ROUTE/q/swagger-ui"
 echo -e " * Grafana: $GRAFANA_ROUTE"
 echo -e " * Loki: $LOKI_ROUTE"
 echo -e " * Tracing: $TRACING_ROUTE"
