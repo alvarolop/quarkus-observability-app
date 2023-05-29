@@ -1,0 +1,15 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+  - apiVersion: project.openshift.io/v1
+    kind: Project
+    metadata:
+      name: ${APP_NAMESPACE}
+      annotations:
+        openshift.io/description: "Project to deploy the observability app"
+        openshift.io/display-name: "Observability Test Environment"
+parameters:
+  - name: APP_NAMESPACE
+    description: "The project where the application will be deployed."
+    required: false
+    value: quarkus-observability
