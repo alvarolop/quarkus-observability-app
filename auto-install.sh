@@ -36,6 +36,10 @@ echo -e " * APP_NAMESPACE: $APP_NAMESPACE"
 echo -e " * APP_NAME: $APP_NAME"
 echo -e " * GRAFANA_NAMESPACE: $GRAFANA_NAMESPACE"
 echo -e " * GRAFANA_DASHBOARD_NAME: $GRAFANA_DASHBOARD_NAME"
+echo -e " * LOGGING_NAMESPACE: $LOGGING_NAMESPACE"
+echo -e " * LOKISTACK_NAME: $LOKISTACK_NAME"
+echo -e " * TRACING_PROJECT: $TRACING_PROJECT"
+echo -e " * TRACING_DEPLOYMENT: $TRACING_DEPLOYMENT"
 echo -e "==============\n"
 
 # Check if the user is logged in 
@@ -71,7 +75,7 @@ fi
 ##
 # 1) Quarkus application
 ## 
-echo -e "\n[1/8]Deploying the Quarkus application"
+echo -e "\n[1/12]Deploying the Quarkus application"
 
 oc process -f openshift/quarkus-app/10-project.yaml \
     -p APP_NAMESPACE=$APP_NAMESPACE | oc apply -f -
@@ -97,7 +101,7 @@ oc process -f openshift/quarkus-app/20-app.yaml \
 ## 
 
 # Add Service Monitor to collect metrics from the App
-echo -e "\n[2/8]Configure Prometheus to monitor RHDG"
+echo -e "\n[2/12]Configure Prometheus to monitor RHDG"
 oc process -f openshift/ocp-monitoring/20-service-monitor.yaml \
     -p APP_NAMESPACE=$APP_NAMESPACE \
     -p APP_NAME=$APP_NAME | oc apply -f -
@@ -109,7 +113,7 @@ oc process -f openshift/ocp-monitoring/20-service-monitor.yaml \
 ## 
 
 # Add Alert to monitorize requests to the API
-echo -e "\n[3/8]Configure Alert to monitorize requests to the API"
+echo -e "\n[3/12]Configure Alert to monitorize requests to the API"
 oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml \
     -p APP_NAMESPACE=$APP_NAMESPACE \
     -p APP_NAME=$APP_NAME | oc apply -f -
@@ -121,7 +125,7 @@ oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml \
 # ## 
 
 # # Deploy the Grafana Operator
-# echo -e "\n[4/8]Deploying the Grafana operator"
+# echo -e "\n[4/12]Deploying the Grafana operator"
 # oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-01-operator.yaml \
 #     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
@@ -129,14 +133,14 @@ oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml \
 # while [[ $(oc get pods -l control-plane=controller-manager -n $GRAFANA_NAMESPACE -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo -n "." && sleep 1; done; echo -n -e "  [OK]\n"
 
 # # Create Grafana configuration
-# echo -e "\n[5/8]Creating Grafana config"
+# echo -e "\n[4.5/12]Creating Grafana config"
 # oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-config.yaml \
 #     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
 # sleep 5
 
 # # Create a Grafana instance
-# echo -e "\n[6/8]Creating a grafana instance"
+# echo -e "\n[5/12]Creating a grafana instance"
 # oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-instance.yaml \
 #     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
@@ -147,13 +151,13 @@ oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml \
 # BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-serviceaccount -n $GRAFANA_NAMESPACE | awk '/Tokens/{ print $2 }') -n $GRAFANA_NAMESPACE --template='{{ .data.token | base64decode }}')
 
 # # Create a Grafana data source
-# echo -e "\n[7/8]Creating the Grafana data source"
+# echo -e "\n[6/12]Creating the Grafana data source"
 # oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-03-datasource.yaml \
 #     -p BEARER_TOKEN=$BEARER_TOKEN \
 #     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
 # # Create the Grafana dashboard
-# echo -e "\n[8/8]Creating the Grafana dashboard"
+# echo -e "\n[7/12]Creating the Grafana dashboard"
 # if oc get cm $GRAFANA_DASHBOARD_NAME -n $GRAFANA_NAMESPACE &> /dev/null; then
 #     echo -e "Check. Deleting previous configuration..."
 #     oc delete configmap $GRAFANA_DASHBOARD_NAME -n $GRAFANA_NAMESPACE
@@ -173,7 +177,7 @@ oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml \
 ##
 
 # Install the Openshift Logging operator
-echo -e "\n[1/8]Deploying the Openshift Logging operator"
+echo -e "\n[8/12]Deploying the Openshift Logging operator"
 oc apply -f openshift/ocp-logging/00-subscription.yaml
 
 echo -n "Waiting for operator pods to be ready..."
@@ -181,13 +185,13 @@ while [[ $(oc get pods -l "name=cluster-logging-operator" -n $LOGGING_NAMESPACE 
 
 
 # Install the Openshift Logging operator
-echo -e "\n[1/8]Deploying the Loki operator"
+echo -e "\n[9/12]Deploying the Loki operator"
 oc apply -f openshift/ocp-logging/loki/10-operator.yaml
 
 echo -n "Waiting for operator pods to be ready..."
 while [[ $(oc get pods -l "name=loki-operator-controller-manager" -n openshift-operators-redhat -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo -n "." && sleep 1; done; echo -n -e "  [OK]\n"
 
-echo -e "\n[3/8]Create the Logging instance"
+echo -e "\n[10/12]Create the Logging instance"
 oc process -f openshift/ocp-logging/loki/20-instance.yaml \
     --param-file aws-env-vars --ignore-unknown-parameters=true \
     -p LOGGING_NAMESPACE=$LOGGING_NAMESPACE \
@@ -203,23 +207,23 @@ oc patch console.operator cluster --type json -p '[{"op": "add", "path": "/spec/
 ## 
 
 # Install the operator
-echo -e "\n[1/8]Deploying the Distributed tracing operator"
+echo -e "\n[11/12]Deploying the Distributed tracing operator"
 oc apply -f openshift/ocp-distributed-tracing/10-subscription.yaml
 
 echo -n "Waiting for operator pods to be ready..."
 while [[ $(oc get pods -l "name=jaeger-operator" -n openshift-operators -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo -n "." && sleep 1; done; echo -n -e "  [OK]\n"
 
 # Deploy Jaeger
+echo -e "\n[12/12]Deploying the Jaeger Instance"
+
 oc process -f openshift/ocp-distributed-tracing/20-jaeger.yaml \
     -p TRACING_PROJECT=$TRACING_PROJECT \
     -p DEPLOYMENT_NAME=$TRACING_DEPLOYMENT | oc apply -f -
 
 
-
-
-
-
-
+##
+# 7) Wrap Up
+## 
 
 # URLs
 QUARKUS_ROUTE=$(oc get route $APP_NAME -n $APP_NAMESPACE --template='https://{{ .spec.host }}/q/swagger-ui')
