@@ -1,0 +1,84 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+
+  # This networkPolicy is optional as is "included" in the second, but 
+  # for the sake of clarity, I'm adding it to the configuration
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: deny-by-default
+      namespace: ${APP_NAMESPACE}
+    spec:
+      podSelector:
+      ingress: []
+
+  # This is the main restricting policy, it denies traffic from outside the ns
+  - kind: NetworkPolicy
+    apiVersion: networking.k8s.io/v1
+    metadata:
+      name: allow-same-namespace
+      namespace: ${APP_NAMESPACE}
+    spec:
+      podSelector: {}
+      ingress:
+      - from:
+        - podSelector: {}
+
+  # To allow requests through the OCP Route
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: allow-from-openshift-ingress
+      namespace: ${APP_NAMESPACE}
+    spec:
+      ingress:
+      - from:
+        - namespaceSelector:
+            matchLabels:
+              policy-group.network.openshift.io/ingress: ""
+      podSelector: {}
+      policyTypes:
+      - Ingress
+
+  # To allow access from Prometheus (Infra and user-workload)
+  # https://access.redhat.com/solutions/6247871
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: allow-from-openshift-monitoring
+      namespace: ${APP_NAMESPACE}
+    spec:
+      ingress:
+      - from:
+        - namespaceSelector:
+            matchLabels:
+              network.openshift.io/policy-group: monitoring
+      podSelector: {}
+      policyTypes:
+      - Ingress
+
+  # Not sure why would need this probably only of an operator controls resources in this namespace? VMs?
+  # https://access.redhat.com/solutions/6964520
+  # - apiVersion: networking.k8s.io/v1
+  #   kind: NetworkPolicy
+  #   metadata:
+  #     name: allow-from-kube-apiserver-operator
+  #     namespace: ${APP_NAMESPACE}
+  #   spec:
+  #     ingress:
+  #     - from:
+  #       - namespaceSelector:
+  #           matchLabels:
+  #             kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+  #         podSelector:
+  #           matchLabels:
+  #             app: kube-apiserver-operator
+  #     policyTypes:
+  #     - Ingress
+
+parameters:
+  - name: APP_NAMESPACE
+    description: "The project where the application will be deployed."
+    required: false
+    value: quarkus-observability
