@@ -246,7 +246,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "rate(app_hello_counter_total[1m])",
+          "expr": "increase(app_hello_counter_total[1m])",
           "interval": "",
           "intervalFactor": 1,
           "legendFormat": "Rate {{pod}}:/hello ",
@@ -254,7 +254,7 @@
         },
         {
           "exemplar": true,
-          "expr": "rate(app_hello_delayed_counter_total[1m])",
+          "expr": "increase(app_hello_delayed_counter_total[1m])",
           "hide": false,
           "interval": "",
           "legendFormat": "Rate {{pod}}:/hello-delayed",
