@@ -151,7 +151,7 @@ while ! oc get sa grafana-serviceaccount -n $GRAFANA_NAMESPACE &> /dev/null; do 
 BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-serviceaccount -n $GRAFANA_NAMESPACE | awk '/Tokens/{ print $2 }') -n $GRAFANA_NAMESPACE --template='{{ .data.token | base64decode }}')
 
 # Create a Grafana data source
-echo -e "\n[6/12]Creating the Grafana data source"
+echo -e "\n[6/12]Creating the Grafana datasource"
 oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-03-datasource.yaml \
     -p BEARER_TOKEN=$BEARER_TOKEN \
     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
@@ -161,6 +161,7 @@ echo -e "\n[7/12]Creating the Grafana dashboard"
 if oc get cm $GRAFANA_DASHBOARD_NAME -n $GRAFANA_NAMESPACE &> /dev/null; then
     echo -e "Check. Deleting previous configuration..."
     oc delete configmap $GRAFANA_DASHBOARD_NAME -n $GRAFANA_NAMESPACE
+    oc delete GrafanaDashboard $GRAFANA_DASHBOARD_NAME -n $GRAFANA_NAMESPACE
 fi
 oc create configmap $GRAFANA_DASHBOARD_NAME --from-file=$GRAFANA_DASHBOARD_KEY=openshift/ocp-monitoring/grafana/$GRAFANA_DASHBOARD_NAME.json -n $GRAFANA_NAMESPACE
 
