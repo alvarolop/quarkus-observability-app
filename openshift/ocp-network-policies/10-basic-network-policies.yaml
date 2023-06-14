@@ -42,7 +42,7 @@ objects:
       - Ingress
 
   # To allow access from Prometheus (Infra and user-workload)
-  # https://access.redhat.com/solutions/6247871
+  # More info here: https://access.redhat.com/solutions/6247871
   - apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
     metadata:
@@ -58,24 +58,28 @@ objects:
       policyTypes:
       - Ingress
 
-  # Not sure why would need this probably only of an operator controls resources in this namespace? VMs?
-  # https://access.redhat.com/solutions/6964520
-  # - apiVersion: networking.k8s.io/v1
-  #   kind: NetworkPolicy
-  #   metadata:
-  #     name: allow-from-kube-apiserver-operator
-  #     namespace: ${APP_NAMESPACE}
-  #   spec:
-  #     ingress:
-  #     - from:
-  #       - namespaceSelector:
-  #           matchLabels:
-  #             kubernetes.io/metadata.name: openshift-kube-apiserver-operator
-  #         podSelector:
-  #           matchLabels:
-  #             app: kube-apiserver-operator
-  #     policyTypes:
-  #     - Ingress
+  # This is needed for namespaces that are running pods of Mutating and Validating Webhooks
+  # In general, this is not needed for application namespaces, but it is not harmful, as 
+  # only the kube-apiserver-operator running on its namespace will be able to use it.
+  # It could happen that you install a namespaced operator that defines a webhook in your namespace
+  # and in that case, you would need it.
+  # More information here: https://access.redhat.com/solutions/6964520
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: allow-from-kube-apiserver-operator
+      namespace: ${APP_NAMESPACE}
+    spec:
+      ingress:
+      - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-kube-apiserver-operator
+          podSelector:
+            matchLabels:
+              app: kube-apiserver-operator
+      policyTypes:
+      - Ingress
 
 parameters:
   - name: APP_NAMESPACE

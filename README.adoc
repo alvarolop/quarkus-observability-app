@@ -333,12 +333,11 @@ image::loki-dashboard.png["Loki dashboard"]
 
 == Annex: Network Policies with Observability
 
-As you may already know, you can define network policies that restrict traffic to pods in your cluster. When the cluster is empty and your applications don't rely on other Openshift components, this is easy to configure. However, when you add the full observability stack plus extra common services, it can get tricky. That's why I would like to summarize some of the common `NetworkPolicies`.
-
-
+As you may already know, you can define network policies that restrict traffic to pods in your cluster. When the cluster is empty and your applications don't rely on other Openshift components, this is easy to configure. However, when you add the full observability stack plus extra common services, it can get tricky. That's why I would like to summarize some of the common `NetworkPolicies`:
 
 [source, bash]
 ----
+# Here you will deny all traffic except for Routes, Metrics, and webhook requests. 
 oc process -f openshift/ocp-network-policies/10-basic-network-policies.yaml | oc apply -f -
 ----
 
