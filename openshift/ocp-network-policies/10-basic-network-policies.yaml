@@ -10,8 +10,9 @@ objects:
       name: deny-by-default
       namespace: ${APP_NAMESPACE}
     spec:
-      podSelector:
-      ingress: []
+      podSelector: {}
+      policyTypes:
+        - Ingress
 
   # This is the main restricting policy, it denies traffic from outside the ns
   - kind: NetworkPolicy
@@ -78,6 +79,23 @@ objects:
           podSelector:
             matchLabels:
               app: kube-apiserver-operator
+      policyTypes:
+      - Ingress
+
+
+  # Add NetworkPolicy to allow Openshift Logging pods to get Logs from the app
+  - apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: allow-from-openshift-logging
+      namespace: ${APP_NAMESPACE}
+    spec:
+      ingress:
+      - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: openshift-logging
+      podSelector: {}
       policyTypes:
       - Ingress
 
