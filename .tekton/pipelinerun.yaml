@@ -59,7 +59,7 @@ spec:
         taskRef: 
           name: mvn-config
         runAfter:
-          - source-clone
+          - fetch-repository
         workspaces:
         - name: workspace
           workspace: source
