@@ -1,0 +1,47 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: mvn-config
+spec:
+  description: Configure settings.xml for Maven
+  params:
+    - name: MAVEN_MIRROR_REPO
+      type: string
+      default: http://nexus:8081/repository/maven-public/
+    - name: SERVER_USERNAME
+      type: string
+      default: admin
+    - name: SERVER_PASSWORD
+      type: string
+      default: admin123
+  workspaces:
+    - name: workspace
+  steps:
+    - name: configure
+      image: registry.access.redhat.com/ubi8/ubi-minimal
+      script: |
+        #!/usr/bin/env bash
+        cat << EOF > $(workspaces.workspace.path)/settings.xml
+        <?xml version="1.0" encoding="UTF-8"?>
+        <settings>
+          <servers>
+            <server>
+              <id>nexus</id>
+              <username>$(params.SERVER_USERNAME)</username>
+              <password>$(params.SERVER_PASSWORD)</password>
+            </server>
+          </servers>
+          <mirrors>
+            <mirror>
+              <id>nexus</id>
+              <name>nexus</name>
+              <url>$(params.MAVEN_MIRROR_REPO)</url>
+              <mirrorOf>*</mirrorOf>
+            </mirror>
+          </mirrors>
+        </settings>
+        EOF
+
+        echo "Created $(workspaces.workspace.path)/settings.xml"
+      
