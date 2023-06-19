@@ -55,6 +55,14 @@ spec:
             value: $(params.repo_url)
           - name: revision
             value: $(params.revision)
+      - name: mvn-config
+        taskRef: 
+          name: mvn-config
+        runAfter:
+          - source-clone
+        workspaces:
+        - name: workspace
+          workspace: source
       - name: maven-test
         taskRef:
           name: maven
