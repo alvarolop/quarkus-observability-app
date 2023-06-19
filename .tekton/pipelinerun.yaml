@@ -67,14 +67,16 @@ spec:
         taskRef:
           name: maven
         runAfter:
-          - fetch-repository
+          - mvn-config
         params:
           - name: GOALS
             value:
               - test
         workspaces:
-          - name: source
-            workspace: source
+        - name: source
+          workspace: source
+        - name: maven-settings
+          workspace: source
   workspaces:
     - name: source
       volumeClaimTemplate:
