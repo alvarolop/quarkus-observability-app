@@ -29,8 +29,8 @@ metadata:
 
     # Executes only for specific paths
     pipelinesascode.tekton.dev/on-cel-expression: |
-      event == "push" && "src/".pathChanged() 
-      
+      event == "push" && "src/\*".pathChanged() 
+
 spec:
   params:
     # The variable with brackets are special to Pipelines as Code
