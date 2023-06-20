@@ -26,6 +26,11 @@ metadata:
 
     # How many runs we want to keep attached to this event
     pipelinesascode.tekton.dev/max-keep-runs: "5"
+
+    # Executes only for specific paths
+    pipelinesascode.tekton.dev/on-cel-expression: |
+      event == "push" && "src/".pathChanged() 
+      
 spec:
   params:
     # The variable with brackets are special to Pipelines as Code
