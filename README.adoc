@@ -342,3 +342,31 @@ oc process -f openshift/ocp-network-policies/10-basic-network-policies.yaml | oc
 ----
 
 For other NetworkPolicy configurations, check the https://docs.openshift.com/container-platform/4.12/networking/network_policy/about-network-policy.html[official documentation].
+
+
+== Annex: Tekton Pipelines as Code
+
+Pipelines as code allows to define CI/CD in a file located in git. This file is then used to automatically create a pipeline for a Pull Request or a Push to a branch.
+
+=== Step 1: Create a GH application
+
+This step automates all the steps in this https://docs.openshift.com/container-platform/4.13/cicd/pipelines/using-pipelines-as-code.html#using-pipelines-as-code-with-a-github-app_using-pipelines-as-code[section of the documentation]:
+
+* Create an application in GitHub with the configuration of the cluster.
+* Create a secret in Openshift with the configuration of the GH App `pipelines-as-code-secret`.
+
+
+[source, bash]
+----
+tkn pac bootstrap
+# In the interactive menu, set the application name to `pipelines-as-code-app`
+----
+
+=== Step 2: Create a Repository CR
+
+This section creates a `Repository` CR with the configuration of the GitHub application in the destination repository:
+
+[source, bash]
+----
+tkn pac create repository
+----
