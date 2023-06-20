@@ -45,6 +45,24 @@ objects:
           name: ${LOKISTACK_NAME}
       collection:
         type: vector
+        # The documentation for this section is located in this KCS:
+        # https://access.redhat.com/solutions/6999814
+        # nodeSelector:
+        #   node-role.kubernetes.io/worker: ''
+        # tolerations:
+        #   - key: <toleration_key>
+        #     operator: Exists
+        #     effect: "NoSchedule"
+        # resources:
+        #   limits:
+        #     cpu: 2
+        #     memory: 1Gi
+        #   requests:
+        #     cpu: 100m
+        #     memory: 200Mi
+        # fluentd:
+        #   buffer: {} # Tune Buffer for all outputs
+        #   inFile: {} # Tune in-tail inputs
 
 parameters:
   - name: LOGGING_NAMESPACE
