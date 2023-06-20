@@ -66,6 +66,7 @@ spec:
       - name: maven-test
         taskRef:
           name: maven
+          kind: ClusterTask
         runAfter:
           - fetch-repository
         params:
