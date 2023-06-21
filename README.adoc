@@ -266,8 +266,8 @@ image::grafana-dashboard.png["Grafana dashboard"]
 The logging subsystem aggregates infrastructure and applications logs from throughout your cluster and stores them in a default log store. The Openshift Logging installation section consists of sections:
 
 * Installation of the Openshift logging operator. Always needed.
-* Installation of the ElasticSearch operator as the logging backend. This is mutually exclusive with section 3).
 * Installation of the Loki operator as the logging backend. This is mutually exclusive with section 2).
+* Installation of the ElasticSearch operator as the logging backend. This is mutually exclusive with section 3).
 
 .Logging Operator
 [source, bash]
@@ -281,33 +281,9 @@ Currently, the Openshift Logging team decided to move from EFK to Vector+Loki. T
 
 In order to keep up to date and age better, this repo explores both implementations.
 
-==== Logging backend 1: ElasticSearch
+==== Logging backend 1: Loki
 
-[WARNING]
-====
-As of logging version 5.4.3 the OpenShift Elasticsearch Operator is deprecated and is planned to be removed in a future release. As of logging version 5.6 Fluentd is deprecated and is planned to be removed in a future release.
-====
-
-.Option 1: ElasticSearch installation and deployment
-[source, bash]
-----
-# Install the Elastic operator
-oc apply -f openshift/ocp-logging/elasticsearch/10-operator.yaml
-
-# Create the Logging instance
-oc apply -f openshift/ocp-logging/elasticsearch/20-instance.yaml
-----
-
-After installing and configuring the indexing pattern, you will be able to perform queries for the logs:
-
-.Kibana dashboard
-image::kibana-dashboard.png["Kibana dashboard"]
-
-
-
-==== Logging backend 2: Loki
-
-.Option 2: Loki installation and deployment
+.Option 1: Loki installation and deployment
 [source, bash]
 ----
 # Install the Loki operator
@@ -329,6 +305,63 @@ oc patch console.operator cluster --type json -p '[{"op": "add", "path": "/spec/
 image::loki-dashboard.png["Loki dashboard"]
 
 
+==== Logging backend 2: ElasticSearch [DEPRECATED]
+
+[WARNING]
+====
+As of logging version 5.4.3 the OpenShift Elasticsearch Operator is deprecated and is planned to be removed in a future release. As of logging version 5.6 Fluentd is deprecated and is planned to be removed in a future release.
+====
+
+.Option 2: ElasticSearch installation and deployment
+[source, bash]
+----
+# Install the Elastic operator
+oc apply -f openshift/ocp-logging/elasticsearch/10-operator.yaml
+
+# Create the Logging instance
+oc apply -f openshift/ocp-logging/elasticsearch/20-instance.yaml
+----
+
+After installing and configuring the indexing pattern, you will be able to perform queries for the logs:
+
+.Kibana dashboard
+image::kibana-dashboard.png["Kibana dashboard"]
+
+
+
+==== Logging backend 3: Third party
+
+By default, the logging subsystem sends container and infrastructure logs to the default internal log store (That we created in options 1 and 2).
+
+oc get Infrastructure/cluster -ojson | jq .status.infrastructureName
+
+[source, bash]
+----
+oc process -f openshift/ocp-logging/log-forwarding/cluster-log-forwarder-aws.yaml \
+    --param-file aws-env-vars --ignore-unknown-parameters=true \
+    -p CLOUDWATCH_GROUP_PREFIX=$(oc get Infrastructure/cluster -o=jsonpath='{.status.infrastructureName}') \
+    | oc apply -f -
+----
+
+
+
+Now, you can check the logs in Cloudwatch using the following command:
+
+[source, bash]
+----
+source aws-env-vars
+aws --output json logs describe-log-groups --region=$AWS_DEFAULT_REGION
+----
+
+
+
+
+
+
+
+
+
+
 
 
 == Annex: Network Policies with Observability
@@ -342,6 +375,18 @@ oc process -f openshift/ocp-network-policies/10-basic-network-policies.yaml | oc
 ----
 
 For other NetworkPolicy configurations, check the https://docs.openshift.com/container-platform/4.12/networking/network_policy/about-network-policy.html[official documentation].
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 == Annex: Tekton Pipelines as Code
