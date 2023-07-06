@@ -17,8 +17,8 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  schedule:
-    - cron: '0 10 * * *'
+  # schedule:
+  #   - cron: '0 10 * * *'
   push:
     branches:
       - 'releases/**'
