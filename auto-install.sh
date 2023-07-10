@@ -132,12 +132,6 @@ oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/graf
 echo -n "Waiting for pods ready..."
 while [[ $(oc get pods -l control-plane=controller-manager -n $GRAFANA_NAMESPACE -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo -n "." && sleep 1; done; echo -n -e "  [OK]\n"
 
-# Create Grafana configuration
-echo -e "\n[4.5/12]Creating Grafana config"
-oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-config.yaml \
-    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
-
-sleep 5
 
 # Create a Grafana instance
 echo -e "\n[5/12]Creating a grafana instance"
@@ -145,10 +139,10 @@ oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/graf
     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
 echo -n "Waiting for ServiceAccount ready..."
-while ! oc get sa grafana-serviceaccount -n $GRAFANA_NAMESPACE &> /dev/null; do   echo -n "." && sleep 1; done; echo -n -e " [OK]\n"
+while ! oc get sa grafana-sa -n $GRAFANA_NAMESPACE &> /dev/null; do   echo -n "." && sleep 1; done; echo -n -e " [OK]\n"
 
 # --- In OCP 4.11 or higher ---
-BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-serviceaccount -n $GRAFANA_NAMESPACE | awk '/Tokens/{ print $2 }') -n $GRAFANA_NAMESPACE --template='{{ .data.token | base64decode }}')
+BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-sa -n $GRAFANA_NAMESPACE | awk '/Tokens/{ print $2 }') -n $GRAFANA_NAMESPACE --template='{{ .data.token | base64decode }}')
 
 # Create a Grafana data source
 echo -e "\n[6/12]Creating the Grafana datasource"
@@ -158,20 +152,11 @@ oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/graf
 
 # Create the Grafana dashboard
 echo -e "\n[7/12]Creating the Grafana dashboard"
-if oc get cm $GRAFANA_DASHBOARD_NAME -n $GRAFANA_NAMESPACE &> /dev/null; then
-    echo -e "Check. Deleting previous configuration..."
-    oc delete configmap $GRAFANA_DASHBOARD_NAME -n $GRAFANA_NAMESPACE
-    oc delete GrafanaDashboard $GRAFANA_DASHBOARD_NAME -n $GRAFANA_NAMESPACE
-fi
-oc create configmap $GRAFANA_DASHBOARD_NAME --from-file=$GRAFANA_DASHBOARD_KEY=openshift/ocp-monitoring/grafana/$GRAFANA_DASHBOARD_NAME.json -n $GRAFANA_NAMESPACE
-
 oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-04-dashboard.yaml \
+    -p DASHBOARD_GZIP="$(cat openshift/ocp-monitoring/grafana/quarkus-observability-dashboard.json | gzip | base64 -w0)" \
     -p DASHBOARD_NAME=$GRAFANA_DASHBOARD_NAME \
     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
-    -p CUSTOM_FOLDER_NAME="Quarkus Observability" \
-    -p DASHBOARD_KEY=$GRAFANA_DASHBOARD_KEY | oc apply -f -
-
-
+    -p CUSTOM_FOLDER_NAME="Quarkus Observability"  | oc apply -f -
 
 ##
 # 5) Logging

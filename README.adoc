@@ -245,14 +245,10 @@ oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/graf
     | oc apply -f -
 
 # Configure Grafana Dashboard for the quarkus-observability-app
-oc create configmap quarkus-observability-dashboard \
-    --from-file=dashboard.json=openshift/ocp-monitoring/grafana/dashboard.json -n grafana
-
 oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-04-dashboard.yaml \
+    -p DASHBOARD_GZIP="$(cat openshift/ocp-monitoring/grafana/quarkus-observability-dashboard.json | gzip | base64 -w0)" \
     -p DASHBOARD_NAME=quarkus-observability-dashboard \
-    -p OPERATOR_NAMESPACE=grafana \
-    -p CUSTOM_FOLDER_NAME="Quarkus Observability" \
-    -p DASHBOARD_KEY=dashboard.json | oc apply -f -
+    -p CUSTOM_FOLDER_NAME="Quarkus Observability"  | oc apply -f -
 ----
 
 After installing, you can access the Grafana UI and see the following dashboard:
