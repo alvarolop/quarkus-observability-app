@@ -2,6 +2,7 @@ apiVersion: template.openshift.io/v1
 kind: Template
 objects:
 
+
   - apiVersion: v1
     kind: Secret
     metadata:
@@ -13,6 +14,7 @@ objects:
       bucketnames: ${AWS_S3_BUCKET}
       endpoint: https://s3.${AWS_DEFAULT_REGION}.amazonaws.com
       region: "${AWS_DEFAULT_REGION}"
+
 
   - apiVersion: loki.grafana.com/v1
     kind: LokiStack
@@ -31,6 +33,8 @@ objects:
       storageClassName: gp3-csi 
       tenants:
         mode: ${LOGGING_NAMESPACE}
+
+
 
   - apiVersion: logging.openshift.io/v1
     kind: ClusterLogging
