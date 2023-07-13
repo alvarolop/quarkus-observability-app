@@ -102,7 +102,7 @@ spec:
           name: maven
         workspaces:
           - name: source
-            workspace: app-source
+            workspace: source
           - name: maven-settings
             workspace: maven-settings
             
