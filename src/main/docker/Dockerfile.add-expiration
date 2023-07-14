@@ -1,0 +1,13 @@
+####
+# This Dockerfile just allows you to set Quay expiration time in an image from a registry.
+# 
+# Adding a label like quay.expires-after=20h via the Dockerfile LABEL command will cause a tag to automatically expire after the time indicated. The time values could be something like 1h, 2d, 3w for hours, days, and weeks, respectively, from the time the image is built.
+#
+###
+ARG IMAGE_NAME=image-name
+ARG IMAGE_TAG=latest
+
+FROM ${IMAGE_NAME}:${IMAGE_TAG}
+
+ARG EXPIRATION_TIME=24h
+LABEL quay.expires-after=${EXPIRATION_TIME}
