@@ -426,7 +426,7 @@ It is possible to use Labels to set the automatic expiration of individual image
 podman build -f src/main/docker/Dockerfile.add-expiration \
     --build-arg IMAGE_NAME=quay.io/alopezme/quarkus-observability-app \
     --build-arg IMAGE_TAG=latest-micro \
-    --build-arg EXPIRATION_TIME=1h \
+    --build-arg EXPIRATION_TIME=2h \
     -t quay.io/alopezme/quarkus-observability-app:expiration-test .
 ----
 
@@ -434,8 +434,8 @@ podman build -f src/main/docker/Dockerfile.add-expiration \
 [source, bash]
 ----
 # Nothing related to expiration:
-podman inspect image --format='{{json .Config.Labels}}'  quay.io/alopezme/quarkus-observability-app:latest-micro
+podman inspect image --format='{{json .Config.Labels}}'  quay.io/alopezme/quarkus-observability-app:latest-micro | jq
 
 # Adds expiration label:
-podman inspect image --format='{{json .Config.Labels}}'  quay.io/alopezme/quarkus-observability-app:expiration-test
+podman inspect image --format='{{json .Config.Labels}}'  quay.io/alopezme/quarkus-observability-app:expiration-test | jq
 ----

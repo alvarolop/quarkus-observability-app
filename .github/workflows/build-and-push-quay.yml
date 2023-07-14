@@ -124,8 +124,8 @@ jobs:
           push: true
           context: .
           file: src/main/docker/Dockerfile.add-expiration
-          tags: ${{ env.IMAGE_BASE_NAME }}:${{ github.ref_name }}-expiration
+          tags: ${{ env.IMAGE_BASE_NAME }}:latest-micro-expiration
           build-args: |
             IMAGE_NAME=${{ env.IMAGE_BASE_NAME }}
             IMAGE_TAG=latest-micro
-            EXPIRATION_TIME="2h"
+            EXPIRATION_TIME=2h
