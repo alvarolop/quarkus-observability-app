@@ -30,7 +30,7 @@ on:
       - 'pom.xml'
       - '.dockerignore'
       - '.gitignore'
-      - '.github'
+      - '.github/**'
 
 jobs:
   build-native-artifact:
@@ -129,4 +129,3 @@ jobs:
             IMAGE_NAME=${{ env.IMAGE_BASE_NAME }}
             IMAGE_TAG=${{ github.ref_name }}
             EXPIRATION_TIME="1h"
-
