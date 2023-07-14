@@ -127,5 +127,5 @@ jobs:
           tags: ${{ env.IMAGE_BASE_NAME }}:${{ github.ref_name }}-expiration
           build-args: |
             IMAGE_NAME=${{ env.IMAGE_BASE_NAME }}
-            IMAGE_TAG=${{ github.ref_name }}
-            EXPIRATION_TIME="1h"
+            IMAGE_TAG=latest-micro
+            EXPIRATION_TIME="2h"
