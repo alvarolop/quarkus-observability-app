@@ -116,3 +116,16 @@ jobs:
           # Source: https://github.com/orgs/community/discussions/25725#discussioncomment-3248924
           tags: ${{ env.IMAGE_BASE_NAME }}:${{ github.ref_name }}
         if: startsWith(github.ref, 'refs/tags/') 
+
+      - name: Build and push image - Expiration
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: .
+          file: src/main/docker/Dockerfile.add-expiration
+          tags: ${{ env.IMAGE_BASE_NAME }}:${{ github.ref_name }}-expiration
+          build-args: |
+            IMAGE_NAME=${{ env.IMAGE_BASE_NAME }}
+            IMAGE_TAG=${{ github.ref_name }}
+            EXPIRATION_TIME="1h"
+
