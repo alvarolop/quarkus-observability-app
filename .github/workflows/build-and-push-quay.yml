@@ -30,6 +30,7 @@ on:
       - 'pom.xml'
       - '.dockerignore'
       - '.gitignore'
+      - '.github'
 
 jobs:
   build-native-artifact:
