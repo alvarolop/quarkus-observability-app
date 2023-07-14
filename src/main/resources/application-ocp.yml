@@ -24,7 +24,7 @@ quarkus:
   smallrye-openapi:
     path: /q/swagger
     info-title: Quarkus Observability App
-    info-version: 1.0.0
+    info-version: 1.0.2
     info-description: Just a simple app to test Metrics, Logging, Tracing, etc.
     info-contact-name: Alvaro Lopez Medina
     info-license-name: GNU General Public License v3.0
