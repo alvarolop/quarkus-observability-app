@@ -231,17 +231,12 @@ oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml | oc apply -f -
 # Install the Grafana Operator
 oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-01-operator.yaml | oc apply -f -
 
-# Deploy a Grafana Config
-oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-config.yaml | oc apply -f -
-
 # Deploy a Grafana Instance
 oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-instance.yaml | oc apply -f -
 
-# Configure Grafana DataSource
-oc adm policy add-cluster-role-to-user cluster-monitoring-view -z grafana-serviceaccount -n grafana
-
+# Create Datasource
 oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-03-datasource.yaml \
-    -p BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-serviceaccount -n grafana | awk '/Tokens/{ print $2 }') -n grafana --template='{{ .data.token | base64decode }}') \
+    -p BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-sa -n grafana | awk '/Tokens/{ print $2 }') -n grafana --template='{{ .data.token | base64decode }}') \
     | oc apply -f -
 
 # Configure Grafana Dashboard for the quarkus-observability-app
