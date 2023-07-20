@@ -9,6 +9,7 @@ objects:
       namespace: ${APP_NAMESPACE}
       labels:
         app: ${APP_NAME}
+        openshift.io/prometheus-rule-evaluation-scope: leaf-prometheus
     spec:
       groups:
       - name: too-many-hellos
