@@ -46,7 +46,7 @@ objects:
         resources:
           - subjectaccessreviews
 
-  - apiVersion: authorization.openshift.io/v1
+  - apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRoleBinding
     metadata:
       name: grafana-proxy
@@ -54,6 +54,7 @@ objects:
     roleRef:
       kind: ClusterRole
       name: grafana-proxy
+      apiGroup: rbac.authorization.k8s.io
     subjects:
       - kind: ServiceAccount
         name: grafana-sa
@@ -64,14 +65,15 @@ objects:
     metadata:
       name: grafana-cluster-monitoring-binding
       namespace: ${OPERATOR_NAMESPACE}
-    subjects:
-      - kind: ServiceAccount
-        namespace: ${OPERATOR_NAMESPACE}
-        name: grafana-sa
     roleRef:
       kind: ClusterRole
       name: cluster-monitoring-view
       apiGroup: rbac.authorization.k8s.io
+    subjects:
+      - kind: ServiceAccount
+        name: grafana-sa
+        namespace: ${OPERATOR_NAMESPACE}
+
 
   - apiVersion: grafana.integreatly.org/v1beta1
     kind: Grafana
