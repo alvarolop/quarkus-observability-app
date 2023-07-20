@@ -232,19 +232,19 @@ oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml | oc apply -f -
 [source, bash]
 ----
 # Install the Grafana Operator
-oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-01-operator.yaml | oc apply -f -
+oc process -f openshift/grafana/10-operator.yaml | oc apply -f -
 
 # Deploy a Grafana Instance
-oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-instance.yaml | oc apply -f -
+oc process -f openshift/grafana/20-instance.yaml | oc apply -f -
 
 # Create Datasource
-oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-03-datasource.yaml \
+oc process -f openshift/grafana/30-datasource.yaml \
     -p BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-sa -n grafana | awk '/Tokens/{ print $2 }') -n grafana --template='{{ .data.token | base64decode }}') \
     | oc apply -f -
 
 # Configure Grafana Dashboard for the quarkus-observability-app
-oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-04-dashboard.yaml \
-    -p DASHBOARD_GZIP="$(cat openshift/ocp-monitoring/grafana/quarkus-observability-dashboard.json | gzip | base64 -w0)" \
+oc process -f openshift/grafana/40-dashboard.yaml \
+    -p DASHBOARD_GZIP="$(cat openshift/grafana/quarkus-observability-dashboard.json | gzip | base64 -w0)" \
     -p DASHBOARD_NAME=quarkus-observability-dashboard \
     -p CUSTOM_FOLDER_NAME="Quarkus Observability"  | oc apply -f -
 ----

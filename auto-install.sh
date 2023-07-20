@@ -99,7 +99,7 @@ oc process -f openshift/quarkus-app/20-app.yaml \
 ## 
 
 # Add Service Monitor to collect metrics from the App
-echo -e "\n[2/12]Configure Prometheus to monitor RHDG"
+echo -e "\n[2/12]Configure Prometheus to monitor the App"
 oc process -f openshift/ocp-monitoring/20-service-monitor.yaml \
     -p APP_NAMESPACE=$APP_NAMESPACE \
     -p APP_NAME=$APP_NAME | oc apply -f -
@@ -124,7 +124,7 @@ oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml \
 
 # Deploy the Grafana Operator
 echo -e "\n[4/12]Deploying the Grafana operator"
-oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-01-operator.yaml \
+oc process -f openshift/grafana/10-operator.yaml \
     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
 echo -n "Waiting for pods ready..."
@@ -133,7 +133,7 @@ while [[ $(oc get pods -l control-plane=controller-manager -n $GRAFANA_NAMESPACE
 
 # Create a Grafana instance
 echo -e "\n[5/12]Creating a grafana instance"
-oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-02-instance.yaml \
+oc process -f openshift/grafana/20-instance.yaml \
     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
 echo -n "Waiting for ServiceAccount ready..."
@@ -144,14 +144,14 @@ BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-sa -n $GRAFANA_NAMESPACE |
 
 # Create a Grafana data source
 echo -e "\n[6/12]Creating the Grafana datasource"
-oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-03-datasource.yaml \
+oc process -f openshift/grafana/30-datasource.yaml \
     -p BEARER_TOKEN=$BEARER_TOKEN \
     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
 # Create the Grafana dashboard
 echo -e "\n[7/12]Creating the Grafana dashboard"
-oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-04-dashboard.yaml \
-    -p DASHBOARD_GZIP="$(cat openshift/ocp-monitoring/grafana/quarkus-observability-dashboard.json | gzip | base64 -w0)" \
+oc process -f openshift/grafana/40-dashboard.yaml \
+    -p DASHBOARD_GZIP="$(cat openshift/grafana/quarkus-observability-dashboard.json | gzip | base64 -w0)" \
     -p DASHBOARD_NAME=$GRAFANA_DASHBOARD_NAME \
     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
     -p CUSTOM_FOLDER_NAME="Quarkus Observability"  | oc apply -f -
