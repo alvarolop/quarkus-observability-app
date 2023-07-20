@@ -6,3 +6,6 @@ metadata:
 data:
   config.yaml: |
     enableUserWorkload: true
+    alertmanagerMain:
+      enabled: true
+      enableUserAlertmanagerConfig: false

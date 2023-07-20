@@ -205,7 +205,10 @@ In OpenShift Container Platform 4.12, you can enable monitoring for user-defined
 [source, bash]
 ----
 # Enable user workload monitoring
-oc apply -f openshift/ocp-monitoring/10-cm-user-workload-monitoring.yaml
+oc apply -f openshift/ocp-monitoring/10-cm-cluster-monitoring-config.yaml
+
+# Configure the user workload monitoring instance
+oc apply -f openshift/ocp-monitoring/11-cm-user-workload-monitoring-config.yaml
 
 # Add Service Monitor to collect metrics from the App
 oc process -f openshift/ocp-monitoring/20-service-monitor.yaml | oc apply -f -

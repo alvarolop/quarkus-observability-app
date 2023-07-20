@@ -61,12 +61,10 @@ fi
 
 # User workload monitoring
 
-if ! oc get cm cluster-monitoring-config -n openshift-monitoring &> /dev/null; then
-    echo -e "Check. Cluster monitoring is missing, creating the monitoring stack..."
-    oc apply -f openshift/ocp-monitoring/10-cm-user-workload-monitoring.yaml
-else
-    echo -e "Check. Cluster monitoring is ready, do nothing."
-fi
+echo -e "\n[0/12]Configuring User Workload Monitoring"
+oc apply -f openshift/ocp-monitoring/10-cm-cluster-monitoring-config.yaml
+oc apply -f openshift/ocp-monitoring/11-cm-user-workload-monitoring-config.yaml
+
 
 # Create an AWS S3 Bucket to store the logs
 ./openshift/ocp-logging/loki/aws-create-bucket.sh ./aws-env-vars
