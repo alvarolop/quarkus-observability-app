@@ -22,6 +22,7 @@ objects:
           for: 5s
           labels:
             severity: warning
+            email_to: alopezme@redhat.com
 
 parameters:
   - name: APP_NAMESPACE
