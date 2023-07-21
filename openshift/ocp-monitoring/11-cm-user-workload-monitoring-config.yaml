@@ -6,9 +6,19 @@ metadata:
 data:
   config.yaml: |
     alertmanager:
-      enabled: false
-      enableAlertmanagerConfig: false
+      enabled: true
+      enableAlertmanagerConfig: true
     prometheus:
+      # Maximum number of labels per scrape
+      enforcedLabelLimit: 500 
+      # Maximum length in characters of a label name
+      enforcedLabelNameLengthLimit: 50 
+      # Maximum length in characters of a label value
+      enforcedLabelValueLengthLimit: 600 
+      # Attach custom labels to every user metric
+      externalLabels:
+        region: alvaro
+        environment: lab
       resources:
         requests:
           cpu: 1
@@ -16,3 +26,4 @@ data:
         limits:
           cpu: 4
           memory: 8Gi
+      
