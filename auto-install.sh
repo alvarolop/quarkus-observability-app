@@ -2,6 +2,8 @@
 
 set -e
 
+source ./gmail-app-vars
+
 #####################################
 # Set your environment variables here
 #####################################
@@ -15,6 +17,10 @@ APP_NAME=app
 GRAFANA_NAMESPACE=grafana
 GRAFANA_DASHBOARD_NAME="quarkus-observability-dashboard"
 GRAFANA_DASHBOARD_KEY="dashboard.json"
+
+# ALERTING
+ALERTING_USERNAME=$GMAIL_USERNAME
+ALERTING_PASSWORD=$GMAIL_PASSWORD
 
 # LOGGING
 LOGGING_NAMESPACE=openshift-logging
@@ -64,6 +70,9 @@ fi
 echo -e "\n[0/12]Configuring User Workload Monitoring"
 oc apply -f openshift/ocp-monitoring/10-cm-cluster-monitoring-config.yaml
 oc apply -f openshift/ocp-monitoring/11-cm-user-workload-monitoring-config.yaml
+oc process -f openshift/ocp-monitoring/12-secret-alertmanager-main.yaml \
+    -p AUTH_USERNAME=$ALERTING_USERNAME \
+    -p AUTH_PASSWORD=$ALERTING_PASSWORD | oc apply -f - -n openshift-monitoring
 
 
 # Create an AWS S3 Bucket to store the logs
@@ -78,14 +87,9 @@ echo -e "\n[1/12]Deploying the Quarkus application"
 oc process -f openshift/quarkus-app/10-project.yaml \
     -p APP_NAMESPACE=$APP_NAMESPACE | oc apply -f -
 
-if oc get cm $APP_NAME-config -n $APP_NAMESPACE &> /dev/null; then
-    echo -e "Check. The ConfigMap already exists, recreating..."
-    oc delete configmap $APP_NAME-config -n $APP_NAMESPACE
-else
-    echo -e "Check. Creating the APP ConfigMap"
-fi
-
-oc create configmap $APP_NAME-config --from-file=application.yml=src/main/resources/application-ocp.yml -n $APP_NAMESPACE
+oc create configmap $APP_NAME-config -n $APP_NAMESPACE --dry-run=client --output yaml \
+    --from-file=application.yml=src/main/resources/application-ocp.yml \
+    | oc apply -f -
 
 oc process -f openshift/quarkus-app/20-app.yaml \
     -p APP_NAMESPACE=$APP_NAMESPACE \
@@ -116,6 +120,10 @@ oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml \
     -p APP_NAMESPACE=$APP_NAMESPACE \
     -p APP_NAME=$APP_NAME | oc apply -f -
 
+oc process -f openshift/ocp-alerting/20-alertmanagerconfig.yaml \
+    -p APP_NAMESPACE=$APP_NAMESPACE \
+    -p AUTH_USERNAME=$ALERTING_USERNAME \
+    -p AUTH_PASSWORD=$ALERTING_PASSWORD | oc apply -f -
 
 
 ##
