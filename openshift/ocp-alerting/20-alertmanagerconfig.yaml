@@ -1,0 +1,71 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: alertmanagerconfig
+objects:
+
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: alert-routing-to-mail-secret
+      namespace: ${APP_NAMESPACE}
+    type: Opaque 
+    stringData:
+      password: ${AUTH_PASSWORD}
+
+  - apiVersion: monitoring.coreos.com/v1beta1
+    kind: AlertmanagerConfig
+    metadata:
+      name: alert-routing-to-mail
+      namespace: ${APP_NAMESPACE}
+    spec:
+      route:
+        receiver: email-notification
+        groupBy: 
+          - namespace
+          - alertname
+      receivers:
+        - emailConfigs:
+            - to: alvarolop.medina@gmail.com
+              from: ${AUTH_USERNAME}
+              smarthost: smtp.gmail.com:587
+              authUsername: ${AUTH_USERNAME}
+              authPassword: 
+                key: password
+                name: alert-routing-to-mail-secret
+          name: email-notification
+
+  - apiVersion: monitoring.coreos.com/v1beta1
+    kind: AlertmanagerConfig
+    metadata:
+      name: alert-routing-to-mail-label
+      namespace: ${APP_NAMESPACE}
+    spec:
+      route:
+        receiver: email-notification
+        groupBy: 
+          - namespace
+          - alertname
+          - email_to
+      receivers:
+        - emailConfigs:
+            - to: "{{ .GroupLabels.email_to }}"
+              from: ${AUTH_USERNAME}
+              smarthost: smtp.gmail.com:587
+              authUsername: ${AUTH_USERNAME}
+              authPassword: 
+                key: password
+                name: alert-routing-to-mail-secret
+          name: email-notification
+
+parameters:
+  - name: APP_NAMESPACE
+    description: "The project where the application will be deployed."
+    required: false
+    value: quarkus-observability
+  - name: AUTH_USERNAME
+    description: "The mail sender of the alerts."
+    required: true
+  - name: AUTH_PASSWORD
+    description: "The APP password in Gmail."
+    required: true
