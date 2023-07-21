@@ -43,4 +43,5 @@ nb-configuration.xml
 /.quarkus/cli/plugins/
 
 aws-env-vars
+gmail-app-vars
 
