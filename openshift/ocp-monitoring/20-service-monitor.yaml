@@ -12,12 +12,9 @@ objects:
     spec:
       endpoints:
         - interval: 10s
-          targetPort: 8080
+          port: 8080-tcp
           path: /q/metrics
           scheme: http
-      namespaceSelector:
-        matchNames:
-          - ${APP_NAMESPACE}
       selector:
         matchLabels:
           app: ${APP_NAME}
