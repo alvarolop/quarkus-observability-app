@@ -18,6 +18,8 @@ objects:
       selector:
         matchLabels:
           app: ${APP_NAME}
+      targetLabels:
+        - app
 
 parameters:
   - name: APP_NAMESPACE
