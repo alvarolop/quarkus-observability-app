@@ -1,0 +1,72 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: grafana-datasource
+  annotations:
+    description: Template to create a Grafana data source on OCP.
+    tags: grafana,community,operator
+    iconClass: icon-cassandra
+    openshift.io/provider-display-name: Red Hat, Inc.
+    openshift.io/support-url: https://access.redhat.com
+objects:
+
+  - apiVersion: grafana.integreatly.org/v1beta1
+    kind: Grafana
+    metadata:
+      name: grafana-dev
+      namespace: ${OPERATOR_NAMESPACE}
+      labels:
+        app: grafana-dev
+        dashboards: grafana-dev
+    spec:
+      route:
+        spec: {}
+      config:
+        log:
+          mode: "console"
+        auth:
+          disable_login_form: "false"
+        auth.anonymous:
+          enabled: "True"
+        security:
+          admin_user: admin
+          admin_password: admin
+
+  - apiVersion: grafana.integreatly.org/v1beta1
+    kind: GrafanaDatasource
+    metadata:
+      name: ${DATASOURCE_NAME}
+      namespace: ${OPERATOR_NAMESPACE}
+      labels:
+        app: grafana-dev
+    spec:
+      instanceSelector:
+        matchLabels:
+          dashboards: grafana-dev
+      datasource:
+        access: proxy
+        editable: true
+        isDefault: true
+        jsonData:
+          httpHeaderName1: 'Authorization'
+          timeInterval: 5s
+          tlsSkipVerify: true
+        name: Prometheus
+        secureJsonData:
+          httpHeaderValue1: 'Bearer ${BEARER_TOKEN}'
+        type: prometheus
+        url: 'https://thanos-querier.openshift-monitoring.svc.cluster.local:9091'
+
+parameters:
+- name: OPERATOR_NAMESPACE
+  description: "The project where the operator will be installed."
+  required: false
+  value: "grafana"
+- name: DATASOURCE_NAME
+  description: "The name of the datasource."
+  required: false
+  value: "prometheus-grafana-datasource-dev"
+- name: BEARER_TOKEN
+  description: "Bearer token of the SA."
+  required: true
+  value: ""

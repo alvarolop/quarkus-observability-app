@@ -164,6 +164,12 @@ oc process -f openshift/grafana/40-dashboard.yaml \
     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
     -p CUSTOM_FOLDER_NAME="Quarkus Observability"  | oc apply -f -
 
+
+echo -e "\n[7.5/12]Creating the Grafana development instance"
+oc process -f openshift/grafana/90-dev-instance.yaml \
+    -p BEARER_TOKEN=$BEARER_TOKEN \
+    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
+
 ##
 # 5) Logging
 ##
