@@ -44,8 +44,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "refId": "A"
         }
@@ -103,8 +102,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "editorMode": "code",
           "exemplar": true,
@@ -200,8 +198,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "editorMode": "code",
           "exemplar": true,
@@ -231,8 +228,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "refId": "A"
         }
@@ -323,8 +319,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "editorMode": "code",
           "exemplar": true,
@@ -338,8 +333,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "editorMode": "code",
           "exemplar": true,
@@ -370,8 +364,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "refId": "A"
         }
@@ -460,8 +453,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "editorMode": "code",
           "exemplar": true,
@@ -474,8 +466,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "editorMode": "code",
           "exemplar": true,
@@ -488,8 +479,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "editorMode": "code",
           "exemplar": true,
@@ -586,8 +576,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "editorMode": "code",
           "exemplar": true,
@@ -599,8 +588,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "editorMode": "code",
           "exemplar": true,
@@ -613,8 +601,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "editorMode": "code",
           "exemplar": true,
@@ -712,8 +699,7 @@
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "exemplar": true,
           "expr": "rate({__name__=~\"container_network_receive_bytes_total\",namespace=~\"$namespace\",pod=~\"$pod\"}[5m])",
@@ -723,8 +709,7 @@
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "0e461693-2d1d-481e-a5a8-d5eaf997d8a2"
+            "type": "prometheus" 
           },
           "exemplar": true,
           "expr": "- rate({__name__=~\"container_network_transmit_bytes_total\",namespace=~\"$namespace\",pod=~\"$pod\"}[5m])",

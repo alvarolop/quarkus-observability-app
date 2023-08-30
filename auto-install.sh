@@ -159,10 +159,10 @@ oc process -f openshift/grafana/30-datasource.yaml \
 # Create the Grafana dashboard
 echo -e "\n[7/12]Creating the Grafana dashboard"
 oc process -f openshift/grafana/40-dashboard.yaml \
-    -p DASHBOARD_GZIP="$(cat openshift/grafana/quarkus-observability-dashboard.json | gzip | base64 -w0)" \
+    -p DASHBOARD_GZIP="$(cat openshift/grafana/app-observability-dashboard.json | gzip | base64 -w0)" \
     -p DASHBOARD_NAME=$GRAFANA_DASHBOARD_NAME \
     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
-    -p CUSTOM_FOLDER_NAME="Quarkus Observability"  | oc apply -f -
+    -p CUSTOM_FOLDER_NAME="App Observability"  | oc apply -f -
 
 
 echo -e "\n[7.5/12]Creating the Grafana development instance"
@@ -217,6 +217,8 @@ echo -e "\n[12/12]Deploying the Jaeger Instance"
 oc process -f openshift/ocp-distributed-tracing/20-jaeger.yaml \
     -p TRACING_PROJECT=$TRACING_PROJECT \
     -p DEPLOYMENT_NAME=$TRACING_DEPLOYMENT | oc apply -f -
+
+sleep 5
 
 
 ##
