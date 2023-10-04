@@ -14,7 +14,7 @@ objects:
   metadata:
     name: ${OPERATOR_NAMESPACE}
     annotations:
-      openshift.io/description: "This project contains all the resources related to the operator of Grafana 3.5"
+      openshift.io/description: "This project contains all the resources related to the operator of Grafana 5.4"
       openshift.io/display-name: "Grafana - Operator"
 - apiVersion: operators.coreos.com/v1
   kind: OperatorGroup
