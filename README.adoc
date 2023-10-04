@@ -329,7 +329,10 @@ image::kibana-dashboard.png["Kibana dashboard"]
 
 By default, the logging subsystem sends container and infrastructure logs to the default internal log store (That we created in options 1 and 2).
 
+[source, bash]
+----
 oc get Infrastructure/cluster -ojson | jq .status.infrastructureName
+----
 
 [source, bash]
 ----
@@ -348,9 +351,6 @@ Now, you can check the logs in Cloudwatch using the following command:
 source aws-env-vars
 aws --output json logs describe-log-groups --region=$AWS_DEFAULT_REGION
 ----
-
-
-
 
 
 
