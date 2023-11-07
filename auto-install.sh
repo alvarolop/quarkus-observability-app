@@ -218,7 +218,7 @@ oc process -f openshift/ocp-distributed-tracing/20-jaeger.yaml \
     -p TRACING_PROJECT=$TRACING_PROJECT \
     -p DEPLOYMENT_NAME=$TRACING_DEPLOYMENT | oc apply -f -
 
-sleep 5
+sleep 10
 
 
 ##
