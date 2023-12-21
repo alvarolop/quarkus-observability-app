@@ -128,6 +128,16 @@
                 text-decoration: none;
                 text-transform: uppercase;
             }
+            .left-column .api-error-button {
+                margin: 20px 0;
+                display: inline-block;
+                padding: 1rem 2rem;
+                background-color: #ac1c1c;
+                font-weight: 600;
+                color: white;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
             .right-column {
                 grid-column: span 4;
                 margin-top: 1rem;
@@ -264,8 +274,11 @@
                     <a href="/q/swagger-ui/" class="api-button">Visit the SWAGGER UI</a>
                     <p>We basically have three API Endpoints, you can try them from here:</p>
                     <a href="/api/hello" class="api-button">Hello</a>
-                    <a href="/api/hello-delayed" class="api-button">Hello Delayed</a>
-                    <a href="/api/hello-delayed/3000" class="api-button">Hello Delayed 3s</a>
+                    <a href="/api/hello-delayed" class="api-button">Delayed Hello</a>
+                    <a href="/api/hello-delayed/3000" class="api-button">Delayed Hello 3s</a>
+                    <p>We also provide two failing endpoints to test errors, you can try them from here:</p>
+                    <a href="/api/error" class="api-error-button">Error</a>
+                    <a href="/api/error-delayed" class="api-error-button">Delayed Error</a>
                     
         </li>
 
