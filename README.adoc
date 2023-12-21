@@ -84,7 +84,8 @@ In order to collect the logs, metrics, and traces from our application, we are g
 
 Access the https://code.quarkus.io/?g=org.example&a=quarkus-observability-app[Code Quarkus] site that will help you to generate the application quickstart with the Quarkus extensions:
 
-image::quarkus-quickstart.png[]
+.Quarkus Application Generator
+image::quarkus-quickstart.png["Quarkus Application Generator"]
 
 Generate the application and download it as `.zip`.
 
@@ -246,6 +247,15 @@ oc process -f openshift/ocp-distributed-tracing/tempo/20-tempostack.yaml | oc ap
 ----
 
 
+Once you have configured everything, you can access the Metrics tab and show stats retrieved directly from the Traces collected by the OpenTelemetry collector. This is an example of the output:
+
+
+.Red Hat Distributed Tracing - Metrics tab
+image::tempo-jaegerui-metrics.png["Red Hat Distributed Tracing - Metrics tab"]
+
+
+
+
 
 ==== Tracing backend 2: Jaeger [DEPRECATED]
 
@@ -257,6 +267,7 @@ oc apply -f openshift/ocp-distributed-tracing/jaeger/10-subscription.yaml
 # Deploy Tempo
 oc process -f openshift/ocp-distributed-tracing/jaeger/20-jaeger.yaml | oc apply -f -
 ----
+
 
 
 

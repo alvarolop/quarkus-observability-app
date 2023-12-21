@@ -100,9 +100,9 @@ objects:
           pipelines:
             traces:
               receivers: [otlp]
-              exporters: [otlp, spanmetrics] 
+              exporters: [otlp, spanmetrics]
             metrics:
-              receivers: [spanmetrics] 
+              receivers: [spanmetrics]
               exporters: [prometheus]
       
       
