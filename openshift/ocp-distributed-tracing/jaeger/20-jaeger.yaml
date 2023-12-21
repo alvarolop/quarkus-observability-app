@@ -1,6 +1,7 @@
 apiVersion: template.openshift.io/v1
 kind: Template
 objects:
+
   - apiVersion: project.openshift.io/v1
     kind: Project
     metadata:
@@ -8,6 +9,7 @@ objects:
       annotations:
         openshift.io/description: "Project to deploy Distributed Tracing components"
         openshift.io/display-name: "Tracing System"
+
   - apiVersion: jaegertracing.io/v1
     kind: Jaeger
     metadata:
@@ -24,6 +26,7 @@ objects:
       # OPTION 3: ElasticSearch + AMQ Streams (Kafka) + Jaeger 
       # strategy: streaming
       # Extra config ...
+      
 parameters:
   - name: TRACING_PROJECT
     description: "The project where Jaeger will be deployed."
