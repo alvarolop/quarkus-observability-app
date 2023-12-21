@@ -18,4 +18,13 @@ public class GreetingUtils {
             e.printStackTrace();
         }
     }
+
+    public void wait(int delay) {
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }
