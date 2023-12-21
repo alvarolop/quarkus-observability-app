@@ -1,6 +1,8 @@
 app:
   greeting:
     message: "Hello from RESTEasy Reactive"
+  delay:
+    default: 1000
 quarkus:
   log:
     console:
@@ -18,7 +20,8 @@ quarkus:
     enabled: true
     exporter:
       otlp:
-        endpoint: "http://jaeger-collector.tracing-system.svc.cluster.local:4317/"
+        # endpoint: "http://tempo-tempo-distributor.openshift-tempo.svc.cluster.local:4317/"
+        endpoint: "http://otel-collector.openshift-tempo.svc.cluster.local:4317/"
   swagger-ui:
     always-include: true
   smallrye-openapi:

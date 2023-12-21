@@ -1,6 +1,8 @@
 app:
   greeting:
     message: "Hello from RESTEasy Reactive"
+  delay:
+    default: 1000
 quarkus:
   health:
     openapi:

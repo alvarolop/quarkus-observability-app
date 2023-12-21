@@ -35,7 +35,18 @@ public class GreetingResource {
     @Counted(value = "app.hello-delayed.counter")
     public String helloDelayed() {
         Log.info(greetingConfig.message());
-        greetingUtils.evaluate();
+        greetingUtils.evaluate(greetingConfig.defaultDelay());
+        return greetingConfig.message();
+    }
+
+    @GET
+    @Path("/hello-delayed/{ms:\\d+}")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Timed(value = "app.hello-delayed-ms.timed", longTask = true)
+    @Counted(value = "app.hello-delayed-ms.counter")
+    public String helloDelayedSeconds(int ms) {
+        Log.info(greetingConfig.message());
+        greetingUtils.evaluate(ms);
         return greetingConfig.message();
     }
 }

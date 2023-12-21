@@ -9,10 +9,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class GreetingUtils {
 
     @WithSpan(value = "executeSubprocess", kind = SpanKind.SERVER)
-    public void evaluate() {
-        Log.info("Executing the subprocess");
+    public void evaluate(int delay) {
+        Log.info("Executing the subprocess with " + delay + " ms delay");
         try {
-            Thread.sleep(200L);
+            Thread.sleep(delay);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
