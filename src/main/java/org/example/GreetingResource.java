@@ -67,7 +67,7 @@ public class GreetingResource {
 
     @ServerExceptionMapper
     public RestResponse<String> mapException(BadRequestException x) {
-        return RestResponse.status(Response.Status.NOT_FOUND, "This is a generic error");
+        return RestResponse.status(Response.Status.INTERNAL_SERVER_ERROR, "This is a generic 5xx error");
     }
 
     @GET
