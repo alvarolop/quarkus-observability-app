@@ -82,23 +82,6 @@ objects:
       policyTypes:
       - Ingress
 
-
-  # Add NetworkPolicy to allow Openshift Logging pods to get Logs from the app
-  - apiVersion: networking.k8s.io/v1
-    kind: NetworkPolicy
-    metadata:
-      name: allow-from-openshift-logging
-      namespace: ${APP_NAMESPACE}
-    spec:
-      ingress:
-      - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: openshift-logging
-      podSelector: {}
-      policyTypes:
-      - Ingress
-
 parameters:
   - name: APP_NAMESPACE
     description: "The project where the application will be deployed."
