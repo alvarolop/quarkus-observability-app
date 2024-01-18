@@ -152,6 +152,13 @@ oc process -f openshift/grafana/20-instance.yaml \
 echo -n "Waiting for ServiceAccount ready..."
 while ! oc get sa grafana-sa -n $GRAFANA_NAMESPACE &> /dev/null; do   echo -n "." && sleep 1; done; echo -n -e " [OK]\n"
 
+GRAFANA_ROUTE=$(oc get routes -l app=grafana -n $GRAFANA_NAMESPACE --template='https://{{(index .items 0).spec.host }}')
+
+echo -e "\n[5.5/13]Creating a grafana ConsoleLink"
+oc process -f openshift/grafana/21-consolelink.yaml \
+    -p GRAFANA_NAMESPACE=$GRAFANA_NAMESPACE \
+    -p GRAFANA_ROUTE=$GRAFANA_ROUTE | oc apply -f -
+
 # --- In OCP 4.11 or higher ---
 BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-sa -n $GRAFANA_NAMESPACE | awk '/Tokens/{ print $2 }') -n $GRAFANA_NAMESPACE --template='{{ .data.token | base64decode }}')
 
@@ -254,7 +261,6 @@ sleep 10
 QUARKUS_ROUTE=$(oc get route $APP_NAME -n $APP_NAMESPACE --template='https://{{ .spec.host }}')
 TRACING_ROUTE=$(oc get route -l app.kubernetes.io/name=$TRACING_DEPLOYMENT -n $TRACING_DEPLOYMENT_PROJECT --template='https://{{(index .items 0).spec.host }}')
 LOKI_ROUTE=$(oc whoami --show-console)/monitoring/logs
-GRAFANA_ROUTE=$(oc get routes -l app=grafana -n $GRAFANA_NAMESPACE --template='https://{{(index .items 0).spec.host }}')
 
 # Grafana credentials
 GRAFANA_ADMIN=$(oc get secret grafana-admin-credentials -n $GRAFANA_NAMESPACE -o jsonpath='{.data.GF_SECURITY_ADMIN_USER}' | base64 --decode)
