@@ -176,12 +176,6 @@ oc process -f openshift/grafana/40-dashboard.yaml \
     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
     -p CUSTOM_FOLDER_NAME="App Observability"  | oc apply -f -
 
-
-echo -e "\n[7.5/13]Creating the Grafana development instance"
-oc process -f openshift/grafana/90-dev-instance.yaml \
-    -p BEARER_TOKEN=$BEARER_TOKEN \
-    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
-
 ##
 # 5) Logging
 ##
@@ -252,6 +246,14 @@ oc process -f openshift/ocp-distributed-tracing/tempo/20-tempostack.yaml \
 
 sleep 10
 
+TEMPO_ROUTE=$(oc get routes -l app.kubernetes.io/instance=$TRACING_DEPLOYMENT -n $TRACING_DEPLOYMENT_PROJECT --template='https://{{(index .items 0).spec.host }}')
+
+oc process -f openshift/ocp-distributed-tracing/tempo/21-consolelink.yaml \
+    -p TRACING_DEPLOYMENT_PROJECT=$TRACING_DEPLOYMENT_PROJECT \
+    -p TRACING_DEPLOYMENT=$TRACING_DEPLOYMENT \
+    -p TEMPO_ROUTE=$TEMPO_ROUTE | oc apply -f -
+
+
 
 ##
 # 8) Wrap Up
@@ -262,9 +264,9 @@ QUARKUS_ROUTE=$(oc get route $APP_NAME -n $APP_NAMESPACE --template='https://{{ 
 TRACING_ROUTE=$(oc get route -l app.kubernetes.io/name=$TRACING_DEPLOYMENT -n $TRACING_DEPLOYMENT_PROJECT --template='https://{{(index .items 0).spec.host }}')
 LOKI_ROUTE=$(oc whoami --show-console)/monitoring/logs
 
-# Grafana credentials
-GRAFANA_ADMIN=$(oc get secret grafana-admin-credentials -n $GRAFANA_NAMESPACE -o jsonpath='{.data.GF_SECURITY_ADMIN_USER}' | base64 --decode)
-GRAFANA_PASSW=$(oc get secret grafana-admin-credentials -n $GRAFANA_NAMESPACE -o jsonpath='{.data.GF_SECURITY_ADMIN_PASSWORD}' | base64 --decode)
+# # Grafana credentials
+# GRAFANA_ADMIN=$(oc get secret grafana-admin-credentials -n $GRAFANA_NAMESPACE -o jsonpath='{.data.GF_SECURITY_ADMIN_USER}' | base64 --decode)
+# GRAFANA_PASSW=$(oc get secret grafana-admin-credentials -n $GRAFANA_NAMESPACE -o jsonpath='{.data.GF_SECURITY_ADMIN_PASSWORD}' | base64 --decode)
 
 # TODO: Init the Grafana Dashboard. Needs to change the dashboard logic
 echo -e "\nInitializing the Grafana dashbaord with the first API request..."
@@ -276,5 +278,5 @@ echo -e " * Grafana: $GRAFANA_ROUTE"
 echo -e " * Loki: $LOKI_ROUTE"
 echo -e " * Tracing: $TRACING_ROUTE"
 
-echo -e "\nCredentials:"
-echo -e " * Grafana (User / Pass): $GRAFANA_ADMIN / $GRAFANA_PASSW"
+# echo -e "\nCredentials:"
+# echo -e " * Grafana (User / Pass): $GRAFANA_ADMIN / $GRAFANA_PASSW"

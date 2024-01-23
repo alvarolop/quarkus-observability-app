@@ -178,6 +178,10 @@ objects:
           enable_login_token: "True"
           header_property: "username"
           header_name: "X-Forwarded-User"
+        users:
+          viewers_can_edit: "True"
+        security:
+          admin_user: alopezme
 parameters:
 - name: OPERATOR_NAMESPACE
   description: "The project where the operator will be installed."
