@@ -1,0 +1,30 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: tempo-consolelink
+objects:
+
+  - apiVersion: console.openshift.io/v1
+    kind: ConsoleLink
+    metadata:
+      name: ${TRACING_DEPLOYMENT_PROJECT}-${TRACING_DEPLOYMENT}
+    spec:
+      href: ${TEMPO_ROUTE}
+      location: ApplicationMenu
+      text: Jaeger UI
+      applicationMenu:
+        section: Observability
+        imageURL: https://api.nuget.org/v3-flatcontainer/jaeger/1.0.3/icon
+
+parameters:
+- name: TEMPO_ROUTE
+  description: "The project where the cluster will be installed."
+  required: true
+- name: TRACING_DEPLOYMENT_PROJECT
+  description: "The project where the cluster will be installed."
+  required: false
+  value: "openshift-tempo"
+- name: TRACING_DEPLOYMENT
+  description: "The name of the Grafana cluster."
+  required: false
+  value: "tempo"
