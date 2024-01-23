@@ -151,7 +151,7 @@ oc process -f openshift/grafana/20-instance.yaml \
 
 echo -n "Waiting for ServiceAccount ready..."
 while ! oc get sa grafana-sa -n $GRAFANA_NAMESPACE &> /dev/null; do   echo -n "." && sleep 1; done; echo -n -e " [OK]\n"
-
+sleep 10
 GRAFANA_ROUTE=$(oc get routes -l app=grafana -n $GRAFANA_NAMESPACE --template='https://{{(index .items 0).spec.host }}')
 
 echo -e "\n[5.5/13]Creating a grafana ConsoleLink"
