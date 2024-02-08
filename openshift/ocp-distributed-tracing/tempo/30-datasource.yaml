@@ -1,0 +1,45 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+
+  # TODO: PEnding work documented in this blog
+  # http://tempo-tempo-query-frontend.openshift-tempo.svc.cluster.local:3200
+  # https://grafana.com/blog/2023/07/28/simplify-managing-grafana-tempo-instances-in-kubernetes-with-the-tempo-operator/#sending-traces-and-configuring-grafana
+  - apiVersion: grafana.integreatly.org/v1beta1
+    kind: GrafanaDatasource
+    metadata:
+      name: ${DATASOURCE_NAME}
+      namespace: ${OPERATOR_NAMESPACE}
+      labels:
+        app: grafana
+    spec:
+      instanceSelector:
+        matchLabels:
+          dashboards: grafana
+      datasource:
+        access: proxy
+        editable: true
+        isDefault: true
+        jsonData:
+          httpHeaderName1: 'Authorization'
+          timeInterval: 5s
+          tlsSkipVerify: true
+        name: Prometheus
+        secureJsonData:
+          httpHeaderValue1: 'Bearer ${BEARER_TOKEN}'
+        type: prometheus
+        url: 'https://thanos-querier.openshift-monitoring.svc.cluster.local:9091'
+
+parameters:
+- name: OPERATOR_NAMESPACE
+  description: "The project where the operator will be installed."
+  required: false
+  value: "grafana"
+- name: DATASOURCE_NAME
+  description: "The name of the datasource."
+  required: false
+  value: "prometheus-grafana-datasource"
+- name: BEARER_TOKEN
+  description: "Bearer token of the SA."
+  required: true
+  value: ""

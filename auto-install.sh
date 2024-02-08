@@ -141,7 +141,7 @@ oc process -f openshift/grafana/10-operator.yaml \
     -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE | oc apply -f -
 
 echo -n "Waiting for pods ready..."
-while [[ $(oc get pods -l control-plane=controller-manager -n $GRAFANA_NAMESPACE -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo -n "." && sleep 1; done; echo -n -e "  [OK]\n"
+while [[ $(oc get pods -l app.kubernetes.io/name=grafana-operator -n $GRAFANA_NAMESPACE -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo -n "." && sleep 1; done; echo -n -e "  [OK]\n"
 
 
 # Create a Grafana instance
@@ -238,6 +238,8 @@ while [[ $(oc get pods -l "app.kubernetes.io/name=tempo-operator" -n $TRACING_OP
 
 # Deploy TempoStack
 echo -e "\n[13/13]Deploying the Grafana Tempo Instance"
+
+sleep 10
 
 oc process -f openshift/ocp-distributed-tracing/tempo/20-tempostack.yaml \
     --param-file aws-env-vars --ignore-unknown-parameters=true \
