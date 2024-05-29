@@ -27,6 +27,7 @@ LOGGING_NAMESPACE=openshift-logging
 LOKISTACK_NAME=logging-loki
 
 # DISTRIBUTED TRACING
+OPENTELEMETRY_OPERATOR_PROJECT=openshift-opentelemetry-operator
 TRACING_OPERATOR_PROJECT=openshift-tempo-operator
 TRACING_DEPLOYMENT_PROJECT=openshift-tempo
 TRACING_DEPLOYMENT=tempo
@@ -222,7 +223,7 @@ echo -e "\n[11/13]Deploying the Red Hat build of OpenTelemetry for the telemetry
 oc apply -f openshift/ocp-opentelemetry/10-subscription.yaml
 
 echo -n "Waiting for operator pods to be ready..."
-while [[ $(oc get pods -l "app.kubernetes.io/name=tempo-operator" -n $TRACING_OPERATOR_PROJECT -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo -n "." && sleep 1; done; echo -n -e "  [OK]\n"
+while [[ $(oc get pods -l "app.kubernetes.io/name=opentelemetry-operator" -n $OPENTELEMETRY_OPERATOR_PROJECT -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo -n "." && sleep 1; done; echo -n -e "  [OK]\n"
 
 
 ##
@@ -236,11 +237,10 @@ oc apply -f openshift/ocp-distributed-tracing/tempo/10-subscription.yaml
 echo -n "Waiting for operator pods to be ready..."
 while [[ $(oc get pods -l "app.kubernetes.io/name=tempo-operator" -n $TRACING_OPERATOR_PROJECT -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo -n "." && sleep 1; done; echo -n -e "  [OK]\n"
 
-# Deploy TempoStack
-echo -e "\n[13/13]Deploying the Grafana Tempo Instance"
-
 sleep 10
 
+# Deploy TempoStack
+echo -e "\n[13/13]Deploying the Grafana Tempo Instance"
 oc process -f openshift/ocp-distributed-tracing/tempo/20-tempostack.yaml \
     --param-file aws-env-vars --ignore-unknown-parameters=true \
     -p TRACING_DEPLOYMENT_PROJECT=$TRACING_DEPLOYMENT_PROJECT \
