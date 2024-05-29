@@ -254,6 +254,10 @@ Once you have configured everything, you can access the Metrics tab and show sta
 image::tempo-jaegerui-metrics.png["Red Hat Distributed Tracing - Metrics tab"]
 
 
+===== Dashboards
+
+By default, the Grafana Tempo operator does not configure or provide any Grafana Dashboards for monitoring. Therefore, I have collected the ones provided upstream in this folder: https://github.com/grafana/tempo/tree/main/operations/tempo-mixin-compiled.
+
 
 
 

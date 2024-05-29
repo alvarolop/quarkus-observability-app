@@ -255,6 +255,40 @@ oc process -f openshift/ocp-distributed-tracing/tempo/21-consolelink.yaml \
     -p TRACING_DEPLOYMENT=$TRACING_DEPLOYMENT \
     -p TEMPO_ROUTE=$TEMPO_ROUTE | oc apply -f -
 
+# Create the Grafana dashboards for Tempo
+echo -e "\n[14/13]Creating the Grafana dashboards for Tempo"
+DASHBOARDS_DIR="./openshift/ocp-distributed-tracing/tempo/dashboards-mixin-compiled"
+oc process -f openshift/ocp-distributed-tracing/tempo/30-dashboard.yaml \
+    -p DASHBOARD_GZIP="$(cat $DASHBOARDS_DIR/tempo-operational.json | gzip | base64 -w0)" \
+    -p DASHBOARD_NAME="tempo-operational" \
+    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
+    -p CUSTOM_FOLDER_NAME="Grafana Tempo"  | oc apply -f -
+oc process -f openshift/ocp-distributed-tracing/tempo/30-dashboard.yaml \
+    -p DASHBOARD_GZIP="$(cat $DASHBOARDS_DIR/tempo-reads.json | gzip | base64 -w0)" \
+    -p DASHBOARD_NAME="tempo-reads" \
+    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
+    -p CUSTOM_FOLDER_NAME="Grafana Tempo"  | oc apply -f -
+oc process -f openshift/ocp-distributed-tracing/tempo/30-dashboard.yaml \
+    -p DASHBOARD_GZIP="$(cat $DASHBOARDS_DIR/tempo-resources.json | gzip | base64 -w0)" \
+    -p DASHBOARD_NAME="tempo-resources" \
+    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
+    -p CUSTOM_FOLDER_NAME="Grafana Tempo"  | oc apply -f -
+oc process -f openshift/ocp-distributed-tracing/tempo/30-dashboard.yaml \
+    -p DASHBOARD_GZIP="$(cat $DASHBOARDS_DIR/tempo-rollout-progress.json | gzip | base64 -w0)" \
+    -p DASHBOARD_NAME="tempo-rollout-progress" \
+    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
+    -p CUSTOM_FOLDER_NAME="Grafana Tempo"  | oc apply -f -
+oc process -f openshift/ocp-distributed-tracing/tempo/30-dashboard.yaml \
+    -p DASHBOARD_GZIP="$(cat $DASHBOARDS_DIR/tempo-tenants.json | gzip | base64 -w0)" \
+    -p DASHBOARD_NAME="tempo-tenants" \
+    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
+    -p CUSTOM_FOLDER_NAME="Grafana Tempo"  | oc apply -f -
+oc process -f openshift/ocp-distributed-tracing/tempo/30-dashboard.yaml \
+    -p DASHBOARD_GZIP="$(cat $DASHBOARDS_DIR/tempo-writes.json | gzip | base64 -w0)" \
+    -p DASHBOARD_NAME="tempo-writes" \
+    -p OPERATOR_NAMESPACE=$GRAFANA_NAMESPACE \
+    -p CUSTOM_FOLDER_NAME="Grafana Tempo"  | oc apply -f -
+
 
 
 ##
