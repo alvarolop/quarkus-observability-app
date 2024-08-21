@@ -4,6 +4,13 @@ kind: Kustomization
 
 namespace: quarkus-observability
 
+configMapGenerator:
+  - name: app-config
+    files:
+      - ../../src/main/resources/application-ocp.yaml
+    options:
+      disableNameSuffixHash: true
+
 resources:
   - ns-quarkus-observability.yaml
   - deployment-app.yaml
