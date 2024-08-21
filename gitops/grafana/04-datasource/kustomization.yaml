@@ -4,7 +4,3 @@ kind: Kustomization
 resources:
   - grafanadatasource-prometheus-grafana.yaml
   - secret-grafana-sa-token.yaml
-  # - job-create-prometheus-token-secret.yaml
-  # - role-create-prometheus-token-secret.yaml
-  # - rolebinding-create-prometheus-token-secret.yaml
-  # - sa-job-create-prometheus-token-secret.yaml
