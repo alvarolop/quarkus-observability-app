@@ -1,7 +1,6 @@
 package org.example;
 
 import io.quarkus.test.junit.QuarkusTest;
-import jakarta.ws.rs.Path;
 
 import org.junit.jupiter.api.Test;
 
