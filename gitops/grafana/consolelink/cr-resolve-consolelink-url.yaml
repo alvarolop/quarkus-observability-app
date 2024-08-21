@@ -12,3 +12,11 @@ rules:
   verbs:
   - get
   - list
+- apiGroups:
+  - console.openshift.io
+  resources:
+  - consolelinks
+  verbs:
+  - get
+  - list
+  - patch
