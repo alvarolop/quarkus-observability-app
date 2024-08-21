@@ -19,3 +19,10 @@ spec:
       prune: false
       selfHeal: false
     syncOptions: []
+  hooks:
+    - name: resolve-consolelink-url
+      type: PreSync
+      resource:
+        group: batch
+        kind: Job
+        name: resolve-consolelink-url
