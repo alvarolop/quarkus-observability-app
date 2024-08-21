@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: quarkus-observability
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
+    openshift.io/description: "Project to deploy the observability app"
+    openshift.io/display-name: "Observability Test Environment"
