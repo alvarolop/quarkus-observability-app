@@ -4,6 +4,8 @@ kind: Subscription
 metadata:
   name: grafana-operator
   namespace: grafana
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
 spec:
   channel: v5
   installPlanApproval: Automatic

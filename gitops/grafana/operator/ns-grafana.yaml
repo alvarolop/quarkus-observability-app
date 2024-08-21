@@ -5,5 +5,5 @@ metadata:
   name: grafana
   annotations:
     argocd.argoproj.io/sync-wave: "-10"
-    openshift.io/description: "This project contains all the resources related to the operator of Grafana 5.4"
+    openshift.io/description: "This project contains all the resources related to the operator of Grafana 5"
     openshift.io/display-name: "Grafana - Operator"

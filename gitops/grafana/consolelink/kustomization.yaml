@@ -1,0 +1,6 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - consolelink-grafana-grafana.yaml
+  - job-resolve-consolelink-url.yaml

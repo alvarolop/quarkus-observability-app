@@ -1,0 +1,25 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: resolve-consolelink-url
+  namespace: grafana
+spec:
+  template:
+    spec:
+      containers:
+      - name: consolelink-resolver
+        image: openshift-cli
+        command:
+        - "/bin/bash"
+        - "-c"
+        - |
+          APP_URL=$(oc get route grafana-route -n grafana -o jsonpath='{.spec.host}')
+          if [[ -n "$APP_URL" ]]; then
+              oc patch consolelink grafana-grafana --type=merge -p '{"spec":{"href":"https://'"$APP_URL"'"}}'
+          else
+              echo "Route not found, cannot create ConsoleLink"
+              exit 1
+          fi
+      restartPolicy: OnFailure
+  ttlSecondsAfterFinished: 300  # Job will be deleted 5 mins after completion

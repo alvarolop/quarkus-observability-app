@@ -4,6 +4,8 @@ kind: OperatorGroup
 metadata:
   name: grafana-operator
   namespace: grafana
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
 spec:
   targetNamespaces:
     - grafana
