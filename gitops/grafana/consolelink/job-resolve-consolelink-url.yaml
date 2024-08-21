@@ -6,12 +6,7 @@ metadata:
   namespace: grafana
   annotations:
     argocd.argoproj.io/hook: PreSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
-  completions: 1
-  parallelism: 1
-  backoffLimit: 10
-  activeDeadlineSeconds: 240
   template:
     spec:
       containers:
