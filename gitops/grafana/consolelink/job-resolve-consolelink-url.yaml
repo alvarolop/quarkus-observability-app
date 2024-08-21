@@ -5,7 +5,7 @@ metadata:
   name: resolve-consolelink-url
   namespace: grafana
   annotations:
-    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook: PostSync
 spec:
   template:
     spec:
