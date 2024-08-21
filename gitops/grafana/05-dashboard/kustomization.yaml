@@ -10,5 +10,5 @@ configMapGenerator:
       disableNameSuffixHash: true
 
 resources:
-  - grafanadashboard-quarkus-observability-dashboard.yaml
+  - grafanadashboard-quarkus-observability.yaml
 

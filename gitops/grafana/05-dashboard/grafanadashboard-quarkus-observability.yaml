@@ -2,7 +2,7 @@
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
-  name: quarkus-observability-dashboard
+  name: quarkus-observability
   labels:
     app: grafana
   annotations:
