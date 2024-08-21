@@ -9,14 +9,15 @@ spec:
     spec:
       containers:
       - name: consolelink-resolver
-        image: openshift-cli
+        image: registry.redhat.io/openshift4/ose-cli-rhel9:latest
         command:
         - "/bin/bash"
         - "-c"
         - |
-          APP_URL=$(oc get route grafana-route -n grafana -o jsonpath='{.spec.host}')
-          if [[ -n "$APP_URL" ]]; then
-              oc patch consolelink grafana-grafana --type=merge -p '{"spec":{"href":"https://'"$APP_URL"'"}}'
+          GRAFANA_URL=$(oc get route grafana-route -n grafana -o jsonpath='{.spec.host}')
+          echo "Thhe Grafana URL is $GRAFANA_URL"
+          if [[ -n "$GRAFANA_URL" ]]; then
+              oc patch consolelink grafana-grafana --type=merge -p '{"spec":{"href":"https://'"$GRAFANA_URL"'"}}'
           else
               echo "Route not found, cannot create ConsoleLink"
               exit 1
