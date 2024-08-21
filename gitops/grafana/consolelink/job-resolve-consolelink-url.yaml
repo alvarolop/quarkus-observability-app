@@ -5,10 +5,14 @@ metadata:
   name: resolve-consolelink-url
   namespace: grafana
 spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 10
+  activeDeadlineSeconds: 240
   template:
     spec:
       containers:
-      - name: consolelink-resolver
+      - name: resolve-consolelink-url
         image: registry.redhat.io/openshift4/ose-cli-rhel9:latest
         command:
         - "/bin/bash"
@@ -22,5 +26,8 @@ spec:
               echo "Route not found, cannot create ConsoleLink"
               exit 1
           fi
-      restartPolicy: OnFailure
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      serviceAccountName: job-resolve-consolelink-url
+      terminationGracePeriodSeconds: 30
   ttlSecondsAfterFinished: 300  # Job will be deleted 5 mins after completion
