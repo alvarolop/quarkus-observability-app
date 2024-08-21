@@ -4,24 +4,9 @@ kind: Kustomization
 
 namespace: grafana
 
-configMapGenerator:
-  - name: quarkus-observability-dashboard
-    files:
-      - dashboard.json
-    options:
-      disableNameSuffixHash: true
-
 resources:
-  - operator
-
-  - cm-ocp-injected-certs.yaml
-  - secret-grafana-proxy.yaml
-  - cr-grafana-proxy.yaml
-  - crb-grafana-cluster-monitoring.yaml
-  - crb-grafana-proxy.yaml
-  - grafana-grafana.yaml
-
-  - consolelink
-
-  - grafanadashboard-quarkus-observability-dashboard.yaml
-
+  - 01-operator
+  - 02-grafana
+  - 03-consolelink
+  # - 04-datasource
+  - 05-dashboard
