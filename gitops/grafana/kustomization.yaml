@@ -8,6 +8,8 @@ configMapGenerator:
   - name: quarkus-observability-dashboard
     files:
       - dashboard.json
+    options:
+      disableNameSuffixHash: true
 
 resources:
   - operator
