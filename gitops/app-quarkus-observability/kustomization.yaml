@@ -7,7 +7,7 @@ namespace: quarkus-observability
 configMapGenerator:
   - name: app-config
     files:
-      - ../../src/main/resources/application-ocp.yml
+      - application-ocp.yml
     options:
       disableNameSuffixHash: true
 
