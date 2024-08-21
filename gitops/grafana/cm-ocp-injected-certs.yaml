@@ -5,4 +5,3 @@ metadata:
   labels:
     config.openshift.io/inject-trusted-cabundle: "true"
   name: ocp-injected-certs
-  namespace: grafana
