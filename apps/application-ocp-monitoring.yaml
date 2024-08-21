@@ -3,15 +3,15 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   labels:
-    app: grafana
-  name: grafana
+    app: ocp-monitoring
+  name: ocp-monitoring
   namespace: gitops
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
   project: default
   source:
-    path: gitops/grafana
+    path: gitops/ocp-monitoring
     repoURL: https://github.com/alvarolop/quarkus-observability-app.git
     targetRevision: main
   syncPolicy:
