@@ -1,0 +1,11 @@
+---
+# This networkPolicy is optional as is "included" in the second, but 
+# for the sake of clarity, I'm adding it to the configuration
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: deny-by-default
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
