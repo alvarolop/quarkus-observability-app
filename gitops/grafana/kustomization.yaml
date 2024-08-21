@@ -8,5 +8,5 @@ resources:
   - 01-operator
   - 02-grafana
   - 03-consolelink
-  # - 04-datasource
+  - 04-datasource
   - 05-dashboard
