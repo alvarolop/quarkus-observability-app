@@ -188,6 +188,10 @@ oc apply -f openshift/ocp-logging/00-subscription.yaml
 echo -n "Waiting for operator pods to be ready..."
 while [[ $(oc get pods -l "name=cluster-logging-operator" -n $LOGGING_NAMESPACE -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do echo -n "." && sleep 1; done; echo -n -e "  [OK]\n"
 
+echo -e "\nCreate the Cluster Logging Forwarder"
+oc process -f openshift/ocp-logging/log-forwarding/cluster-log-forwarder-aws.yaml \
+    --param-file aws-env-vars --ignore-unknown-parameters=true \
+    -p LOGGING_NAMESPACE=$LOGGING_NAMESPACE | oc apply -f -
 
 # Install the Openshift Logging operator
 echo -e "\n[9/13]Deploying the Loki operator"
