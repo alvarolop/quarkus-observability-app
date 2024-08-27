@@ -30,7 +30,7 @@ on:
       - 'pom.xml'
       - '.dockerignore'
       - '.gitignore'
-      - '.github/**'
+      - '.github/workflows/build-and-push-quay.yml'
 
 jobs:
   build-native-artifact:
