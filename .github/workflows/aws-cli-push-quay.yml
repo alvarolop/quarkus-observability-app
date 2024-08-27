@@ -1,6 +1,6 @@
 name: aws-cli-push-quay
 
-run-name: Build and Push a Container image to Quay.io that contains both oc and aws cli 🚀
+run-name: Build and Push AWS-OC Container image to Quay.io🚀
 
 env:
   IMAGE_BASE_NAME: "quay.io/alopezme/aws-cli"
@@ -16,13 +16,12 @@ on:
   push:
     paths:
       - 'dockerfile-aws/**'
+      - '.github/workflows/aws-cli-push-quay.yml'
 
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-    needs: 
-      - build-container
-    name: "Build Native Image"
+    name: "Build AWS-OC Image"
     steps:
 
       - name: Checkout the code
