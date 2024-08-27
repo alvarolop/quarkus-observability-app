@@ -1,0 +1,44 @@
+name: aws-cli-push-quay
+
+run-name: Build and Push a Container image to Quay.io that contains both oc and aws cli 🚀
+
+env:
+  IMAGE_BASE_NAME: "quay.io/alopezme/aws-cli"
+
+# This section ensures that new pushes cancel current executions of the workflow
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  # schedule:
+  #   - cron: '0 10 * * *'
+  push:
+    paths:
+      - 'dockerfile-aws/**'
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    needs: 
+      - build-container
+    name: "Build Native Image"
+    steps:
+
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Login to Quay.io
+        uses: docker/login-action@v2
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_REPO_USERNAME }}
+          password: ${{ secrets.QUAY_REPO_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: .
+          file: dockerfile-aws/Dockerfile
+          tags: ${{ env.IMAGE_BASE_NAME }}:latest
