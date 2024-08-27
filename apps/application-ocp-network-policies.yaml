@@ -9,6 +9,7 @@ metadata:
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
+    namespace: quarkus-observability
   project: default
   source:
     path: gitops/ocp-network-policies
