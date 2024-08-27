@@ -1,4 +1,4 @@
-FROM registry.redhat.io/openshift4/ose-cli-rhel9:latest
+FROM quay.io/openshift/origin-cli:4.16
 
 # Install dependencies
 RUN yum install -y unzip
