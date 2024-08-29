@@ -3,15 +3,15 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   labels:
-    app: ocp-distributed-tracing
-  name: ocp-distributed-tracing
+    app: ocp-dist-tracing
+  name: ocp-dist-tracing
   namespace: gitops
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
   project: default
   source:
-    path: gitops/ocp-distributed-tracing
+    path: gitops/ocp-dist-tracing
     repoURL: https://github.com/alvarolop/quarkus-observability-app.git
     targetRevision: main
   syncPolicy:
