@@ -9,9 +9,12 @@ source ./gmail-app-vars
 # Set your environment variables here
 #####################################
 
-
+# S3 Buckets
 LOKI_BUCKET="s3-bucket-loki-alvaro"
 TEMPO_BUCKET="s3-bucket-tempo-alvaro"
+
+# ALERTING
+ALERTING_PASSWORD=$GMAIL_PASSWORD
 
 
 #####################################
@@ -67,5 +70,9 @@ oc process -f prerequisites/aws-s3-secret.yaml \
     -p SECRET_NAME=$LOKI_BUCKET \
     -p AWS_S3_BUCKET=$LOKI_BUCKET | oc apply -f -
 
-
+# Create the Quarkus Obs Alerting Pass
+echo -e "\nCreate the Quarkus Obs Alerting Pass"
+SECRET_NAMESPACE=quarkus-observability
+oc process -f prerequisites/secret-alert-routing-to-mail.yaml \
+    -p AUTH_PASSWORD=$ALERTING_PASSWORD | oc apply -f -
 

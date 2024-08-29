@@ -1,0 +1,21 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: rules-quarkus-observability
+  labels:
+    app: quarkus-observability
+    openshift.io/prometheus-rule-evaluation-scope: leaf-prometheus
+spec:
+  groups:
+  - name: too-many-hellos
+    rules:
+    - alert: TooManyHellos
+      annotations:
+        description: "Quarkus app \"{{ $labels.pod }}\" received too many `/hello` reqs"
+        summary: "Quarkus app \"{{ $labels.pod }}\" received too many /hello reqs in the last minute"
+      expr: 'rate(app_hello_counter_total{namespace="${CLUSTER_NAMESPACE}"}[1m]) > 0.1' 
+      for: 5s
+      labels:
+        severity: warning
+        email_to: alopezme@redhat.com

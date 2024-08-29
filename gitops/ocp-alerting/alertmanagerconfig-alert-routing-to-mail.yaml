@@ -1,0 +1,21 @@
+---
+apiVersion: monitoring.coreos.com/v1beta1
+kind: AlertmanagerConfig
+metadata:
+  name: alert-routing-to-mail
+spec:
+  route:
+    receiver: email-notification
+    groupBy: 
+      - namespace
+      - alertname
+  receivers:
+    - emailConfigs:
+        - to: alvarolop.medina@gmail.com
+          from: ${AUTH_USERNAME}
+          smarthost: smtp.gmail.com:587
+          authUsername: ${AUTH_USERNAME}
+          authPassword: 
+            key: password
+            name: alert-routing-to-mail
+      name: email-notification
