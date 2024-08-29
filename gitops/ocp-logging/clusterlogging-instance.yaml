@@ -14,8 +14,8 @@ spec:
       name: logging-loki
   visualization:
     type: ocp-console  
-    # nodeSelector:
-    #   node-role.kubernetes.io/infra: ''
+    nodeSelector:
+      node-role.kubernetes.io/infra: ''
   collection:
     type: vector
     resources:

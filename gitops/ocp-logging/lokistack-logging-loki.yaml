@@ -20,7 +20,7 @@ spec:
       - version: v13
         effectiveDate: "2024-07-01"
     secret:
-      name: logging-loki-odf
+      name: s3-bucket-loki-alvaro
       type: s3 
     tls:
       caName: openshift-service-ca.crt
@@ -30,29 +30,29 @@ spec:
     mode: openshift-logging
   rules:
     enabled: true
-  # template:
-  #   compactor:
-  #     nodeSelector:
-  #       node-role.kubernetes.io/infra: ""
-  #   distributor:
-  #     nodeSelector:
-  #       node-role.kubernetes.io/infra: ""
-  #   gateway:
-  #     nodeSelector:
-  #       node-role.kubernetes.io/infra: ""
-  #   indexGateway:
-  #     nodeSelector:
-  #       node-role.kubernetes.io/infra: ""
-  #   ingester:
-  #     nodeSelector:
-  #       node-role.kubernetes.io/infra: ""
-  #   querier:
-  #     nodeSelector:
-  #       node-role.kubernetes.io/infra: ""
-  #   queryFrontend:
-  #     nodeSelector:
-  #       node-role.kubernetes.io/infra: ""
-  #   ruler:
-  #     nodeSelector:
-  #       node-role.kubernetes.io/infra: ""
+  template:
+    compactor:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    distributor:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    gateway:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    indexGateway:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    ingester:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    querier:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    queryFrontend:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    ruler:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
     
