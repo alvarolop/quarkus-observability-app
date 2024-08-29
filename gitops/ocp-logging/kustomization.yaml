@@ -18,4 +18,4 @@ resources:
   - clusterlogging-instance.yaml
 
   # Log Forwarding
-  # - clusterlogforwarder-instance.yaml
+  - clusterlogforwarder-instance.yaml
