@@ -7,12 +7,12 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
-  inputs: {}
+  # inputs:
     # - name: quarkus-observability-logs
     #   application:
     #     namespaces:
     #       - quarkus-observability
-  outputs: {}
+  # outputs:
     # - name: rsyslog-bastion
     #   type: syslog
     #   syslog:
