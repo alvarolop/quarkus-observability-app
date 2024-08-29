@@ -7,25 +7,41 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
-  # inputs: 
-  #   - name: quarkus-observability-logs
-  #     application:
-  #       namespaces:
-  #         - quarkus-observability
-  # outputs: 
-  #   - name: rsyslog-bastion
-  #     type: syslog
-  #     syslog:
-  #       facility: local0
-  #       rfc: RFC5424
-  #       severity: informational
-  #     url: 'tcp://X.X.X.X:514'   # Bastion
+  inputs: 
+    # - name: quarkus-observability-logs
+    #   application:
+    #     namespaces:
+    #       - quarkus-observability
+  outputs: 
+    - name: rsyslog-bastion
+      type: syslog
+      syslog:
+        facility: local0
+        rfc: RFC5424
+        severity: informational
+      url: 'tcp://X.X.X.X:514'   # Bastion
+    # - name: cw-output
+    #   type: cloudwatch 
+    #   cloudwatch:
+    #     groupBy: logType 
+    #     groupPrefix: ${CLOUDWATCH_GROUP_PREFIX}
+    #     region: ${AWS_DEFAULT_REGION}
+    #   secret:
+    #       name: ${AWS_SECRET_NAME} 
   pipelines:
-    # - name: audit-logs
-    #   inputRefs:
-    #     - audit
+    - name: audit-logs-to-rsyslog
+      inputRefs:
+        - audit
+      outputRefs:
+        - rsyslog-bastion
+    # - name: quarkus-observability
+    #   inputRefs: 
+    #     - quarkus-observability-logs
     #   outputRefs:
-    #     - rsyslog-bastion
+    #     - cw-output 
+    #   parse: json 
+    #   labels:
+    #     test: "alvaro" 
     - name: default
       inputRefs:
         - application
@@ -33,40 +49,3 @@ spec:
         - audit
       outputRefs:
         - default
-
-
-    spec:
-      inputs: 
-        - name: quarkus-observability-logs
-          application:
-            namespaces:
-              - quarkus-observability
-      pipelines:
-        # - name: quarkus-observability
-        #   inputRefs: 
-        #     # - infrastructure
-        #     # - audit
-        #     # - application
-        #     - quarkus-observability-logs
-        #   outputRefs:
-        #     - cw-output 
-        #   parse: json 
-        #   labels:
-        #     test: "alvaro" 
-        - name: enable-audit-logs
-          inputRefs: 
-            - audit
-          outputRefs:
-            - default
-          # parse: json 
-          labels:
-            cluster: "aws"
-      # outputs:
-      #   - name: cw-output
-      #     type: cloudwatch 
-      #     cloudwatch:
-      #       groupBy: logType 
-      #       groupPrefix: ${CLOUDWATCH_GROUP_PREFIX}
-      #       region: ${AWS_DEFAULT_REGION}
-      #     secret:
-      #         name: ${AWS_SECRET_NAME} 
