@@ -1,0 +1,21 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+
+  - 01-clo-operator
+  - 02-loki-operator
+  - 03-job-enable-console-plugin
+
+  # S3 Bucket alterative if using ODF
+  # - obc-loki-bucket-odf.yaml
+  # - 04-create-odf-s3-secret
+
+  # Logs Storage
+  - lokistack-logging-loki.yaml
+
+  # Logs Collection and Visualization
+  - clusterlogging-instance.yaml
+
+  # Log Forwarding
+  # - clusterlogforwarder-instance.yaml

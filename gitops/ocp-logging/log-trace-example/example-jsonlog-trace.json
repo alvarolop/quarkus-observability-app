@@ -1,0 +1,61 @@
+{
+    "@timestamp": "2023-06-20T18:56:45.266387763Z",
+    "group_name": "ocp-bvbgw-json.application",
+    "hostname": "ip-10-0-137-62.eu-west-3.compute.internal",
+    "kubernetes": {
+        "annotations": {
+            "k8s.v1.cni.cncf.io/network-status": "[{\n    \"name\": \"openshift-sdn\",\n    \"interface\": \"eth0\",\n    \"ips\": [\n        \"10.131.0.26\"\n    ],\n    \"default\": true,\n    \"dns\": {}\n}]",
+            "openshift.io/scc": "restricted-v2",
+            "seccomp.security.alpha.kubernetes.io/pod": "runtime/default"
+        },
+        "container_id": "cri-o://8df9240444d3e3927c682bf761c397a1a761bab7d375ba2cce79aa08054b13c7",
+        "container_image": "quay.io/alopezme/quarkus-observability-app:latest-micro",
+        "container_name": "app",
+        "labels": {
+            "app": "app",
+            "deployment": "app",
+            "pod-template-hash": "6fb7dcf667"
+        },
+        "namespace_labels": {
+            "kubernetes_io_metadata_name": "quarkus-observability",
+            "openshift-pipelines_tekton_dev_namespace-reconcile-version": "1.11.0",
+            "pod-security_kubernetes_io_audit": "baseline",
+            "pod-security_kubernetes_io_audit-version": "v1.24",
+            "pod-security_kubernetes_io_warn": "baseline",
+            "pod-security_kubernetes_io_warn-version": "v1.24"
+        },
+        "namespace_name": "quarkus-observability",
+        "pod_id": "88331dbc-79d2-46f0-a963-152aef5f9adb",
+        "pod_ip": "10.131.0.26",
+        "pod_name": "app-6fb7dcf667-4xq8v",
+        "pod_owner": "ReplicaSet/app-6fb7dcf667"
+    },
+    "level": "info",
+    "log_type": "application",
+    "openshift": {
+        "cluster_id": "b70fa6d3-02e1-4321-b58a-20bf37041b99",
+        "labels": {
+            "test": "alvaro"
+        },
+        "sequence": 1
+    },
+    "stream_name": "kubernetes.var.log.pods.quarkus-observability_app-6fb7dcf667-4xq8v_88331dbc-79d2-46f0-a963-152aef5f9adb.app.0.log",
+    "structured": {
+        "hostName": "app-6fb7dcf667-4xq8v",
+        "level": "INFO",
+        "loggerClassName": "org.jboss.logging.Logger",
+        "loggerName": "org.example.GreetingResource",
+        "mdc": {
+            "sampled": "true",
+            "spanId": "505eb098681ad33d",
+            "traceId": "483858698836cd15f36f8ba3ad1ce02e"
+        },
+        "message": "Hello from RESTEasy Reactive",
+        "ndc": "",
+        "processId": 53,
+        "sequence": 159,
+        "threadId": 35,
+        "threadName": "executor-thread-2",
+        "timestamp": "2023-06-20T18:56:45.266Z"
+    }
+}

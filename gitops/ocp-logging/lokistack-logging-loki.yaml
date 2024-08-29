@@ -1,0 +1,58 @@
+---
+apiVersion: loki.grafana.com/v1
+kind: LokiStack
+metadata:
+  name: logging-loki
+  namespace: openshift-logging
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  limits:
+    global:
+      retention:
+        days: 7
+  size: 1x.small
+  replication:
+    factor: 1
+  managementState: Managed
+  storage:
+    schemas:
+      - version: v13
+        effectiveDate: "2024-07-01"
+    secret:
+      name: logging-loki-odf
+      type: s3 
+    tls:
+      caName: openshift-service-ca.crt
+  # storageClassName: ocs-storagecluster-ceph-rbd # This is for ODF
+  storageClassName: gp3-csi
+  tenants:
+    mode: openshift-logging
+  rules:
+    enabled: true
+  # template:
+  #   compactor:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #   distributor:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #   gateway:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #   indexGateway:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #   ingester:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #   querier:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #   queryFrontend:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #   ruler:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+    
