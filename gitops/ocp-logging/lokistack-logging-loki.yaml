@@ -11,7 +11,7 @@ spec:
     global:
       retention:
         days: 7
-  size: 1x.small
+  size: 1x.extra-small # Could even use 1x.demo
   replication:
     factor: 1
   managementState: Managed
