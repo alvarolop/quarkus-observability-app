@@ -1,0 +1,37 @@
+---
+apiVersion: tempo.grafana.com/v1alpha1
+kind: TempoStack
+metadata:
+  name: tempo
+spec:
+  observability:
+    metrics:
+      createServiceMonitors: true
+      createPrometheusRules: true
+  replicationFactor: 1
+  resources:
+    total:
+      limits:
+        memory: 2Gi
+        cpu: '2'
+  retention:
+    global:
+      traces: 48h0m0s
+  storageSize: 1Gi
+  storage:
+    secret:
+      name: s3-bucket-tempo-alvaro
+      type: s3
+  template:
+    # gateway:
+    #   enabled: true
+    queryFrontend:
+      jaegerQuery:
+        enabled: true
+        ingress:
+          route:
+            termination: edge
+          type: route
+        monitorTab:
+          enabled: true 
+          prometheusEndpoint: https://thanos-querier.openshift-monitoring.svc.cluster.local:9091

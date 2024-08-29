@@ -1,0 +1,12 @@
+---
+apiVersion: console.openshift.io/v1
+kind: ConsoleLink
+metadata:
+  name: openshift-tempo-tempo
+spec:
+  href: "https://PLACEHOLDER-URL"
+  location: ApplicationMenu
+  text: Jaeger UI
+  applicationMenu:
+    section: Observability
+    imageURL: https://api.nuget.org/v3-flatcontainer/jaeger/1.0.3/icon
