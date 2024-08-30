@@ -14,8 +14,9 @@ spec:
     path: gitops/app-quarkus-observability
     repoURL: https://github.com/alvarolop/quarkus-observability-app.git
     targetRevision: main
+    kustomize:
+      namespace: quarkus-observability
   syncPolicy:
     automated:
       prune: false
       selfHeal: false
-    syncOptions: []
