@@ -9,12 +9,13 @@ metadata:
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: quarkus-observability
   project: default
   source:
     path: gitops/ocp-alerting
     repoURL: https://github.com/alvarolop/quarkus-observability-app.git
     targetRevision: main
+    kustomize:
+      namespace: quarkus-observability
   syncPolicy:
     automated:
       prune: false
