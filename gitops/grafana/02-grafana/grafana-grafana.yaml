@@ -65,17 +65,15 @@ spec:
               ports:
                 - containerPort: 9091
                   name: https
+                  protocol: TCP
               resources: { }
               volumeMounts:
                 - mountPath: /etc/tls/private
                   name: grafana-tls
-                  readOnly: false
                 - mountPath: /etc/proxy/secrets
                   name: grafana-proxy
-                  readOnly: false
                 - mountPath: /etc/proxy/certs
                   name: ocp-injected-certs
-                  readOnly: false
   service:
     metadata:
       annotations:
