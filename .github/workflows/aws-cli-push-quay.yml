@@ -5,6 +5,7 @@ run-name: Build and Push AWS-OC Container image to Quay.io🚀
 env:
   IMAGE_BASE_NAME: "quay.io/alopezme/aws-cli"
 
+
 # This section ensures that new pushes cancel current executions of the workflow
 concurrency:
   group: ${{ github.ref }}
