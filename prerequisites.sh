@@ -70,6 +70,15 @@ oc process -f prerequisites/aws-s3-secret.yaml \
     -p SECRET_NAME=$LOKI_BUCKET \
     -p AWS_S3_BUCKET=$LOKI_BUCKET | oc apply -f -
 
+# Create the Tempo Bucket Secret
+echo -e "\nCreate the Logging Bucket Secret"
+SECRET_NAMESPACE=openshift-tempo
+oc process -f prerequisites/aws-s3-secret.yaml \
+    --param-file aws-env-vars --ignore-unknown-parameters=true \
+    -p SECRET_NAMESPACE=$SECRET_NAMESPACE \
+    -p SECRET_NAME=$TEMPO_BUCKET \
+    -p AWS_S3_BUCKET=$TEMPO_BUCKET | oc apply -f -
+
 # Create the Quarkus Obs Alerting Pass
 echo -e "\nCreate the Quarkus Obs Alerting Pass"
 SECRET_NAMESPACE=quarkus-observability
