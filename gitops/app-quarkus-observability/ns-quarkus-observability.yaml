@@ -4,6 +4,6 @@ kind: Namespace
 metadata:
   name: quarkus-observability
   labels:
-    openshift.io/user-monitoring: true
+    openshift.io/user-monitoring: "true"
   annotations:
     argocd.argoproj.io/sync-wave: "-10"
