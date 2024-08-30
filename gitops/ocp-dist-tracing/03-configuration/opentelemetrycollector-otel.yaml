@@ -11,32 +11,39 @@ spec:
     metrics:
       enableMetrics: true 
   config: |
-    connectors:
-      spanmetrics: 
-        metrics_flush_interval: 15s
-
     receivers:
       otlp: 
         protocols:
-          grpc:
-          http:
+          grpc: null
+          http: null
 
     exporters:
       otlp:
         endpoint: tempo-tempo-distributor.openshift-tempo.svc.cluster.local:4317
         tls:
           insecure: true
-      prometheus: 
-        endpoint: 0.0.0.0:8889
+      prometheus:
         add_metric_suffixes: false
+        endpoint: 0.0.0.0:8889
         resource_to_telemetry_conversion:
           enabled: true # by default resource attributes are dropped
 
+    connectors:
+      spanmetrics: 
+        metrics_flush_interval: 15s
+
     service:
       pipelines:
-        traces:
-          receivers: [otlp]
-          exporters: [otlp, spanmetrics]
         metrics:
-          receivers: [spanmetrics]
-          exporters: [prometheus]
+          exporters:
+            - prometheus
+          processors: []
+          receivers:
+            - spanmetrics
+        traces:
+          exporters:
+            - otlp
+            - spanmetrics
+          processors: []
+          receivers:
+            - otlp
