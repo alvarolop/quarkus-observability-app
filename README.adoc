@@ -210,26 +210,15 @@ After that, you should see the following apps on ArgoCD:
 image::app-of-apps.png["App of Apps for Quarkus Observability"]
 
 
-== Deploy individual components
+== Deploy components individually
 
-== Deploy the Quarkus App
+=== Quarkus App
 
 Deploy the app in a new namespace using the following command:
 
 [source, bash]
 ----
-# Create the project 
-oc process -f openshift/quarkus-app/10-project.yaml | oc apply -f -
-
-
-# Create a ConfigMap to mount in the application to configure without rebuilding
-oc create configmap app-config --from-file=application.yml=src/main/resources/application-ocp.yml -n quarkus-observability
-
-# Install the application
-oc process -f openshift/quarkus-app/20-app.yaml | oc apply -f -
-
-# After that, you can access the Swagger UI using the following link
-oc get route app -n quarkus-observability  --template='https://{{ .spec.host }}/q/swagger-ui'
+oc apply -f apps/application-quarkus-observability.yaml
 ----
 
 
@@ -252,21 +241,13 @@ For more context about OpenTelemetry, I strongly recommend reading the following
 NOTE: If you struggle with OTEL configuration, please check this https://github.com/os-observability/redhat-rhosdt-samples/tree/main[redhat-rhosdt-samples repository].
 
 
-[source, bash]
-----
-# Install the operator
-oc apply -f openshift/ocp-opentelemetry/10-subscription.yaml
-----
+This component is currently used only as an aggregator of traces for Distributed Tracing, so it is deployed together. Please, continue to the new section to see how.
 
 
 
+=== OpenShift Distributed Tracing
 
-=== Distributed Tracing
-
-*Red Hat OpenShift Distributed Tracing* lets you perform distributed tracing, which records the path of a request through various microservices that make up an application.
-
-
-Tempo is split into several components deployed as different microservices. From a beginner's point of view, it can be more complex to understand. The following diagram from https://developers.redhat.com/articles/2023/08/01/how-deploy-new-grafana-tempo-operator-openshift#[this blog] will help you to better understand the architecture:
+*Red Hat OpenShift Distributed Tracing* lets you perform distributed tracing, which records the path of a request through various microservices that make up an application. Tempo is split into several components deployed as different microservices. The following diagram from https://developers.redhat.com/articles/2023/08/01/how-deploy-new-grafana-tempo-operator-openshift#[this blog] will help you to better understand the architecture:
 
 .Red Hat Distributed Tracing - Architecture
 image::tempo-architecture.png["Red Hat Distributed Tracing - Architecture"]
@@ -279,49 +260,27 @@ For more context about DistTracing, I strongly recommend reading the following b
 * https://developers.redhat.com/articles/2023/08/01/how-deploy-new-grafana-tempo-operator-openshift#the_tempo_operator_features[How to deploy the new Grafana Tempo operator on OpenShift].
 
 
-For more information, check the https://docs.openshift.com/container-platform/4.14/distr_tracing/distr_tracing_arch/distr-tracing-architecture.html[official documentation].
+For more information, check the https://docs.openshift.com/container-platform/4.16/observability/distr_tracing/distr_tracing_arch/distr-tracing-architecture.html[official documentation].
 
 
-
-==== Tracing backend 1: Grafana Tempo
+You con deploy Grafana Tempo and OpenTelemetry using the following ArgoCD application:
 
 [source, bash]
 ----
-# Create an s3 bucket
-./openshift/ocp-distributed-tracing/tempo/aws-create-bucket.sh ./aws-env-vars
-
-# Install the operator
-oc apply -f openshift/ocp-distributed-tracing/tempo/10-subscription.yaml
-
-# Deploy Tempo
-oc process -f openshift/ocp-distributed-tracing/tempo/20-tempostack.yaml | oc apply -f -
+oc apply -f apps/application-ocp-dist-tracing.yaml
 ----
 
 
-Once you have configured everything, you can access the Metrics tab and show stats retrieved directly from the Traces collected by the OpenTelemetry collector. This is an example of the output:
+Once you have configured everything, you can access the Metrics tab and show stats retrieved directly from the Traces collected by the `OpenTelemetry` collector. This is an example of the output:
 
 
 .Red Hat Distributed Tracing - Metrics tab
 image::tempo-jaegerui-metrics.png["Red Hat Distributed Tracing - Metrics tab"]
 
 
-===== Dashboards
+==== Dashboards
 
-By default, the Grafana Tempo operator does not configure or provide any Grafana Dashboards for monitoring. Therefore, I have collected the ones provided upstream in this folder: https://github.com/grafana/tempo/tree/main/operations/tempo-mixin-compiled.
-
-
-
-
-==== Tracing backend 2: Jaeger [DEPRECATED]
-
-[source, bash]
-----
-# Install the operator
-oc apply -f openshift/ocp-distributed-tracing/jaeger/10-subscription.yaml
-
-# Deploy Tempo
-oc process -f openshift/ocp-distributed-tracing/jaeger/20-jaeger.yaml | oc apply -f -
-----
+By default, the Grafana Tempo operator does not configure or provide any Grafana Dashboards for monitoring. Therefore, I have collected the ones provided upstream in this folder: https://github.com/grafana/tempo/tree/main/operations/tempo-mixin-compiled. They are deployed together with the Grafana deployment that you will see in a section below.
 
 
 
@@ -330,153 +289,59 @@ oc process -f openshift/ocp-distributed-tracing/jaeger/20-jaeger.yaml | oc apply
 
 
 
+=== OpenShift Monitoring 
 
-
-=== Monitoring 
-
-In OpenShift Container Platform 4.14, you can enable monitoring for user-defined projects in addition to the default platform monitoring. You can monitor your own projects in OpenShift Container Platform without the need for an additional monitoring solution.
+In OpenShift Container Platform 4.16, you can enable monitoring for user-defined projects in addition to the default platform monitoring. You can monitor your own projects in OpenShift Container Platform without the need for an additional monitoring solution. In this section  we only configure the components, but we don't set up the monitoring of the application using a ServiceMonitor. This is done in the application section:
 
 [source, bash]
 ----
-# Enable user workload monitoring
-oc apply -f openshift/ocp-monitoring/10-cm-cluster-monitoring-config.yaml
-
-# Configure the user workload monitoring instance
-oc apply -f openshift/ocp-monitoring/11-cm-user-workload-monitoring-config.yaml
-
-# Add Service Monitor to collect metrics from the App
-oc process -f openshift/ocp-monitoring/20-service-monitor.yaml | oc apply -f -
+oc apply -f apps/application-ocp-monitoring.yaml
 ----
 
-For more information, check the https://docs.openshift.com/container-platform/4.14/monitoring/enabling-monitoring-for-user-defined-projects.html[official documentation]. 
+For more information, check the https://docs.openshift.com/container-platform/4.16/observability/monitoring/enabling-monitoring-for-user-defined-projects.html[official documentation]. 
 
 NOTE: If you face issues creating and configuring the Service monitor, you can use this https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/troubleshooting.md[Thoubleshooting guide].
 
 
-==== Alerting
+=== OpenShift Alerting
 
 Using Openshift Metrics, it is really simple to add alerts based on those Prometheus Metrics:
 
 [source, bash]
 ----
-# Add Alert to monitorize requests to the API
-oc process -f openshift/ocp-alerting/10-prometheus-rule.yaml | oc apply -f -
+oc apply -f apps/application-ocp-alerting.yaml
 ----
 
-==== Grafana Dashboards
+
+
+
+=== OpenShift Logging
+
+The logging subsystem aggregates infrastructure and applications logs from throughout your cluster and stores them in a default log store. The Openshift Logging installation consists on installing first the Cluster Logging Operator, the Loki Operator and configuring them.
+
+NOTE: The Openshift Logging team decided to move from EFK to Vector+Loki. The original Openshift Logging Stack was split into three products: ElasticSearch ( Log Store and Search), Fluentd (Collection and Transportation), and Kibana (Visualization). Now, there will be only two: Vector (Collection) and Loki (Store).
+
+
+.Installing Logging
+[source, bash]
+----
+oc apply -f apps/application-ocp-logging.yaml
+----
+
+
+
+==== External logging storage
+
+By default, the logging subsystem sends container and infrastructure logs to the default internal log store based on Loki. Administrators can create `ClusterLogForwarder` resources that specify which logs are collected, how they are transformed, and where they are forwarded to.
+
+`ClusterLogForwarder` resources can be used up to forward container, infrastructure, and audit logs to specific endpoints within or outside of a cluster. Transport Layer Security (TLS) is supported so that log forwarders can be configured to send logs securely.
+
+In the current implementation, the CLF only enables audit logs on the default Loki store. It is possible to configure other stuff like sending logs to the AWS Cloudwatch service. If you want to do so, please, check the CLF definition `gitops/ocp-logging/clusterlogforwarder-instance.yaml` and uncomment the sections related to Cloudwatch. You will need the infrastructureName that can be retrieved using the following command and you will need to add it to `.spec.outputs.cloudwatch.groupPrefix`:
 
 [source, bash]
 ----
-# Install the Grafana Operator
-oc process -f openshift/grafana/10-operator.yaml | oc apply -f -
-
-# Deploy a Grafana Instance
-oc process -f openshift/grafana/20-instance.yaml | oc apply -f -
-
-# Create Datasource
-oc process -f openshift/grafana/30-datasource.yaml \
-    -p BEARER_TOKEN=$(oc get secret $(oc describe sa grafana-sa -n grafana | awk '/Tokens/{ print $2 }') -n grafana --template='{{ .data.token | base64decode }}') \
-    | oc apply -f -
-
-# Configure Grafana Dashboard for the quarkus-observability-app
-oc process -f openshift/grafana/40-dashboard.yaml \
-    -p DASHBOARD_GZIP="$(cat openshift/grafana/quarkus-observability-dashboard.json | gzip | base64 -w0)" \
-    -p DASHBOARD_NAME=quarkus-observability-dashboard \
-    -p CUSTOM_FOLDER_NAME="Quarkus Observability"  | oc apply -f -
+oc get Infrastructure/cluster -o=jsonpath='{.status.infrastructureName}'
 ----
-
-After installing, you can access the Grafana UI and see the following dashboard:
-
-.Grafana dashboard
-image::grafana-dashboard.png["Grafana dashboard"]
-
-
-=== Logging
-
-The logging subsystem aggregates infrastructure and applications logs from throughout your cluster and stores them in a default log store. The Openshift Logging installation section consists of sections:
-
-* Installation of the Openshift logging operator. Always needed.
-* Installation of the Loki operator as the logging backend. This is mutually exclusive with section 2).
-* Installation of the ElasticSearch operator as the logging backend. This is mutually exclusive with section 3).
-
-.Logging Operator
-[source, bash]
-----
-oc apply -f openshift/ocp-logging/00-subscription.yaml
-----
-
-==== Migration to the new Logging stack
-
-Currently, the Openshift Logging team decided to move from EFK to Vector+Loki. The original Openshift Logging Stack was split into three products: ElasticSearch ( Log Store and Search), Fluentd (Collection and Transportation), and Kibana (Visualization). Now, there will be only two: Vector (Collection) and Loki (Store).
-
-In order to keep up to date and age better, this repo explores both implementations.
-
-==== Logging backend 1: Loki
-
-.Option 1: Loki installation and deployment
-[source, bash]
-----
-# Install the Loki operator
-oc apply -f openshift/ocp-logging/loki/10-operator.yaml
-
-# Create an AWS S3 Bucket to store the logs
-./openshift/ocp-logging/loki/aws-create-bucket.sh ./aws-env-vars
-
-# Create the Logging instance
-oc process -f openshift/ocp-logging/loki/20-instance.yaml \
-    --param-file aws-env-vars --ignore-unknown-parameters=true | oc apply -f -
-
-# Enable the console plugin
-# -> This plugin adds the logging view into the 'observe' menu in the OpenShift console. It requires OpenShift 4.10.
-oc patch console.operator cluster --type json -p '[{"op": "add", "path": "/spec/plugins", "value": ["logging-view-plugin"]}]'
-----
-
-.Loki dashboard
-image::loki-dashboard.png["Loki dashboard"]
-
-
-==== Logging backend 2: ElasticSearch [DEPRECATED]
-
-[WARNING]
-====
-As of logging version 5.4.3 the OpenShift Elasticsearch Operator is deprecated and is planned to be removed in a future release. As of logging version 5.6 Fluentd is deprecated and is planned to be removed in a future release.
-====
-
-.Option 2: ElasticSearch installation and deployment
-[source, bash]
-----
-# Install the Elastic operator
-oc apply -f openshift/ocp-logging/elasticsearch/10-operator.yaml
-
-# Create the Logging instance
-oc apply -f openshift/ocp-logging/elasticsearch/20-instance.yaml
-----
-
-After installing and configuring the indexing pattern, you will be able to perform queries for the logs:
-
-.Kibana dashboard
-image::kibana-dashboard.png["Kibana dashboard"]
-
-
-
-==== Logging backend 3: Third-party
-
-By default, the logging subsystem sends container and infrastructure logs to the default internal log store (That we created in options 1 and 2).
-
-[source, bash]
-----
-oc get Infrastructure/cluster -ojson | jq .status.infrastructureName
-----
-
-[source, bash]
-----
-oc process -f openshift/ocp-logging/log-forwarding/cluster-log-forwarder-aws.yaml \
-    --param-file aws-env-vars --ignore-unknown-parameters=true \
-    -p CLOUDWATCH_GROUP_PREFIX=$(oc get Infrastructure/cluster -o=jsonpath='{.status.infrastructureName}') \
-    | oc apply -f -
-----
-
-
 
 Now, you can check the logs in Cloudwatch using the following command:
 
@@ -487,6 +352,19 @@ aws --output json logs describe-log-groups --region=$AWS_DEFAULT_REGION
 ----
 
 
+
+=== Grafana Operator
+
+.Installing Grafana
+[source, bash]
+----
+oc apply -f apps/application-grafana.yaml
+----
+
+After installing, you can access the Grafana UI and see the following dashboard:
+
+.Grafana dashboard
+image::grafana-dashboard.png["Grafana dashboard"]
 
 
 
@@ -534,7 +412,7 @@ This step automates all the steps in this https://docs.openshift.com/container-p
 [source, bash]
 ----
 tkn pac bootstrap
-# In the interactive menu, set the application name to `pipelines-as-code-app`
+# In the interactive menu, set the application name to "pipelines-as-code-app"
 ----
 
 === Step 2: Create a Repository CR
