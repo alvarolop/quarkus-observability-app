@@ -55,7 +55,7 @@ jobs:
         run: ./mvnw install --no-transfer-progress -Dnative -DskipTests -Dquarkus.native.remote-container-build=true
 
       - name: Release if it is a new tag
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: target/*-runner
