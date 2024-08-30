@@ -19,7 +19,7 @@ spec:
         - "/bin/bash"
         - "-c"
         - |
-          TEMPO_URL=$(oc get route tempo -n openshift-tempo -o jsonpath='{.spec.host}')
+          TEMPO_URL=$(oc get route tempo-tempo-query-frontend -n openshift-tempo -o jsonpath='{.spec.host}')
           echo "The Jaeger UI (Tempo) URL is $TEMPO_URL"
           if [[ -n "$TEMPO_URL" ]]; then
               oc patch consolelink openshift-tempo-tempo --type=merge -p '{"spec":{"href":"https://'"$TEMPO_URL"'"}}'
