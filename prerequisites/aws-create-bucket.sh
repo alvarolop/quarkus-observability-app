@@ -5,13 +5,13 @@
 AWS_S3_BUCKET=$1
 
 # Print environment variables
-echo -e "\n=============="
-echo -e "ENVIRONMENT VARIABLES:"
-echo -e " * AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
-echo -e " * AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
-echo -e " * AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION"
-echo -e " * AWS_S3_BUCKET: $AWS_S3_BUCKET"
-echo -e "==============\n"
+# echo -e "\n=============="
+# echo -e "ENVIRONMENT VARIABLES:"
+# echo -e " * AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
+# echo -e " * AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
+# echo -e " * AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION"
+# echo -e " * AWS_S3_BUCKET: $AWS_S3_BUCKET"
+# echo -e "==============\n"
 
 if ! which aws &> /dev/null; then 
     echo "You need the AWS CLI to run this Quickstart, please, refer to the official documentation:"
