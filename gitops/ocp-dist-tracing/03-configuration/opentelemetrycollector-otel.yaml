@@ -3,6 +3,8 @@ kind: OpenTelemetryCollector
 apiVersion: opentelemetry.io/v1alpha1
 metadata:
   name: otel
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   mode: deployment
   observability:
