@@ -22,8 +22,6 @@ spec:
     secret:
       name: s3-bucket-loki-alvaro
       type: s3 
-    tls:
-      caName: openshift-service-ca.crt
   # storageClassName: ocs-storagecluster-ceph-rbd # This is for ODF
   storageClassName: gp3-csi
   tenants:
