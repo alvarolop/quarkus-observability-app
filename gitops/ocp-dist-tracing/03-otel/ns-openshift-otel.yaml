@@ -4,7 +4,7 @@ kind: Namespace
 metadata:
   labels:
     openshift.io/cluster-monitoring: "true"
+    istio-injection: enabled
   annotations:
     argocd.argoproj.io/sync-wave: "-10"
-    istio-injection: enabled
   name: openshift-otel
