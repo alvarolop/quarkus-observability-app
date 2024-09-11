@@ -1,6 +1,6 @@
 ---
 kind: OpenTelemetryCollector
-apiVersion: opentelemetry.io/v1alpha1
+apiVersion: opentelemetry.io/v1beta1
 metadata:
   name: otel
   annotations:
@@ -12,9 +12,22 @@ spec:
       enableMetrics: true 
   config:
     receivers:
-      otlp: {}
-
+      otlp:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+    # Data sources: metrics
+      prometheus:
+        config:
+          scrape_configs:
+            - job_name: otel-collector
+              scrape_interval: 5s
+              static_configs:
+                - targets: [localhost:8888]
     exporters:
+      debug:
+        verbosity: detailed
       otlp:
         endpoint: tempo-tempo-distributor.openshift-tempo.svc.cluster.local:4317
         tls:
@@ -24,7 +37,8 @@ spec:
         endpoint: 0.0.0.0:8889
         resource_to_telemetry_conversion:
           enabled: true # by default resource attributes are dropped
-
+      tls:
+        insecure: true
     connectors:
       spanmetrics: 
         metrics_flush_interval: 15s
@@ -40,7 +54,8 @@ spec:
         traces:
           exporters:
             - otlp
-            - spanmetrics
+            # - spanmetrics
+            - debug
           processors: []
           receivers:
             - otlp
