@@ -9,39 +9,33 @@ data:
     alertmanagerMain:
       enabled: true
       enableUserAlertmanagerConfig: false
-      # nodeSelector:
-      #   node-role.kubernetes.io/infra: ""
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
     prometheusK8s:
       # Specify the maximum body size for scraped metrics targets.
       enforcedBodySizeLimit: 40MB
       retention: 24h
       retentionSize: 10GB
-      # nodeSelector:
-      #   node-role.kubernetes.io/infra: ""
-    k8sPrometheusAdapter:
-      # Deploy a dedicated service monitor that exposes the kubelet /metrics/resource endpoint.
-      dedicatedServiceMonitors:
-        enabled: true
-      # nodeSelector:
-      #   node-role.kubernetes.io/infra: ""
-    # prometheusOperator:
-    #   nodeSelector:
-    #     node-role.kubernetes.io/infra: ""
-    # openshiftStateMetrics:
-    #   nodeSelector:
-    #     node-role.kubernetes.io/infra: ""
-    # grafana:
-    #   nodeSelector:
-    #     node-role.kubernetes.io/infra: ""
-    # kubeStateMetrics:
-    #   nodeSelector:
-    #     node-role.kubernetes.io/infra: ""
-    # telemeterClient:
-    #   nodeSelector:
-    #     node-role.kubernetes.io/infra: ""
-    # thanosQuerier:
-    #   nodeSelector:
-    #     node-role.kubernetes.io/infra: ""
-    # monitoringPlugin:
-    #   nodeSelector:
-    #     node-role.kubernetes.io/infra: ""
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    prometheusOperator:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    openshiftStateMetrics:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    grafana:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    kubeStateMetrics:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    telemeterClient:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    thanosQuerier:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    monitoringPlugin:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""

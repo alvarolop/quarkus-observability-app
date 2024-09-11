@@ -27,8 +27,8 @@ data:
         limits:
           cpu: 4
           memory: 8Gi
-    #   nodeSelector:
-    #     node-role.kubernetes.io/infra: ""
-    # thanosRuler:
-    #   nodeSelector:
-    #     node-role.kubernetes.io/infra: ""
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
+    thanosRuler:
+      nodeSelector:
+        node-role.kubernetes.io/infra: ""
