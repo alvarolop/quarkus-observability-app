@@ -5,6 +5,7 @@ metadata:
   name: otel
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    sidecar.istio.io/inject: 'true'
 spec:
   mode: deployment
   observability:
