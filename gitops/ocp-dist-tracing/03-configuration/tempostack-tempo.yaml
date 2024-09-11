@@ -10,25 +10,41 @@ spec:
     metrics:
       createServiceMonitors: true
       createPrometheusRules: true
-  replicationFactor: 1
   resources:
     total:
       limits:
         memory: 2Gi
-        cpu: '2'
-  retention:
-    global:
-      traces: 48h0m0s
-  storageSize: 1Gi
-  storage:
-    secret:
-      name: s3-bucket-tempo-alvaro
-      type: s3
+        cpu: 2000m
+  search:
+    maxDuration: 0s
+    maxResultLimit: 20
+  # tenants:
+  #   mode: openshift 
   template:
-    # gateway:
-    #   enabled: true
+    compactor:
+      replicas: 1
+    distributor:
+      component:
+        replicas: 1
+      tls:
+        enabled: false
+    gateway:
+      component:
+        replicas: 1
+      enabled: false
+      ingress:
+        route: {}
+    ingester:
+      replicas: 1
+    querier:
+      replicas: 1
     queryFrontend:
+      component:
+        replicas: 1
       jaegerQuery:
+        authentication:
+          enabled: false
+          sar: '{"namespace": "openshift-tempo", "resource": "pods", "verb": "get"}'
         enabled: true
         ingress:
           route:
@@ -37,3 +53,12 @@ spec:
         monitorTab:
           enabled: true 
           prometheusEndpoint: https://thanos-querier.openshift-monitoring.svc.cluster.local:9091
+  replicationFactor: 1
+  storage:
+    secret:
+      name: s3-bucket-tempo-obs
+      type: s3
+  storageSize: 1Gi
+  retention:
+    global:
+      traces: 48h0m0s

@@ -12,10 +12,7 @@ spec:
       enableMetrics: true 
   config: |
     receivers:
-      otlp: 
-        protocols:
-          grpc: null
-          http: null
+      otlp: {}
 
     exporters:
       otlp:
