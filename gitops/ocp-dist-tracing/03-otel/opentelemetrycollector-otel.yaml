@@ -58,7 +58,7 @@ spec:
           exporters:
             - otlp
             # - spanmetrics
-            - debug
+            # - debug
           # processors: []
           receivers:
             - otlp
