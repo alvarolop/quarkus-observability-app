@@ -10,10 +10,10 @@ source ./gmail-app-vars
 #####################################
 
 # S3 Buckets
-LOKI_BUCKET="s3-bucket-loki-alvaro"
+LOKI_BUCKET="s3-bucket-loki-obs"
 LOKI_SECRET_NAMESPACE=openshift-logging
 
-TEMPO_BUCKET="s3-bucket-tempo-alvaro"
+TEMPO_BUCKET="s3-bucket-tempo-obs"
 TEMPO_SECRET_NAMESPACE=openshift-tempo
 
 # ALERTING
