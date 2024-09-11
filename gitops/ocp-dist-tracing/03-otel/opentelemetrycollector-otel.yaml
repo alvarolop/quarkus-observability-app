@@ -28,8 +28,9 @@ spec:
     #           static_configs:
     #             - targets: [localhost:8888]
     exporters:
+      # https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/debugexporter/README.md
       debug:
-        verbosity: detailed
+        verbosity: basic # detailed
       otlp:
         endpoint: "tempo-tempo-distributor.openshift-tempo.svc.cluster.local:4317"
         tls:
