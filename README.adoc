@@ -244,6 +244,17 @@ NOTE: If you struggle with OTEL configuration, please check this https://github.
 This component is currently used only as an aggregator of traces for Distributed Tracing, so it is deployed together. Please, continue to the new section to see how.
 
 
+.Why Opentelemetry Collector?
+====
+If you arrived here and still don't know why you should add this component to your Observability architecture, here I have some good use cases:
+
+* Convert signals between protocols (zipkin --> OTel/Jaeger etc).
+* Add, filter or transform attributes in the spans.
+* Create secondary metrics based on spans or others.
+* Easily change endpoints with just changing the config in the collector (take into account that normally an application will be also sending metrics, logs and traces to a collector).
+* Do some batching, sampling, etc.
+====
+
 
 === OpenShift Distributed Tracing
 
@@ -254,7 +265,7 @@ image::tempo-architecture.png["Red Hat Distributed Tracing - Architecture"]
 
 
 
-For more context about DistTracing, I strongly recommend reading the following blogs:
+For more context about Dist Tracing, I strongly recommend reading the following blogs:
 
 * https://cloud.redhat.com/blog/the-path-to-distributed-tracing-an-openshift-observability-adventure[The Path to Distributed Tracing: an OpenShift Observability Adventure].
 * https://developers.redhat.com/articles/2023/08/01/how-deploy-new-grafana-tempo-operator-openshift#the_tempo_operator_features[How to deploy the new Grafana Tempo operator on OpenShift].
@@ -278,14 +289,23 @@ Once you have configured everything, you can access the Metrics tab and show sta
 image::tempo-jaegerui-metrics.png["Red Hat Distributed Tracing - Metrics tab"]
 
 
+==== Traces Datasource
+
+At this point, you might consider that this is good enough, but there is more! As you are already watching application metrics on Grafana, you will probably also want to check traces on the same page. If this is the case, you are lucky!! With the previous ArgoCD application, you are also creating a new Datasource of type tempo pointing directly to the Grafana Tempo instance so that we can query traces from Grafana.
+
+Go to the Grafana instance, click on `Explore` and then select the `Tempo` datasource, you will see all your traces like in the following picture:
+
+
+.Traces from the Grafana Web Console
+image::tempo-grafana-traces.png["Traces from the Grafana Web Console"]
+
+
+
 ==== Dashboards
 
-By default, the Grafana Tempo operator does not configure or provide any Grafana Dashboards for monitoring. Therefore, I have collected the ones provided upstream in this folder: https://github.com/grafana/tempo/tree/main/operations/tempo-mixin-compiled. They are deployed together with the Grafana deployment that you will see in a section below.
+By default, the Grafana Tempo operator does not configure or provide any Grafana Dashboards for monitoring. Therefore, I have collected the ones provided upstream in this folder: https://github.com/grafana/tempo/tree/main/operations/tempo-mixin-compiled. They are deployed together in the same Grafana instance. https://grafana.com/docs/tempo/latest/operations/monitor/#openshift-dashboards[This article] explains the purpose of each of the dashboards.
 
-
-
-
-
+IMPORTANT: If you see concerning metrics, you have a troubleshooting guide based on those metrics in https://github.com/grafana/tempo/blob/main/operations/tempo-mixin/runbook.md[here].
 
 
 

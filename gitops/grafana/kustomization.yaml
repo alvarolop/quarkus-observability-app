@@ -10,3 +10,4 @@ resources:
   - 03-consolelink
   - 04-datasource
   - 05-dashboard
+  - 06-grafana-tempo

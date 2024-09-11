@@ -1,0 +1,26 @@
+---
+# http://tempo-tempo-query-frontend.openshift-tempo.svc.cluster.local:3200
+# https://grafana.com/blog/2023/07/28/simplify-managing-grafana-tempo-instances-in-kubernetes-with-the-tempo-operator/#sending-traces-and-configuring-grafana
+
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: tempo
+  labels:
+    app: grafana
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasource:
+    name: Tempo
+    type: tempo
+    access: proxy
+    basicAuth: false
+    editable: true
+    isDefault: false
+    jsonData:
+      timeInterval: 5s
+    url: 'http://tempo-tempo-query-frontend.openshift-tempo.svc.cluster.local:3200'
