@@ -20,7 +20,7 @@ spec:
           # http:
           #   endpoint: 0.0.0.0:4318
           grpc: {}
-          http: {}  
+          http: {}
     # # Data sources: metrics
     #   prometheus:
     #     config:
@@ -31,8 +31,8 @@ spec:
     #             - targets: [localhost:8888]
     exporters:
       # https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/debugexporter/README.md
-      debug:
-        verbosity: normal # basic / normal / detailed
+      # debug:
+      #   verbosity: normal # basic / normal / detailed
       otlp:
         endpoint: "tempo-tempo-distributor.openshift-tempo.svc.cluster.local:4317" # GRPC
         tls:
@@ -62,3 +62,8 @@ spec:
           # processors: []
           receivers:
             - otlp
+      telemetry:
+        logs: # Getting the OpenTelemetry Collector logs
+          level: debug
+        metrics: # Exposing the metrics
+          address: ":8888"
