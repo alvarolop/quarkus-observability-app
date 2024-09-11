@@ -19,14 +19,14 @@ spec:
             endpoint: 0.0.0.0:4317
           http:
             endpoint: 0.0.0.0:4318
-    # Data sources: metrics
-      prometheus:
-        config:
-          scrape_configs:
-            - job_name: otel-collector
-              scrape_interval: 5s
-              static_configs:
-                - targets: [localhost:8888]
+    # # Data sources: metrics
+    #   prometheus:
+    #     config:
+    #       scrape_configs:
+    #         - job_name: otel-collector
+    #           scrape_interval: 5s
+    #           static_configs:
+    #             - targets: [localhost:8888]
     exporters:
       debug:
         verbosity: detailed
@@ -39,9 +39,9 @@ spec:
         endpoint: 0.0.0.0:8889
         resource_to_telemetry_conversion:
           enabled: true # by default resource attributes are dropped
-    connectors:
-      spanmetrics: 
-        metrics_flush_interval: 15s
+    # connectors:
+    #   spanmetrics: 
+    #     metrics_flush_interval: 15s
 
     service:
       pipelines:
