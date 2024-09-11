@@ -5,5 +5,6 @@ kind: Kustomization
 resources:
   - 01-tempo-operator
   - 02-opentelemetry-operator
-  - 03-configuration
-  - 04-consolelink
+  - 03-otel
+  - 04-tempo
+  - 05-consolelink

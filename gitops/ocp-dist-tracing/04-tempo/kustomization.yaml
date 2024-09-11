@@ -7,4 +7,3 @@ namespace: openshift-tempo
 resources:
   - ns-openshift-tempo.yaml
   - tempostack-tempo.yaml
-  - opentelemetrycollector-otel.yaml

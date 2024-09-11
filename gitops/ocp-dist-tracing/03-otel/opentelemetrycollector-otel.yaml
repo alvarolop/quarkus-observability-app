@@ -10,7 +10,7 @@ spec:
   observability:
     metrics:
       enableMetrics: true 
-  config: |
+  config:
     receivers:
       otlp: {}
 
