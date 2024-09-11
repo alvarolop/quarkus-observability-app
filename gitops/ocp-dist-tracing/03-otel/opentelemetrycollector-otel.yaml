@@ -13,10 +13,11 @@ spec:
   config:
     receivers:
       otlp:
-        grpc:
-          endpoint: 0.0.0.0:4317
-        http:
-          endpoint: 0.0.0.0:4318
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
     # Data sources: metrics
       prometheus:
         config:
