@@ -32,9 +32,9 @@ spec:
     exporters:
       # https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/debugexporter/README.md
       debug:
-        verbosity: detailed # basic / normal / detailed
+        verbosity: normal # basic / normal / detailed
       otlp:
-        endpoint: "tempo-tempo-distributor.openshift-tempo.svc.cluster.local:4317"
+        endpoint: "tempo-tempo-distributor.openshift-tempo.svc.cluster.local:4317" # GRPC
         tls:
           insecure: true
       prometheus:
