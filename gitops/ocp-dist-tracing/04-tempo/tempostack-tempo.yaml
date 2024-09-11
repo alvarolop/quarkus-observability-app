@@ -14,7 +14,7 @@ spec:
     total:
       limits:
         memory: 2Gi
-        cpu: 2000m
+        cpu: '2'
   search:
     maxDuration: 0s
     maxResultLimit: 20

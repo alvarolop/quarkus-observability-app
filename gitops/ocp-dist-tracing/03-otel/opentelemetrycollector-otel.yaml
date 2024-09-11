@@ -56,6 +56,6 @@ spec:
             - otlp
             # - spanmetrics
             - debug
-          processors: []
+          # processors: []
           receivers:
             - otlp
