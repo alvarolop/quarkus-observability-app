@@ -48,8 +48,8 @@ spec:
           exporters:
             - prometheus
           processors: []
-          receivers:
-            - spanmetrics
+          receivers: []
+            # - spanmetrics
         traces:
           exporters:
             - otlp
