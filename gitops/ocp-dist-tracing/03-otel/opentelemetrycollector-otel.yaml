@@ -44,12 +44,12 @@ spec:
 
     service:
       pipelines:
-        metrics:
-          exporters:
-            - prometheus
-          processors: []
-          receivers: []
-            # - spanmetrics
+        # metrics:
+        #   exporters:
+        #     - prometheus
+        #   processors: []
+        #   receivers: []
+        #     # - spanmetrics
         traces:
           exporters:
             - otlp
