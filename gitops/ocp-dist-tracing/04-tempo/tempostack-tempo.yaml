@@ -49,6 +49,8 @@ spec:
         ingress:
           route:
             termination: edge
+            annotations:
+              haproxy.router.openshift.io/timeout: 3m
           type: route
         monitorTab:
           enabled: true 
