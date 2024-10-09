@@ -63,24 +63,24 @@ spec:
       openshiftLabels:
         test: "alvaro"
   pipelines:
-    - name: audit-logs-to-rsyslog
-      inputRefs:
-        - audit
-      # filterRefs:
-      # - detectexception
-      # - labels
-      # - parse-json
-      outputRefs:
-        - rsyslog-bastion
-    - name: quarkus-observability
-      inputRefs: 
-        - quarkus-observability-logs
-      filterRefs:
-      # - detectexception
-      - labels
-      - parse-json
-      outputRefs:
-        - cw-output 
+    # - name: audit-logs-to-rsyslog
+    #   inputRefs:
+    #     - audit
+    #   # filterRefs:
+    #   # - detectexception
+    #   # - labels
+    #   # - parse-json
+    #   outputRefs:
+    #     - rsyslog-bastion
+    # - name: quarkus-observability
+    #   inputRefs: 
+    #     - quarkus-observability-logs
+    #   filterRefs:
+    #   # - detectexception
+    #   - labels
+    #   - parse-json
+    #   outputRefs:
+    #     - cw-output 
     - name: default
       inputRefs:
         - application
