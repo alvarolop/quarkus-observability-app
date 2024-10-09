@@ -5,7 +5,6 @@ resources:
 
   - 01-clo-operator
   - 02-loki-operator
-  - 03-cluster-obs-operator
 
   # S3 Bucket alterative if using ODF
   # - obc-loki-bucket-odf.yaml
