@@ -10,11 +10,11 @@ resources:
   # - obc-loki-bucket-odf.yaml
   # - 04-create-odf-s3-secret
 
-  # # Logs Storage
-  # - lokistack-logging-loki.yaml
+  # Logs Storage
+  - lokistack-logging-loki.yaml
 
   # # Logs Collection and Visualization
   # - clusterlogging-instance.yaml
 
-  # # Log Forwarding
-  # - clusterlogforwarder-instance.yaml
+  # Log Forwarding
+  - clusterlogforwarder-instance.yaml

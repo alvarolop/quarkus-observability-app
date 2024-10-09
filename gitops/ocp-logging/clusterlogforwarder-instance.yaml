@@ -1,5 +1,5 @@
 ---
-apiVersion: logging.openshift.io/v1
+apiVersion: observability.openshift.io/v1
 kind: ClusterLogForwarder
 metadata:
   name: instance
@@ -7,12 +7,34 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
+  collector:
+    resources:
+      # limits:
+      #   memory: 1Gi
+      requests:
+        cpu: 200m
+        memory: 1Gi
+    # nodeSelector: {}
+    # tolerations: {}
   # inputs:
-    # - name: quarkus-observability-logs
-    #   application:
-    #     namespaces:
-    #       - quarkus-observability
-  # outputs:
+  #   - name: quarkus-observability-logs
+  #     application:
+  #       includes:
+  #         - namespace: quarkus-observability
+  outputs:
+    - name: default
+      type: lokiStack
+      lokiStack:
+        target:
+          name: logging-loki
+          namespace: openshift-logging
+        authentication:
+          token:
+            from: serviceAccount
+      tls:
+        ca:
+          key: service-ca.crt
+          configMapName: openshift-service-ca.crt
     # - name: rsyslog-bastion
     #   type: syslog
     #   syslog:
@@ -28,20 +50,34 @@ spec:
     #     region: ${AWS_DEFAULT_REGION}
     #   secret:
     #       name: ${AWS_SECRET_NAME} 
+  filters:
+    - name: detectexception
+      type: detectMultilineException
+    - name: parse-json
+      type: parse
+    - name: labels
+      type: openShiftLabels
+      openShiftLabels:
+        test: "alvaro"
   pipelines:
-    # - name: audit-logs-to-rsyslog
-    #   inputRefs:
-    #     - audit
-    #   outputRefs:
-    #     - rsyslog-bastion
-    # - name: quarkus-observability
-    #   inputRefs: 
-    #     - quarkus-observability-logs
-    #   outputRefs:
-    #     - cw-output 
-    #   parse: json 
-    #   labels:
-    #     test: "alvaro" 
+    - name: audit-logs-to-rsyslog
+      inputRefs:
+        - audit
+      # filterRefs:
+      # - detectexception
+      # - labels
+      # - parse-json
+      outputRefs:
+        - rsyslog-bastion
+    - name: quarkus-observability
+      inputRefs: 
+        - quarkus-observability-logs
+      filterRefs:
+      # - detectexception
+      - labels
+      - parse-json
+      outputRefs:
+        - cw-output 
     - name: default
       inputRefs:
         - application
