@@ -2,10 +2,11 @@
 apiVersion: observability.openshift.io/v1
 kind: ClusterLogForwarder
 metadata:
-  name: instance
+  name: collector
   namespace: openshift-logging
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    # observability.openshift.io/log-level: debug
 spec:
   serviceAccount: 
     name: cluster-logging-operator
@@ -86,5 +87,9 @@ spec:
         - application
         - infrastructure
         - audit
+      filterRefs:
+        - detectexception
+        - labels
+        - parse-json
       outputRefs:
         - default

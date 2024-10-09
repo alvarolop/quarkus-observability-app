@@ -13,8 +13,13 @@ resources:
   # Logs Storage
   - lokistack-logging-loki.yaml
 
+  # Log Forwarding
+  - crb-clo-collect-application-logs.yaml
+  - crb-clo-collect-audit-logs.yaml
+  - crb-clo-collect-infrastructure-logs.yaml
+  - clusterlogforwarder-collector.yaml
+
   # # Logs Collection and Visualization
   # - clusterlogging-instance.yaml
 
-  # Log Forwarding
-  - clusterlogforwarder-instance.yaml
+
