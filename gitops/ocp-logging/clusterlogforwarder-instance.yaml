@@ -60,7 +60,7 @@ spec:
       type: parse
     - name: labels
       type: openshiftLabels
-      openShiftLabels:
+      openshiftLabels:
         test: "alvaro"
   pipelines:
     - name: audit-logs-to-rsyslog
