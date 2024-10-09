@@ -7,6 +7,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
+  serviceAccount: cluster-logging-operator
   collector:
     resources:
       # limits:
@@ -51,12 +52,13 @@ spec:
     #   secret:
     #       name: ${AWS_SECRET_NAME} 
   filters:
+    # Available: openshiftLabels, detectMultilineException, drop, kubeAPIAudit, parse, prune
     - name: detectexception
       type: detectMultilineException
     - name: parse-json
       type: parse
     - name: labels
-      type: openShiftLabels
+      type: openshiftLabels
       openShiftLabels:
         test: "alvaro"
   pipelines:
