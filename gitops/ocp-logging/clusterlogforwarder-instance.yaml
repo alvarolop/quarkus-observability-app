@@ -7,7 +7,8 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
-  serviceAccount: cluster-logging-operator
+  serviceAccount: 
+    name: cluster-logging-operator
   collector:
     resources:
       # limits:
