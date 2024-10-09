@@ -61,7 +61,7 @@ echo -e "==================\n"
 echo -e "Create the Logging Bucket and Secret"
 # Create an AWS S3 Bucket to store logs
 ./prerequisites/aws-create-bucket.sh $LOKI_BUCKET
-oc process -f prerequisites/aws-s3-secret.yaml \
+oc process -f prerequisites/aws-s3-secret-loki.yaml \
     --param-file aws-env-vars --ignore-unknown-parameters=true \
     -p SECRET_NAMESPACE=$LOKI_SECRET_NAMESPACE \
     -p SECRET_NAME=$LOKI_BUCKET \
@@ -75,7 +75,7 @@ echo -e "==================\n"
 echo -e "Create the Tempo Bucket and Secret"
 # Create an AWS S3 Bucket to store traces
 ./prerequisites/aws-create-bucket.sh $TEMPO_BUCKET
-oc process -f prerequisites/aws-s3-secret.yaml \
+oc process -f prerequisites/aws-s3-secret-tempo.yaml \
     --param-file aws-env-vars --ignore-unknown-parameters=true \
     -p SECRET_NAMESPACE=$TEMPO_SECRET_NAMESPACE \
     -p SECRET_NAME=$TEMPO_BUCKET \
