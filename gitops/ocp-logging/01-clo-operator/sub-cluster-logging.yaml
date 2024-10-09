@@ -9,7 +9,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "-5"
 spec:
-  channel: stable-5.9
+  channel: stable-6.0
   installPlanApproval: Automatic
   name: cluster-logging
   source: redhat-operators
