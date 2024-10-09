@@ -82,7 +82,7 @@ spec:
     #   - parse-json
     #   outputRefs:
     #     - cw-output 
-    - name: default
+    - name: default-lokistack
       inputRefs:
         - application
         - infrastructure
@@ -92,4 +92,4 @@ spec:
         - labels
         - parse-json
       outputRefs:
-        - default
+        - default-lokistack
