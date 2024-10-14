@@ -18,22 +18,29 @@ spec:
   search:
     maxDuration: 0s
     maxResultLimit: 20
-  # tenants:
-  #   mode: openshift 
+  tenants:
+    mode: openshift
+    authentication: 
+      - tenantName: dev
+        tenantId: "dev-id"
+      - tenantName: prod
+        tenantId: "prod-id"
   template:
     compactor:
       replicas: 1
     distributor:
       component:
         replicas: 1
-      tls:
-        enabled: false
+      # tls:
+      #   enabled: false
     gateway:
-      component:
-        replicas: 1
-      enabled: false
-      ingress:
-        route: {}
+      # component:
+      #   replicas: 1
+      enabled: true
+      # ingress:
+      #   annotations:
+      #     haproxy.router.openshift.io/timeout: 3m
+      #   route: {}
     ingester:
       replicas: 1
     querier:
@@ -43,15 +50,15 @@ spec:
         replicas: 1
       jaegerQuery:
         authentication:
-          enabled: false
+          enabled: true
           sar: '{"namespace": "openshift-tempo", "resource": "pods", "verb": "get"}'
         enabled: true
-        ingress:
-          annotations:
-            haproxy.router.openshift.io/timeout: 3m
-          route:
-            termination: edge
-          type: route
+        # ingress:
+          # annotations:
+          #   haproxy.router.openshift.io/timeout: 3m
+          # route:
+          #   termination: edge
+          # type: route
         monitorTab:
           enabled: true 
           prometheusEndpoint: https://thanos-querier.openshift-monitoring.svc.cluster.local:9091
