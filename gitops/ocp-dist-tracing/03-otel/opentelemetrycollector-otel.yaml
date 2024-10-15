@@ -8,13 +8,21 @@ metadata:
     sidecar.istio.io/inject: 'true'
 spec:
   mode: deployment
+  serviceAccount: otel-collector
   observability:
     metrics:
       enableMetrics: true 
   config:
+
     extensions:
       bearertokenauth:
         filename: /var/run/secrets/kubernetes.io/serviceaccount/token
+
+    # The Spanmetrics connector receives traces and exports metrics
+    connectors:
+      spanmetrics: 
+        metrics_flush_interval: 15s
+
     receivers:
       otlp/grpc:
         protocols:
@@ -29,7 +37,8 @@ spec:
     #         - job_name: otel-collector
     #           scrape_interval: 5s
     #           static_configs:
-    #             - targets: [localhost:8888]
+    #             - targets: 
+    #               - localhost:8888
     exporters:
       # https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/debugexporter/README.md
       debug:
@@ -55,39 +64,35 @@ spec:
         headers:
           X-Scope-OrgID: dev  # tenantName
       
-      # prometheus:
-      #   add_metric_suffixes: false
-      #   endpoint: 0.0.0.0:8889
-      #   resource_to_telemetry_conversion:
-      #     enabled: true # by default resource attributes are dropped
-
-    # connectors:
-    #   spanmetrics: 
-    #     metrics_flush_interval: 15s
+      prometheus:
+        add_metric_suffixes: false
+        endpoint: 0.0.0.0:8889
+        resource_to_telemetry_conversion:
+          enabled: true # by default resource attributes are dropped
 
     service:
       extensions:
         - bearertokenauth
       pipelines:
-        # metrics:
-        #   exporters:
-        #     - prometheus
-        #   receivers: []
-        #     # - spanmetrics
         traces/grpc:
           receivers:
             - otlp/grpc
           exporters:
             - otlp
-            # - spanmetrics
+            - spanmetrics
             # - debug
         traces/http:
           receivers:
             - otlp/http
           exporters:
             - otlphttp
-            # - spanmetrics
+            - spanmetrics
             # - debug
+        metrics:
+          receivers:
+            - spanmetrics
+          exporters:
+            - prometheus
       telemetry:
         # logs: # Getting the OpenTelemetry Collector logs
         #   level: debug

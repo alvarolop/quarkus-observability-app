@@ -49,9 +49,9 @@ spec:
       component:
         replicas: 1
       jaegerQuery:
-        authentication:
-          enabled: true
-          sar: '{"namespace": "openshift-tempo", "resource": "pods", "verb": "get"}'
+        # authentication:
+        #   enabled: true
+        #   sar: '{"namespace": "openshift-tempo", "resource": "pods", "verb": "get"}'
         enabled: true
         monitorTab:
           enabled: true 
