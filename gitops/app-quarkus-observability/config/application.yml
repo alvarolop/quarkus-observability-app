@@ -20,8 +20,7 @@ quarkus:
     enabled: true
     exporter:
       otlp:
-        # endpoint: "http://tempo-tempo-distributor.openshift-tempo.svc.cluster.local:4317/"
-        endpoint: "http://otel-collector.openshift-tempo.svc.cluster.local:4317/"
+        endpoint: http://otel-collector.otel.svc.cluster.local:4317
   swagger-ui:
     always-include: true
   smallrye-openapi:
