@@ -8,7 +8,7 @@ resources:
   - ns-openshift-tempo.yaml
   - tempostack-tempo.yaml
 
-  # Allow everybody to get traces
+  # Allow everybody to get traces in both tenants
   - cr-tempostack-traces-reader-dev.yaml
   - cr-tempostack-traces-reader-prod.yaml
   - crb-tempostack-traces-reader-dev.yaml

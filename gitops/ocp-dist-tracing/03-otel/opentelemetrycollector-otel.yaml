@@ -12,14 +12,15 @@ spec:
     metrics:
       enableMetrics: true 
   config:
+    extensions:
+      bearertokenauth:
+        filename: /var/run/secrets/kubernetes.io/serviceaccount/token
     receivers:
-      otlp:
+      otlp/grpc:
         protocols:
-          # grpc:
-          #   endpoint: 0.0.0.0:4317
-          # http:
-          #   endpoint: 0.0.0.0:4318
           grpc: {}
+      otlp/http:
+        protocols:
           http: {}
     # # Data sources: metrics
     #   prometheus:
@@ -31,39 +32,64 @@ spec:
     #             - targets: [localhost:8888]
     exporters:
       # https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/debugexporter/README.md
-      # debug:
-      #   verbosity: normal # basic / normal / detailed
+      debug:
+        verbosity: normal # basic / normal / detailed
+
+      # GRPC exporter to Tempo
       otlp:
-        endpoint: "tempo-tempo-distributor.openshift-tempo.svc.cluster.local:4317" # GRPC
+        endpoint: tempo-tempo-gateway.openshift-tempo.svc.cluster.local:8090
         tls:
-          insecure: true
-      prometheus:
-        add_metric_suffixes: false
-        endpoint: 0.0.0.0:8889
-        resource_to_telemetry_conversion:
-          enabled: true # by default resource attributes are dropped
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+        auth:
+          authenticator: bearertokenauth
+        headers:
+          X-Scope-OrgID: dev  # tenantName
+
+      # HTTP exporter to Tempo
+      otlphttp: 
+        endpoint: https://tempo-tempo-gateway.openshift-tempo.svc.cluster.local:8080/api/traces/v1/dev
+        tls:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+        auth:
+          authenticator: bearertokenauth
+        headers:
+          X-Scope-OrgID: dev  # tenantName
+      
+      # prometheus:
+      #   add_metric_suffixes: false
+      #   endpoint: 0.0.0.0:8889
+      #   resource_to_telemetry_conversion:
+      #     enabled: true # by default resource attributes are dropped
+
     # connectors:
     #   spanmetrics: 
     #     metrics_flush_interval: 15s
 
     service:
+      extensions:
+        - bearertokenauth
       pipelines:
         # metrics:
         #   exporters:
         #     - prometheus
-        #   processors: []
         #   receivers: []
         #     # - spanmetrics
-        traces:
+        traces/grpc:
+          receivers:
+            - otlp/grpc
           exporters:
             - otlp
             # - spanmetrics
             # - debug
-          # processors: []
+        traces/http:
           receivers:
-            - otlp
+            - otlp/http
+          exporters:
+            - otlphttp
+            # - spanmetrics
+            # - debug
       telemetry:
-        logs: # Getting the OpenTelemetry Collector logs
-          level: debug
+        # logs: # Getting the OpenTelemetry Collector logs
+        #   level: debug
         metrics: # Exposing the metrics
           address: ":8888"

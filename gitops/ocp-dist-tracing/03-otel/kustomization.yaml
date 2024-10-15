@@ -7,3 +7,9 @@ namespace: otel
 resources:
   - ns-otel.yaml
   - opentelemetrycollector-otel.yaml
+
+  # Allow everybody to get traces in both tenants
+  - cr-tempostack-traces-writer-dev.yaml
+  - cr-tempostack-traces-writer-prod.yaml
+  - crb-tempostack-traces-writer-dev.yaml
+  - crb-tempostack-traces-writer-prod.yaml

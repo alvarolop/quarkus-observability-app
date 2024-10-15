@@ -34,8 +34,8 @@ spec:
       # tls:
       #   enabled: false
     gateway:
-      # component:
-      #   replicas: 1
+      component:
+        replicas: 1
       enabled: true
       # ingress:
       #   annotations:
@@ -53,12 +53,6 @@ spec:
           enabled: true
           sar: '{"namespace": "openshift-tempo", "resource": "pods", "verb": "get"}'
         enabled: true
-        # ingress:
-          # annotations:
-          #   haproxy.router.openshift.io/timeout: 3m
-          # route:
-          #   termination: edge
-          # type: route
         monitorTab:
           enabled: true 
           prometheusEndpoint: https://thanos-querier.openshift-monitoring.svc.cluster.local:9091
