@@ -25,7 +25,7 @@ spec:
   #       includes:
   #         - namespace: quarkus-observability
   outputs:
-    - name: default
+    - name: default-lokistack
       type: lokiStack
       lokiStack:
         target:

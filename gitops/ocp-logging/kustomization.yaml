@@ -13,13 +13,19 @@ resources:
   # Logs Storage
   - lokistack-logging-loki.yaml
 
-  # Log Forwarding
+  # Log RBAC
   - crb-clo-collect-application-logs.yaml
   - crb-clo-collect-audit-logs.yaml
   - crb-clo-collect-infrastructure-logs.yaml
+  ## Allow write anything 
+  - crb-clo-logging-collector-logs-writer.yaml
+  ## Segregate write permission
+  # - crb-clo-write-application-logs.yaml
+  # - crb-clo-write-audit-logs.yaml
+  # - crb-clo-write-infrastructure-logs.yaml
+
+  # Log Forwarding
   - clusterlogforwarder-collector.yaml
 
   # # Logs Collection and Visualization
   # - clusterlogging-instance.yaml
-
-
