@@ -31,8 +31,6 @@ spec:
     distributor:
       component:
         replicas: 1
-      # tls:
-      #   enabled: false
     gateway:
       component:
         replicas: 1
