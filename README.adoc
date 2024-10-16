@@ -36,9 +36,6 @@ toc::[]
 
 This application showcases how to configure Logging, Metrics, and Tracing in a Quarkus and collect and manage them using the supported infrastructure of Openshift. 
 
-NOTE: In this section I have new great features!
-
-
 === Quarkus application
 
 The application is built using https://quarkus.io/[Quarkus], a container-first framework for writing Java applications.
