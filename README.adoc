@@ -193,7 +193,7 @@ NOTE: This repository has been fully migrated to the GitOps pattern. This means 
 
 What do you need before installing the application?
 
-* This repo is tested on OpenShift version `4.16.10`, but most of the configuration should work in previous versions. There has been changes to the code to adapt to latest releases, so you can always check old commits for old configurations :)
+* This repo is tested on OpenShift version `4.16.16`, but most of the configuration should work in previous versions. There has been changes to the code to adapt to latest releases, so you can always check old commits for old configurations :)
 * Both Grafana Loki and Grafana Tempo relies on Object storage that is not available on OCP after installation. As I don't want to mix things installing ODF (Super nice component), the `auto-install.sh` script will use your AWS credentials to create two AWS S3 buckets on Amazon.
 * This is the GitOps era, so you will need ArgoCD deployed on your cluster. I recommend using OpenShift GitOps and for that I have a really cool repo. Have a lok at it https://github.com/alvarolop/ocp-gitops-playground[here].
 
