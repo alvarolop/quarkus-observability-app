@@ -1,9 +1,11 @@
-FROM quay.io/openshift/origin-cli:4.16
+FROM registry.redhat.io/ubi9-minimal:latest
 
 # Install dependencies
-RUN yum install -y unzip
+RUN microdnf install -y unzip \
+    && microdnf clean all
 
 # Install AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
+    && rm -rf awscliv2.zip \
     && ./aws/install
