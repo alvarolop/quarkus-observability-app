@@ -1,4 +1,4 @@
-FROM registry.redhat.io/ubi9-minimal:latest
+FROM registry.access.redhat.com/ubi9-minimal:latest
 
 # Install dependencies
 RUN microdnf install -y unzip \
