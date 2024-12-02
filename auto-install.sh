@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -35,7 +35,7 @@ echo -e "==============\n"
 
 # Check if the user is logged in 
 if ! oc whoami &> /dev/null; then
-    echo -e "Check. You are not logged out. Please log in and run the script again."
+    echo -e "Check. You are not logged in. Please log in and run the script again."
     exit 1
 else
     echo -e "Check. You are correctly logged in. Continue..."
