@@ -8,11 +8,16 @@ source ./aws-env-vars
 # Set your environment variables here
 #####################################
 
+# Random suffix generator
+generate_random_suffix() {
+    tr -dc 'a-z0-9' </dev/urandom | head -c 5
+}
+
 # S3 Buckets
-LOKI_BUCKET="s3-bucket-loki-alvaro"
+LOKI_BUCKET="s3-bucket-loki-$(generate_random_suffix)"
 LOKI_SECRET_NAMESPACE=openshift-logging
 
-TEMPO_BUCKET="s3-bucket-tempo-alvaro"
+TEMPO_BUCKET="s3-bucket-tempo-$(generate_random_suffix)"
 TEMPO_SECRET_NAMESPACE=openshift-tempo
 
 #####################################
