@@ -102,6 +102,7 @@ else
     echo "Secret 's3-bucket-tempo' already exists in namespace '$TEMPO_SECRET_NAMESPACE'. Skipping creation."
 fi
 
+
 echo -e "\n=================="
 echo -e "= INFRA ALERTING ="
 echo -e "==================\n"
@@ -128,8 +129,27 @@ else
 fi
 
 
+echo -e "\n======================="
+echo -e "=     CONSOLELINKS    ="
+echo -e "=======================\n"
 
+ROUTE_SUFIX=$(oc get route console -n openshift-console -o jsonpath='{.spec.host}' | sed 's/^console-openshift-console\.//')
 
+# Create the ConsoleLink to Grafana
+oc process -f prerequisites/consolelink.yaml \
+    -p NAME=openshift-tempo-tempo \
+    -p SPEC_HREF="https://tempo-tempo-gateway-openshift-tempo.$ROUTE_SUFIX" \
+    -p SPEC_TEXT="Jaeger UI" \
+    -p SECTION="Observability" \
+    -p IMAGE_URL="https://api.nuget.org/v3-flatcontainer/jaeger/1.0.3/icon" | oc apply -f -
+
+# Create the ConsoleLink to Tempo
+oc process -f prerequisites/consolelink.yaml \
+    -p NAME=grafana-grafana \
+    -p SPEC_HREF="https://grafana-route-grafana.$ROUTE_SUFIX" \
+    -p SPEC_TEXT="Grafana" \
+    -p SECTION="Observability" \
+    -p IMAGE_URL="https://img.icons8.com/fluency/256/grafana.png" | oc apply -f -
 
 
 echo -e "\n=================="
@@ -138,28 +158,3 @@ echo -e "==================\n"
 
 echo -e "Trigger the app of apps creation"
 oc apply -f app-of-apps.yaml
-
-
-echo -e "\n======================="
-echo -e "=     CONSOLELINKS    ="
-echo -e "=======================\n"
-
-
-while ! oc get routes grafana -n grafana &>/dev/null; do echo "Waiting for Grafana route..."; sleep 2; done
-while ! oc get routes grafana -n grafana &>/dev/null; do echo "Waiting for Grafana route..."; sleep 2; done
-
-# Create the ConsoleLink to Grafana
-oc process -f prerequisites/consolelink.yaml \
-    -p NAME=openshift-tempo-tempo \
-    -p SPEC_HREF="$(oc get routes grafana-route -n grafana --template='https://{{ .spec.host }}')" \
-    -p SPEC_TEXT="Jaeger UI" \
-    -p SECTION="Observability" \
-    -p IMAGE_URL="https://api.nuget.org/v3-flatcontainer/jaeger/1.0.3/icon" | oc apply -f -
-
-# Create the ConsoleLink to Tempo
-oc process -f prerequisites/consolelink.yaml \
-    -p NAME=grafana-grafana \
-    -p SPEC_HREF="$(oc get routes grafana -n grafana --template='https://{{ .spec.host }}')" \
-    -p SPEC_TEXT="Grafana" \
-    -p SECTION="Observability" \
-    -p IMAGE_URL="https://img.icons8.com/fluency/256/grafana.png" | oc apply -f -
