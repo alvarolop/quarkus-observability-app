@@ -3,22 +3,17 @@
 set -e
 
 source ./aws-env-vars
-source ./gmail-app-vars
 
 #####################################
 # Set your environment variables here
 #####################################
 
 # S3 Buckets
-LOKI_BUCKET="s3-bucket-loki-obs"
+LOKI_BUCKET="s3-bucket-loki-alvaro"
 LOKI_SECRET_NAMESPACE=openshift-logging
 
-TEMPO_BUCKET="s3-bucket-tempo-obs"
+TEMPO_BUCKET="s3-bucket-tempo-alvaro"
 TEMPO_SECRET_NAMESPACE=openshift-tempo
-
-# ALERTING
-ALERTING_PASSWORD=$GMAIL_PASSWORD
-
 
 #####################################
 ## Do not modify anything from this line
@@ -35,14 +30,23 @@ echo -e "==============\n"
 
 # Check if the user is logged in 
 if ! oc whoami &> /dev/null; then
-    echo -e "Check. You are not logged in. Please log in and run the script again."
+    echo -e "Checked. You are not logged in. Please log in and run the script again."
     exit 1
 else
-    echo -e "Check. You are correctly logged in. Continue..."
+    echo -e "Checked. You are correctly logged in. Continue..."
     if ! oc project &> /dev/null; then
         echo -e "Current project does not exist, moving to project Default."
         oc project default 
     fi
+fi
+
+# Check if aws cli is installed
+if ! which aws &> /dev/null; then 
+    echo "You need the AWS CLI to run this Quickstart, please, refer to the official documentation:"
+    echo -e "\thttps://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html"
+    exit 1
+else 
+    echo -e "Checked. You have aws cli installed. Continue..."
 fi
 
 
@@ -67,6 +71,7 @@ oc process -f prerequisites/aws-s3-secret-loki.yaml \
     -p SECRET_NAME=$LOKI_BUCKET \
     -p AWS_S3_BUCKET=$LOKI_BUCKET | oc apply -f -
 
+
 echo -e "\n=================="
 echo -e "=     TRACING    ="
 echo -e "==================\n"
@@ -81,15 +86,24 @@ oc process -f prerequisites/aws-s3-secret-tempo.yaml \
     -p SECRET_NAME=$TEMPO_BUCKET \
     -p AWS_S3_BUCKET=$TEMPO_BUCKET | oc apply -f -
 
+
 echo -e "\n=================="
 echo -e "= INFRA ALERTING ="
 echo -e "==================\n"
 
-# Create the Quarkus Obs Alerting Pass
-echo -e "Create the Quarkus Obs Alerting Pass"
-SECRET_NAMESPACE=quarkus-observability
-oc process -f prerequisites/secret-alert-routing-to-mail.yaml \
-    -p AUTH_PASSWORD=$ALERTING_PASSWORD | oc apply -f -
+if [ -f ./gmail-app-vars ]; then
+
+    # Create the Quarkus Obs Alerting Pass
+    echo -e "Create the Quarkus Obs Alerting Pass"
+
+    source ./gmail-app-vars
+    SECRET_NAMESPACE=quarkus-observability
+    oc process -f prerequisites/secret-alert-routing-to-mail.yaml \
+        -p AUTH_PASSWORD=$GMAIL_PASSWORD | oc apply -f -
+else 
+    echo -e "\The file with Gmail vars is missing. Skipping creation of the Alerts secret"
+fi
+
 
 echo -e "\n=================="
 echo -e "=     GITOPS     ="
