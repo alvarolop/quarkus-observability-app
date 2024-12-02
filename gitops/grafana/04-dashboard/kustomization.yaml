@@ -1,0 +1,14 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+  - name: quarkus-observability-dashboard
+    files:
+      - dashboard.json
+    options:
+      disableNameSuffixHash: true
+
+resources:
+  - grafanadashboard-quarkus-observability.yaml
+

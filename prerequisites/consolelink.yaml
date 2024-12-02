@@ -1,0 +1,33 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+
+  - apiVersion: console.openshift.io/v1
+    kind: ConsoleLink
+    metadata:
+      name: ${NAME}
+    spec:
+      href: ${SPEC_HREF}
+      location: ApplicationMenu
+      text: ${SPEC_TEXT}
+      applicationMenu:
+        section: ${SECTION}
+        imageURL: ${IMAGE_URL}
+
+parameters:
+  - name: NAME
+    description: "Name of the ConsoleLink resource."
+    required: true
+  - name: SPEC_HREF
+    description: "URL of the route the ConsoleLink points at."
+    required: true
+  - name: SPEC_TEXT
+    description: "Text to display on the Route."
+    required: true
+  - name: SECTION
+    description: "Section in which to locate the Link."
+    required: true
+  - name: IMAGE_URL
+    description: "URL of the image."
+    required: true
