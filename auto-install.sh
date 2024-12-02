@@ -70,11 +70,17 @@ echo -e "==================\n"
 echo -e "Create the Logging Bucket and Secret"
 # Create an AWS S3 Bucket to store logs
 ./prerequisites/aws-create-bucket.sh $LOKI_BUCKET
-oc process -f prerequisites/aws-s3-secret-loki.yaml \
-    --param-file aws-env-vars --ignore-unknown-parameters=true \
-    -p SECRET_NAMESPACE=$LOKI_SECRET_NAMESPACE \
-    -p SECRET_NAME="s3-bucket-loki" \
-    -p AWS_S3_BUCKET=$LOKI_BUCKET | oc apply -f -
+# Check if the Loki secret exists in the specified namespace
+if ! oc get secret s3-bucket-loki -n $LOKI_SECRET_NAMESPACE &>/dev/null; then
+    echo "Secret 's3-bucket-loki' not found in namespace '$LOKI_SECRET_NAMESPACE'. Creating it now..."
+    oc process -f prerequisites/aws-s3-secret-loki.yaml \
+        --param-file aws-env-vars --ignore-unknown-parameters=true \
+        -p SECRET_NAMESPACE=$LOKI_SECRET_NAMESPACE \
+        -p SECRET_NAME="s3-bucket-loki" \
+        -p AWS_S3_BUCKET=$LOKI_BUCKET | oc apply -f -
+else
+    echo "Secret 's3-bucket-loki' already exists in namespace '$LOKI_SECRET_NAMESPACE'. Skipping creation."
+fi
 
 
 echo -e "\n=================="
@@ -91,6 +97,17 @@ oc process -f prerequisites/aws-s3-secret-tempo.yaml \
     -p SECRET_NAME="s3-bucket-tempo" \
     -p AWS_S3_BUCKET=$TEMPO_BUCKET | oc apply -f -
 
+# Check if the secret exists in the specified namespace
+if ! oc get secret s3-bucket-tempo -n $TEMPO_SECRET_NAMESPACE &>/dev/null; then
+    echo "Secret 's3-bucket-tempo' not found in namespace '$TEMPO_SECRET_NAMESPACE'. Creating it now..."
+    oc process -f prerequisites/aws-s3-secret-tempo.yaml \
+        --param-file aws-env-vars --ignore-unknown-parameters=true \
+        -p SECRET_NAMESPACE=$TEMPO_SECRET_NAMESPACE \
+        -p SECRET_NAME="s3-bucket-tempo" \
+        -p AWS_S3_BUCKET=$TEMPO_BUCKET | oc apply -f -
+else
+    echo "Secret 's3-bucket-tempo' already exists in namespace '$TEMPO_SECRET_NAMESPACE'. Skipping creation."
+fi
 
 echo -e "\n=================="
 echo -e "= INFRA ALERTING ="
@@ -103,8 +120,16 @@ if [ -f ./gmail-app-vars ]; then
 
     source ./gmail-app-vars
     SECRET_NAMESPACE=quarkus-observability
-    oc process -f prerequisites/secret-alert-routing-to-mail.yaml \
-        -p AUTH_PASSWORD=$GMAIL_PASSWORD | oc apply -f -
+    # Check if the alert routing secret exists in the specified namespace
+    if ! oc get secret alert-routing-to-mail -n $SECRET_NAMESPACE &>/dev/null; then
+        echo "Secret 'alert-routing-to-mail' not found in namespace '$SECRET_NAMESPACE'. Creating it now..."
+        oc process -f prerequisites/secret-alert-routing-to-mail.yaml \
+            -p SECRET_NAMESPACE=$SECRET_NAMESPACE \
+            -p SECRET_NAME="alert-routing-to-mail" \
+            -p AUTH_PASSWORD=$GMAIL_PASSWORD | oc apply -f -
+    else
+        echo "Secret 'alert-routing-to-mail' already exists in namespace '$SECRET_NAMESPACE'. Skipping creation."
+    fi
 else 
     echo -e "\The file with Gmail vars is missing. Skipping creation of the Alerts secret"
 fi
