@@ -7,4 +7,3 @@ resources:
   - 02-opentelemetry-operator
   - 03-otel
   - 04-tempo
-  - 05-consolelink

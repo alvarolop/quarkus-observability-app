@@ -7,7 +7,6 @@ namespace: grafana
 resources:
   - 01-operator
   - 02-grafana
-  - 03-consolelink
-  - 04-datasource
-  - 05-dashboard
-  - 06-grafana-tempo
+  - 03-datasource
+  - 04-dashboard
+  - 05-grafana-tempo

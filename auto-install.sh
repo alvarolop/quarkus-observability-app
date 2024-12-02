@@ -87,16 +87,9 @@ echo -e "\n=================="
 echo -e "=     TRACING    ="
 echo -e "==================\n"
 
-# Create the Tempo Bucket Secret
 echo -e "Create the Tempo Bucket and Secret"
 # Create an AWS S3 Bucket to store traces
 ./prerequisites/aws-create-bucket.sh $TEMPO_BUCKET
-oc process -f prerequisites/aws-s3-secret-tempo.yaml \
-    --param-file aws-env-vars --ignore-unknown-parameters=true \
-    -p SECRET_NAMESPACE=$TEMPO_SECRET_NAMESPACE \
-    -p SECRET_NAME="s3-bucket-tempo" \
-    -p AWS_S3_BUCKET=$TEMPO_BUCKET | oc apply -f -
-
 # Check if the secret exists in the specified namespace
 if ! oc get secret s3-bucket-tempo -n $TEMPO_SECRET_NAMESPACE &>/dev/null; then
     echo "Secret 's3-bucket-tempo' not found in namespace '$TEMPO_SECRET_NAMESPACE'. Creating it now..."
@@ -121,18 +114,22 @@ if [ -f ./gmail-app-vars ]; then
     source ./gmail-app-vars
     SECRET_NAMESPACE=quarkus-observability
     # Check if the alert routing secret exists in the specified namespace
-    if ! oc get secret alert-routing-to-mail -n $SECRET_NAMESPACE &>/dev/null; then
-        echo "Secret 'alert-routing-to-mail' not found in namespace '$SECRET_NAMESPACE'. Creating it now..."
-        oc process -f prerequisites/secret-alert-routing-to-mail.yaml \
-            -p SECRET_NAMESPACE=$SECRET_NAMESPACE \
-            -p SECRET_NAME="alert-routing-to-mail" \
-            -p AUTH_PASSWORD=$GMAIL_PASSWORD | oc apply -f -
-    else
-        echo "Secret 'alert-routing-to-mail' already exists in namespace '$SECRET_NAMESPACE'. Skipping creation."
-    fi
+if ! oc get secret alert-routing-to-mail -n $SECRET_NAMESPACE &>/dev/null; then
+    echo "Secret 'alert-routing-to-mail' not found in namespace '$SECRET_NAMESPACE'. Creating it now..."
+    oc process -f prerequisites/secret-alert-routing-to-mail.yaml \
+        -p SECRET_NAMESPACE=$SECRET_NAMESPACE \
+        -p SECRET_NAME="alert-routing-to-mail" \
+        -p AUTH_PASSWORD=$GMAIL_PASSWORD | oc apply -f -
+else
+    echo "Secret 'alert-routing-to-mail' already exists in namespace '$SECRET_NAMESPACE'. Skipping creation."
+fi
 else 
     echo -e "\The file with Gmail vars is missing. Skipping creation of the Alerts secret"
 fi
+
+
+
+
 
 
 echo -e "\n=================="
@@ -141,3 +138,28 @@ echo -e "==================\n"
 
 echo -e "Trigger the app of apps creation"
 oc apply -f app-of-apps.yaml
+
+
+echo -e "\n======================="
+echo -e "=     CONSOLELINKS    ="
+echo -e "=======================\n"
+
+
+while ! oc get routes grafana -n grafana &>/dev/null; do echo "Waiting for Grafana route..."; sleep 2; done
+while ! oc get routes grafana -n grafana &>/dev/null; do echo "Waiting for Grafana route..."; sleep 2; done
+
+# Create the ConsoleLink to Grafana
+oc process -f prerequisites/consolelink.yaml \
+    -p NAME=openshift-tempo-tempo \
+    -p SPEC_HREF="$(oc get routes grafana-route -n grafana --template='https://{{ .spec.host }}')" \
+    -p SPEC_TEXT="Jaeger UI" \
+    -p SECTION="Observability" \
+    -p IMAGE_URL="https://api.nuget.org/v3-flatcontainer/jaeger/1.0.3/icon" | oc apply -f -
+
+# Create the ConsoleLink to Tempo
+oc process -f prerequisites/consolelink.yaml \
+    -p NAME=grafana-grafana \
+    -p SPEC_HREF="$(oc get routes grafana -n grafana --template='https://{{ .spec.host }}')" \
+    -p SPEC_TEXT="Grafana" \
+    -p SECTION="Observability" \
+    -p IMAGE_URL="https://img.icons8.com/fluency/256/grafana.png" | oc apply -f -
