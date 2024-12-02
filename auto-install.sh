@@ -68,7 +68,7 @@ echo -e "Create the Logging Bucket and Secret"
 oc process -f prerequisites/aws-s3-secret-loki.yaml \
     --param-file aws-env-vars --ignore-unknown-parameters=true \
     -p SECRET_NAMESPACE=$LOKI_SECRET_NAMESPACE \
-    -p SECRET_NAME=$LOKI_BUCKET \
+    -p SECRET_NAME="s3-bucket-loki" \
     -p AWS_S3_BUCKET=$LOKI_BUCKET | oc apply -f -
 
 
@@ -83,7 +83,7 @@ echo -e "Create the Tempo Bucket and Secret"
 oc process -f prerequisites/aws-s3-secret-tempo.yaml \
     --param-file aws-env-vars --ignore-unknown-parameters=true \
     -p SECRET_NAMESPACE=$TEMPO_SECRET_NAMESPACE \
-    -p SECRET_NAME=$TEMPO_BUCKET \
+    -p SECRET_NAME="s3-bucket-tempo" \
     -p AWS_S3_BUCKET=$TEMPO_BUCKET | oc apply -f -
 
 

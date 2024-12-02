@@ -20,7 +20,7 @@ spec:
       - version: v13
         effectiveDate: "2024-07-01"
     secret:
-      name: s3-bucket-loki-alvaro
+      name: s3-bucket-loki
       type: s3 
   # storageClassName: ocs-storagecluster-ceph-rbd # This is for ODF
   storageClassName: gp3-csi
