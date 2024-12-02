@@ -4,7 +4,7 @@ app:
   delay:
     default: 1000
 quarkus:
-  health:
+  smallrye-health:
     openapi:
       included: true
   log:
