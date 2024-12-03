@@ -6,6 +6,7 @@ namespace: otel
 
 resources:
   - ns-otel.yaml
+  - sa-otel-collector.yaml
   - opentelemetrycollector-otel.yaml
 
   # Allow everybody to get traces in both tenants
