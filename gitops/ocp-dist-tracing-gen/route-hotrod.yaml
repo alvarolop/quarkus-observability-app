@@ -1,0 +1,10 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: hotrod
+  namespace: tracing-app-hotrod
+spec:
+  to:
+    kind: Service
+    name: hotrod

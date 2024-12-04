@@ -20,6 +20,8 @@ LOKI_SECRET_NAMESPACE=openshift-logging
 TEMPO_BUCKET="s3-bucket-tempo-$(generate_random_suffix)"
 TEMPO_SECRET_NAMESPACE=openshift-tempo
 
+DEPLOY_GENERATOR_APPS=true
+
 #####################################
 ## Do not modify anything from this line
 #####################################
@@ -100,6 +102,11 @@ if ! oc get secret s3-bucket-tempo -n $TEMPO_SECRET_NAMESPACE &>/dev/null; then
         -p AWS_S3_BUCKET=$TEMPO_BUCKET | oc apply -f -
 else
     echo "Secret 's3-bucket-tempo' already exists in namespace '$TEMPO_SECRET_NAMESPACE'. Skipping creation."
+fi
+
+if [[ "$DEPLOY_GENERATOR_APPS" =~ ^([Tt]rue|[Yy]es|[1])$ ]]; then
+
+    oc apply -f application-ocp-dist-tracing-gen.yaml
 fi
 
 

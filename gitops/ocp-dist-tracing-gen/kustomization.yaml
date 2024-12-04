@@ -1,0 +1,13 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ns-tracing-app-hotrod.yaml
+  - ns-tracing-app-k6.yaml
+  - ns-tracing-app-telemetrygen.yaml
+  - deployment-hotrod.yaml
+  - deployment-k6-tracing.yaml
+  - deployment-telemetrygen.yaml
+  - svc-hotrod.yaml
+  - route-hotrod.yaml
