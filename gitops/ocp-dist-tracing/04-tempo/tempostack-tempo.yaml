@@ -13,8 +13,8 @@ spec:
   resources:
     total:
       limits:
-        memory: 2Gi
-        cpu: '2'
+        memory: 3Gi
+        cpu: '3'
   search:
     maxDuration: 0s
     maxResultLimit: 20
@@ -48,9 +48,9 @@ spec:
         replicas: 1
       jaegerQuery:
         enabled: true
-        monitorTab:
-          enabled: true 
-          prometheusEndpoint: https://thanos-querier.openshift-monitoring.svc.cluster.local:9091
+        # monitorTab:
+        #   enabled: true 
+        #   prometheusEndpoint: https://thanos-querier.openshift-monitoring.svc.cluster.local:9091
   replicationFactor: 1
   storage:
     secret:
