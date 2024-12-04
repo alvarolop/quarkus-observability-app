@@ -8,3 +8,7 @@ spec:
   to:
     kind: Service
     name: hotrod
+    weight: 100
+  port:
+    targetPort: frontend
+  wildcardPolicy: None
