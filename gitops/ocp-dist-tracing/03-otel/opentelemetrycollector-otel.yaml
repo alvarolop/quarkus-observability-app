@@ -24,12 +24,15 @@ spec:
         metrics_flush_interval: 15s
 
     receivers:
-      otlp/grpc:
+      otlp:
         protocols:
-          grpc: {}
-      otlp/http:
-        protocols:
-          http: {}
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+
+    processors:
+      k8sattributes: {}
 
     exporters:
       # https://github.com/open-telemetry/opentelemetry-collector/blob/main/exporter/debugexporter/README.md
@@ -46,15 +49,15 @@ spec:
         headers:
           X-Scope-OrgID: dev  # tenantName
 
-      # HTTP exporter to Tempo
-      otlphttp: 
-        endpoint: https://tempo-tempo-gateway.openshift-tempo.svc.cluster.local:8080/api/traces/v1/dev
-        tls:
-          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-        auth:
-          authenticator: bearertokenauth
-        headers:
-          X-Scope-OrgID: dev  # tenantName
+      # # HTTP exporter to Tempo
+      # otlphttp: 
+      #   endpoint: https://tempo-tempo-gateway.openshift-tempo.svc.cluster.local:8080/api/traces/v1/dev
+      #   tls:
+      #     ca_file: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
+      #   auth:
+      #     authenticator: bearertokenauth
+      #   headers:
+      #     X-Scope-OrgID: dev  # tenantName
       
       prometheus:
         add_metric_suffixes: false
@@ -66,20 +69,15 @@ spec:
       extensions:
         - bearertokenauth
       pipelines:
-        traces/grpc:
+        traces:
           receivers:
-            - otlp/grpc
+            - otlp
+          processors:
+            - k8sattributes
           exporters:
             - otlp
             - spanmetrics
-            # - debug
-        traces/http:
-          receivers:
-            - otlp/http
-          exporters:
-            - otlphttp
-            - spanmetrics
-            # - debug
+            - debug
         metrics:
           receivers:
             - spanmetrics

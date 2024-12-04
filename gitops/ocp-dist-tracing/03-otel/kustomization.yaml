@@ -14,3 +14,7 @@ resources:
   - cr-tempostack-traces-writer-prod.yaml
   - crb-tempostack-traces-writer-dev.yaml
   - crb-tempostack-traces-writer-prod.yaml
+
+  # Only needed for k8sattributes
+  - cr-openshift-tracing-otel-collector.yaml
+  - crb-openshift-tracing-otel-collector.yaml
