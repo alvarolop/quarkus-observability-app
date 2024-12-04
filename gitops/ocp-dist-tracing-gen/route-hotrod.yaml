@@ -5,10 +5,14 @@ metadata:
   name: hotrod
   namespace: tracing-app-hotrod
 spec:
+  path: /
   to:
     kind: Service
     name: hotrod
     weight: 100
   port:
     targetPort: frontend
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
   wildcardPolicy: None
