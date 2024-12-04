@@ -41,11 +41,19 @@ spec:
       #   route: {}
     # ingester:
     #   replicas: 1
-    # querier:
-    #   replicas: 1
+    querier:
+      replicas: 1
+      resources:
+        limits:
+          memory: 1Gi
+          cpu: '1'
     queryFrontend:
-      # component:
-      #   replicas: 1
+      component:
+        replicas: 1
+        resources:
+          limits:
+            memory: 1Gi
+            cpu: '1'
       jaegerQuery:
         enabled: true
         monitorTab:
