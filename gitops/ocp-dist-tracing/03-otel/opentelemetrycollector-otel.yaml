@@ -77,7 +77,7 @@ spec:
           exporters:
             - otlp
             - spanmetrics
-            - debug
+            # - debug
         metrics:
           receivers:
             - spanmetrics
