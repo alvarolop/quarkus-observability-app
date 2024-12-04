@@ -105,7 +105,6 @@ else
 fi
 
 if [[ "$DEPLOY_GENERATOR_APPS" =~ ^([Tt]rue|[Yy]es|[1])$ ]]; then
-
     oc apply -f application-ocp-dist-tracing-gen.yaml
 fi
 
@@ -145,8 +144,8 @@ ROUTE_SUFIX=$(oc get route console -n openshift-console -o jsonpath='{.spec.host
 # Create the ConsoleLink to Grafana
 oc process -f prerequisites/consolelink.yaml \
     -p NAME=openshift-tempo-tempo \
-    -p SPEC_HREF="https://tempo-tempo-gateway-openshift-tempo.$ROUTE_SUFIX" \
-    -p SPEC_TEXT="Jaeger UI" \
+    -p SPEC_HREF="https://tempo-tempo-gateway-openshift-tempo.$ROUTE_SUFIX/dev" \
+    -p SPEC_TEXT="Jaeger UI - Dev" \
     -p SECTION="Observability" \
     -p IMAGE_URL="https://api.nuget.org/v3-flatcontainer/jaeger/1.0.3/icon" | oc apply -f -
 
