@@ -1,7 +1,7 @@
 FROM registry.access.redhat.com/ubi9-minimal:latest
 
 # Install dependencies
-RUN microdnf install -y unzip tar gzip ssh rsync \
+RUN microdnf install -y unzip tar gzip openssh rsync \
     && microdnf clean all
 
 # Install AWS CLI
