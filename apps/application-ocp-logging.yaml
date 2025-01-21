@@ -5,7 +5,7 @@ metadata:
   labels:
     app: ocp-logging
   name: ocp-logging
-  namespace: gitops
+  namespace: openshift-gitops
 spec:
   destination:
     server: 'https://kubernetes.default.svc'

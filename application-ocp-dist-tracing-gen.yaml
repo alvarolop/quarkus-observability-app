@@ -5,7 +5,7 @@ metadata:
   labels:
     app: ocp-dist-tracing-gen
   name: ocp-dist-tracing-gen
-  namespace: gitops
+  namespace: openshift-gitops
 spec:
   destination:
     server: 'https://kubernetes.default.svc'

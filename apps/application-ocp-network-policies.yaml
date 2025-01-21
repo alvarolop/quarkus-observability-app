@@ -5,7 +5,7 @@ metadata:
   labels:
     app: ocp-network-policies
   name: ocp-network-policies
-  namespace: gitops
+  namespace: openshift-gitops
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
