@@ -11,7 +11,7 @@ spec:
   serviceAccount: otel-collector
   observability:
     metrics:
-      enableMetrics: true 
+      enableMetrics: true
   config:
 
     extensions:
@@ -20,7 +20,7 @@ spec:
 
     # The Spanmetrics connector receives traces and exports metrics
     connectors:
-      spanmetrics: 
+      spanmetrics:
         metrics_flush_interval: 15s
 
     receivers:
@@ -40,7 +40,7 @@ spec:
         verbosity: normal # basic / normal / detailed
 
       # GRPC exporter to Tempo
-      otlp:
+      otlp/tempo:
         endpoint: tempo-tempo-gateway.openshift-tempo.svc.cluster.local:8090
         tls:
           ca_file: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
@@ -48,16 +48,6 @@ spec:
           authenticator: bearertokenauth
         headers:
           X-Scope-OrgID: dev  # tenantName
-
-      # # HTTP exporter to Tempo
-      # otlphttp: 
-      #   endpoint: https://tempo-tempo-gateway.openshift-tempo.svc.cluster.local:8080/api/traces/v1/dev
-      #   tls:
-      #     ca_file: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-      #   auth:
-      #     authenticator: bearertokenauth
-      #   headers:
-      #     X-Scope-OrgID: dev  # tenantName
       
       prometheus:
         add_metric_suffixes: false
@@ -75,16 +65,21 @@ spec:
           processors:
             - k8sattributes
           exporters:
-            - otlp
+            - otlp/tempo
             - spanmetrics
-            # - debug
+            - debug
         metrics:
           receivers:
             - spanmetrics
           exporters:
             - prometheus
       telemetry:
-        # logs: # Getting the OpenTelemetry Collector logs
-        #   level: debug
-        metrics: # Exposing the metrics
-          address: ":8888"
+        # https://opentelemetry.io/docs/collector/internal-telemetry/#configure-internal-logs
+        logs: # Getting the OpenTelemetry Collector logs
+          # encoding: json
+          level: INFO # INFO / WARN / DEBUG
+        # {"level":"warn","ts":1737558318.3241162,"caller":"service@v0.113.0/service.go:221","msg":"service::telemetry::metrics::address is being deprecated in favor of service::telemetry::metrics::readers"}
+        # curl https://localhost:8888/metrics
+        # metrics: # Exposing the metrics
+          # address: ":8888"
+          # level: normal # none / basic / normal / detailed
