@@ -11,3 +11,5 @@ resources:
   - deployment-telemetrygen.yaml
   - svc-hotrod.yaml
   - route-hotrod.yaml
+
+  - opentelemetry-simple-demo

@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: demo-client
+  name: demo-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: demo-client
+  template:
+    metadata:
+      labels:
+        io.kompose.service: demo-client
+    spec:
+      containers:
+        - env:
+            - name: DEMO_SERVER_ENDPOINT
+              value: http://demo-server:7080/hello
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: app-to-kafka-collector.otel.svc.cluster.local:4317
+          image: quay.io/alopezme/opentelemetry-simple-demo-client
+          name: demo-client
+      restartPolicy: Always

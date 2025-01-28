@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: demo-server
+  name: demo-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-server
+  template:
+    metadata:
+      labels:
+        app: demo-server
+    spec:
+      containers:
+        - env:
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: app-to-kafka-collector.otel.svc.cluster.local:4317
+          image: quay.io/alopezme/opentelemetry-simple-demo-server
+          name: demo-server
+          ports:
+            - containerPort: 7080
+              protocol: TCP
+      restartPolicy: Always
