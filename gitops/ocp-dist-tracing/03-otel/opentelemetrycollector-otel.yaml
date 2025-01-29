@@ -9,6 +9,16 @@ metadata:
 spec:
   mode: deployment
   serviceAccount: otel-collector
+  resources:
+    requests:
+      cpu: 100m
+      memory: 500Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+  autoscaler:
+    minReplicas: 1
+    maxReplicas: 3
   observability:
     metrics:
       enableMetrics: true
