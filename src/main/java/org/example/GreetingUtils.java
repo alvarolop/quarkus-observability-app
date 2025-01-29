@@ -8,7 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class GreetingUtils {
 
-    @WithSpan(value = "executeSubprocess", kind = SpanKind.SERVER)
+    @WithSpan(value = "GreetingUtils.sleep") // , kind = SpanKind.SERVER
     public void evaluate(int delay) {
         Log.info("Executing the subprocess with " + delay + " ms delay");
         try {
