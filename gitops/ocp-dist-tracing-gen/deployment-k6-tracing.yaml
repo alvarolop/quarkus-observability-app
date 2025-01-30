@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: k6-tracing
   name: k6-tracing
-  namespace: tracing-app-k6
+  namespace: opentelemetry-gen-k6
 spec:
   replicas: 1
   selector:
@@ -21,4 +21,4 @@ spec:
         image: ghcr.io/grafana/xk6-client-tracing:v0.0.5
         env:
         - name: ENDPOINT
-          value: otel-collector.otel.svc.cluster.local:4317
+          value: app-to-kafka-collector.otel.svc.cluster.local:4317

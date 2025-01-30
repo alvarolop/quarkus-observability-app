@@ -3,17 +3,17 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    io.kompose.service: demo-client
+    app: demo-client
   name: demo-client
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: demo-client
+      app: demo-client
   template:
     metadata:
       labels:
-        io.kompose.service: demo-client
+        app: demo-client
     spec:
       containers:
         - env:

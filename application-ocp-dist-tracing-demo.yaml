@@ -1,0 +1,51 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  labels:
+    app: opentelemetry-gen-demo
+  name: opentelemetry-gen-demo
+  namespace: openshift-gitops
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: opentelemetry-gen-demo
+  project: default
+  source:
+    repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
+    targetRevision: 0.33.8
+    chart: opentelemetry-demo
+    helm:
+      values: |
+        default:
+          envOverrides:
+            - name: OTEL_COLLECTOR_NAME
+              value: app-to-kafka-collector.otel.svc.cluster.local
+        opentelemetry-collector:
+          enabled: false
+        jaeger:
+          enabled: false
+        prometheus:
+          enabled: false
+        grafana:
+          enabled: false
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: "system:openshift:scc:anyuid"
+  namespace: opentelemetry-gen-demo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:openshift:scc:anyuid
+subjects:
+- kind: ServiceAccount
+  name: opentelemetry-demo
+  namespace: opentelemetry-gen-demo

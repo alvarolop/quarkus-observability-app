@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: hotrod
   name: hotrod
-  namespace: tracing-app-hotrod
+  namespace: opentelemetry-gen-hotrod
 spec:
   selector:
     matchLabels:
@@ -16,14 +16,14 @@ spec:
         app.kubernetes.io/name: hotrod
     spec:
       containers:
-      - image: jaegertracing/example-hotrod:1.46
+      - image: registry.hub.docker.com/jaegertracing/example-hotrod:1.65.0   # 1.46
         name: hotrod
         args:
         - all
         - --otel-exporter=otlp
         env:
         - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          value: http://otel-collector.otel.svc.cluster.local:4318
+          value: http://app-to-kafka-collector.otel.svc.cluster.local:4318
         ports:
         - containerPort: 8080
           name: frontend
