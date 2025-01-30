@@ -88,8 +88,12 @@ spec:
         logs: # Getting the OpenTelemetry Collector logs
           # encoding: json
           level: INFO # INFO / WARN / DEBUG
-        # {"level":"warn","ts":1737558318.3241162,"caller":"service@v0.113.0/service.go:221","msg":"service::telemetry::metrics::address is being deprecated in favor of service::telemetry::metrics::readers"}
-        # curl https://localhost:8888/metrics
-        # metrics: # Exposing the metrics
-          # address: ":8888"
-          # level: normal # none / basic / normal / detailed
+        metrics:
+          level: normal # none / basic / normal / detailed
+          # address: ""
+          # readers:
+          #   - pull:
+          #       exporter:
+          #         prometheus:
+          #           host: '0.0.0.0'
+          #           port: 8888

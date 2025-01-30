@@ -29,6 +29,8 @@ spec:
           enabled: false
         grafana:
           enabled: false
+        serviceAccount:
+          name: opentelemetry-demo
   syncPolicy:
     automated:
       prune: false

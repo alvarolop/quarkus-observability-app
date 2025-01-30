@@ -336,6 +336,8 @@ oc apply -f apps/application-ocp-alerting.yaml
 ----
 
 
+Here you can find nice Alerting Rules examples: https://samber.github.io/awesome-prometheus-alerts/rules.html
+
 
 
 === OpenShift Logging
