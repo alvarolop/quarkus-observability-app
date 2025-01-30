@@ -3,13 +3,13 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   labels:
-    app: opentelemetry-gen-demo
-  name: opentelemetry-gen-demo
+    app: ocp-dist-tracing-demo
+  name: ocp-dist-tracing-demo
   namespace: openshift-gitops
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: opentelemetry-gen-demo
+    namespace: opentelemetry-demo
   project: default
   source:
     repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
@@ -40,7 +40,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: "system:openshift:scc:anyuid"
-  namespace: opentelemetry-gen-demo
+  namespace: opentelemetry-demo
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -48,4 +48,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: opentelemetry-demo
-  namespace: opentelemetry-gen-demo
+  namespace: opentelemetry-demo

@@ -12,4 +12,4 @@ resources:
   - svc-hotrod.yaml
   - route-hotrod.yaml
 
-  - opentelemetry-gen-simple-demo
+  - opentelemetry-simple-demo
