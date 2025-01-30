@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hotrod
-  namespace: tracing-app-hotrod
+  namespace: opentelemetry-gen-hotrod
 spec:
   selector:
     app.kubernetes.io/name: hotrod
