@@ -31,6 +31,10 @@ spec:
           enabled: false
         serviceAccount:
           name: opentelemetry-demo
+        opensearch:
+          rbac:
+            create: true
+            serviceAccountName: opensearch
   syncPolicy:
     automated:
       prune: false
@@ -50,4 +54,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: opentelemetry-demo
+  namespace: opentelemetry-demo
+- kind: ServiceAccount
+  name: opensearch
   namespace: opentelemetry-demo
