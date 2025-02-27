@@ -27,5 +27,8 @@ resources:
   # Log Forwarding
   - clusterlogforwarder-collector.yaml
 
+  # Enable better metrics on the collector
+  - lfme-instance.yaml
+
   # # Logs Collection and Visualization
   # - clusterlogging-instance.yaml
