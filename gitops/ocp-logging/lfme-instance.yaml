@@ -2,7 +2,7 @@
 apiVersion: logging.openshift.io/v1alpha1
 kind: LogFileMetricExporter
 metadata:
-  name: collector
+  name: instance
   namespace: openshift-logging
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
