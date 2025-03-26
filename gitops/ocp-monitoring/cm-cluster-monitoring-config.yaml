@@ -21,10 +21,11 @@ data:
     prometheusOperator:
       nodeSelector:
         node-role.kubernetes.io/infra: ""
+    # prometheusOperatorAdmissionWebhook:
     openshiftStateMetrics:
       nodeSelector:
         node-role.kubernetes.io/infra: ""
-    grafana:
+    metricsServer:
       nodeSelector:
         node-role.kubernetes.io/infra: ""
     kubeStateMetrics:
@@ -39,3 +40,5 @@ data:
     monitoringPlugin:
       nodeSelector:
         node-role.kubernetes.io/infra: ""
+    # nodeExporter:
+    #   collectors: 
