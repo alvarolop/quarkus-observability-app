@@ -9,7 +9,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "-5"
 spec:
-  channel: stable-6.1
+  channel: stable-6.2
   installPlanApproval: Automatic
   name: loki-operator
   source: redhat-operators
