@@ -5,3 +5,5 @@ resources:
 - sub-cluster-observability-operator.yaml
 - uiplugin-logging.yaml
 - uiplugin-distributed-tracing.yaml
+- uiplugin-monitoring.yaml
+- uiplugin-troubleshooting-panel.yaml
