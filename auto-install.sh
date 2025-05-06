@@ -17,6 +17,9 @@ generate_random_suffix() {
 LOKI_BUCKET="s3-bucket-loki-$(generate_random_suffix)"
 LOKI_SECRET_NAMESPACE=openshift-logging
 
+NET_BUCKET="s3-bucket-net-obs-$(generate_random_suffix)"
+NET_SECRET_NAMESPACE=netobserv
+
 TEMPO_BUCKET="s3-bucket-tempo-$(generate_random_suffix)"
 TEMPO_SECRET_NAMESPACE=openshift-tempo
 
@@ -31,6 +34,8 @@ echo -e "\n=============="
 echo -e "ENVIRONMENT VARIABLES:"
 echo -e " * LOKI_BUCKET: $LOKI_BUCKET"
 echo -e " * LOKI_SECRET_NAMESPACE: $LOKI_SECRET_NAMESPACE"
+echo -e " * NET_BUCKET: $NET_BUCKET"
+echo -e " * NET_SECRET_NAMESPACE: $NET_SECRET_NAMESPACE"
 echo -e " * TEMPO_BUCKET: $TEMPO_BUCKET"
 echo -e " * TEMPO_SECRET_NAMESPACE: $TEMPO_SECRET_NAMESPACE"
 echo -e "==============\n"
@@ -68,12 +73,11 @@ echo -e "\n=================="
 echo -e "=     LOGGING    ="
 echo -e "==================\n"
 
-# Create the Logging Bucket Secret
-echo -e "Create the Logging Bucket and Secret"
-# Create an AWS S3 Bucket to store logs
-./prerequisites/aws-create-bucket.sh $LOKI_BUCKET
 # Check if the Loki secret exists in the specified namespace
 if ! oc get secret s3-bucket-loki -n $LOKI_SECRET_NAMESPACE &>/dev/null; then
+    echo -e "Create the Logging Bucket and Secret"
+    ./prerequisites/aws-create-bucket.sh $LOKI_BUCKET
+
     echo "Secret 's3-bucket-loki' not found in namespace '$LOKI_SECRET_NAMESPACE'. Creating it now..."
     oc process -f prerequisites/aws-s3-secret-loki.yaml \
         --param-file aws-env-vars --ignore-unknown-parameters=true \
@@ -84,16 +88,35 @@ else
     echo "Secret 's3-bucket-loki' already exists in namespace '$LOKI_SECRET_NAMESPACE'. Skipping creation."
 fi
 
+echo -e "\n=================="
+echo -e "=   NETWORK OBS  ="
+echo -e "==================\n"
+
+# Check if the Loki secret exists in the specified namespace
+if ! oc get secret s3-bucket-net-obs -n $NET_SECRET_NAMESPACE &>/dev/null; then
+    echo -e "Create the Logging Bucket and Secret"
+    ./prerequisites/aws-create-bucket.sh $NET_BUCKET
+
+    echo "Secret 's3-bucket-net-obs' not found in namespace '$NET_SECRET_NAMESPACE'. Creating it now..."
+    oc process -f prerequisites/aws-s3-secret-loki.yaml \
+        --param-file aws-env-vars --ignore-unknown-parameters=true \
+        -p SECRET_NAMESPACE=$NET_SECRET_NAMESPACE \
+        -p SECRET_NAME="s3-bucket-net-obs" \
+        -p AWS_S3_BUCKET=$NET_BUCKET | oc apply -f -
+else
+    echo "Secret 's3-bucket-net-obs' already exists in namespace '$NET_SECRET_NAMESPACE'. Skipping creation."
+fi
+
 
 echo -e "\n=================="
 echo -e "=     TRACING    ="
 echo -e "==================\n"
 
-echo -e "Create the Tempo Bucket and Secret"
-# Create an AWS S3 Bucket to store traces
-./prerequisites/aws-create-bucket.sh $TEMPO_BUCKET
 # Check if the secret exists in the specified namespace
 if ! oc get secret s3-bucket-tempo -n $TEMPO_SECRET_NAMESPACE &>/dev/null; then
+    echo -e "Create the Tempo Bucket and Secret"
+    ./prerequisites/aws-create-bucket.sh $TEMPO_BUCKET
+
     echo "Secret 's3-bucket-tempo' not found in namespace '$TEMPO_SECRET_NAMESPACE'. Creating it now..."
     oc process -f prerequisites/aws-s3-secret-tempo.yaml \
         --param-file aws-env-vars --ignore-unknown-parameters=true \
@@ -117,19 +140,19 @@ if [ -f ./gmail-app-vars ]; then
 
     # Create the Quarkus Obs Alerting Pass
     echo -e "Create the Quarkus Obs Alerting Pass"
-
     source ./gmail-app-vars
     SECRET_NAMESPACE=quarkus-observability
+    
     # Check if the alert routing secret exists in the specified namespace
-if ! oc get secret alert-routing-to-mail -n $SECRET_NAMESPACE &>/dev/null; then
-    echo "Secret 'alert-routing-to-mail' not found in namespace '$SECRET_NAMESPACE'. Creating it now..."
-    oc process -f prerequisites/secret-alert-routing-to-mail.yaml \
-        -p SECRET_NAMESPACE=$SECRET_NAMESPACE \
-        -p SECRET_NAME="alert-routing-to-mail" \
-        -p AUTH_PASSWORD=$GMAIL_PASSWORD | oc apply -f -
-else
-    echo "Secret 'alert-routing-to-mail' already exists in namespace '$SECRET_NAMESPACE'. Skipping creation."
-fi
+    if ! oc get secret alert-routing-to-mail -n $SECRET_NAMESPACE &>/dev/null; then
+        echo "Secret 'alert-routing-to-mail' not found in namespace '$SECRET_NAMESPACE'. Creating it now..."
+        oc process -f prerequisites/secret-alert-routing-to-mail.yaml \
+            -p SECRET_NAMESPACE=$SECRET_NAMESPACE \
+            -p SECRET_NAME="alert-routing-to-mail" \
+            -p AUTH_PASSWORD=$GMAIL_PASSWORD | oc apply -f -
+    else
+        echo "Secret 'alert-routing-to-mail' already exists in namespace '$SECRET_NAMESPACE'. Skipping creation."
+    fi
 else 
     echo -e "\The file with Gmail vars is missing. Skipping creation of the Alerts secret"
 fi
