@@ -1,0 +1,77 @@
+---
+apiVersion: flows.netobserv.io/v1beta2
+kind: FlowCollector
+metadata:
+  name: cluster
+spec:
+  namespace: netobserv
+  deploymentModel: Direct # Or Kafka for resiliency
+  agent:
+    ebpf:
+      logLevel: info
+      metrics:
+        server:
+          tls:
+            insecureSkipVerify: false
+            type: Disabled
+      cacheMaxFlows: 100000
+      sampling: 50
+      imagePullPolicy: IfNotPresent
+      excludeInterfaces:
+        - lo
+      kafkaBatchSize: 1048576
+      cacheActiveTimeout: 5s
+  processor:
+    logLevel: info
+    resources:
+      requests:
+        memory: 100Mi
+        cpu: 100m
+      limits:
+        memory: 800Mi
+    logTypes: Flows
+    advanced:
+      conversationEndTimeout: 10s
+      conversationHeartbeatInterval: 30s
+  loki:
+    mode: LokiStack
+  prometheus:
+    querier:
+      manual:
+        tls:
+          enable: false
+          insecureSkipVerify: false
+        url: 'http://prometheus:9090'
+      mode: Auto
+      timeout: 30s
+  consolePlugin:
+    logLevel: info
+    advanced:
+      port: 9001
+      register: true
+    enable: true
+    portNaming:
+      enable: true
+    quickFilters:
+      - default: true
+        filter:
+          flow_layer: '"app"'
+        name: Applications
+      - filter:
+          flow_layer: '"infra"'
+        name: Infrastructure
+      - default: true
+        filter:
+          dst_kind: '"Pod"'
+          src_kind: '"Pod"'
+        name: Pods network
+      - filter:
+          dst_kind: '"Service"'
+        name: Services network
+    imagePullPolicy: IfNotPresent
+    autoscaler:
+      maxReplicas: 3
+      status: Disabled
+    replicas: 1
+
+

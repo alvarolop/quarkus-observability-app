@@ -312,6 +312,29 @@ IMPORTANT: If you see concerning metrics, you have a troubleshooting guide based
 
 
 
+=== Network Observability Operator
+
+*Red Hat OpenShift Network Observability* is a new operator that provides a set of tools to monitor and troubleshoot the network performance of your OpenShift cluster. It provides a set of dashboards and alerts that can be used to monitor the network performance of your OpenShift cluster.
+
+.Network Observability Operator - Architecture
+image::network-observability-architecture.png["Network Observability Operator - Architecture"]
+
+
+In the previous diagram, there are several components that take part in Network Observability:
+
+* **eBPF Agent**: A lightweight agent that runs on each node to capture network flows directly from the kernel using eBPF technology, ensuring minimal performance overhead.
+* **FlowCollector processing**: A central component that aggregates, processes, and enriches network flow data collected from eBPF agents before forwarding it to storage or analytics systems.
+* **Loki**: A log aggregation system used to store full network flows, enabling efficient querying and visualization of network traffic data.
+* **Prometheus**: A monitoring system that generates metrics based on network flows, providing insights into network performance and usage patterns.
+* **Kafka**: A distributed messaging system used to send flows to Kafka topics, ensuring better resiliency, scalability, and fault tolerance in handling large volumes of network data.
+
+
+==== Useful Links
+
+If you want to know more about the metrics that the operator exports in Prometheus format, you can use these docs[https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/network_observability/index#metrics-dashboards-alerts].
+
+
+
 === OpenShift Monitoring 
 
 In OpenShift Container Platform 4.16, you can enable monitoring for user-defined projects in addition to the default platform monitoring. You can monitor your own projects in OpenShift Container Platform without the need for an additional monitoring solution. In this section  we only configure the components, but we don't set up the monitoring of the application using a ServiceMonitor. This is done in the application section:

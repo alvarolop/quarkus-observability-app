@@ -1,0 +1,32 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+
+  - operator
+
+  # Logs Storage
+  - lokistack-loki.yaml
+
+  # Obtained from https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/network_observability/index#nw-status-configuration-network-observability-operator_nw-network-observability-operator
+  - flowcollector-cluster.yaml
+
+  # # Log RBAC
+  # - crb-clo-collect-application-logs.yaml
+  # - crb-clo-collect-audit-logs.yaml
+  # - crb-clo-collect-infrastructure-logs.yaml
+  # ## Allow write anything 
+  # - crb-clo-logging-collector-logs-writer.yaml
+  # ## Segregate write permission
+  # # - crb-clo-write-application-logs.yaml
+  # # - crb-clo-write-audit-logs.yaml
+  # # - crb-clo-write-infrastructure-logs.yaml
+
+  # # Log Forwarding
+  # - clusterlogforwarder-collector.yaml
+
+  # # Enable better metrics on the collector
+  # - lfme-instance.yaml
+
+  # # # Logs Collection and Visualization
+  # # - clusterlogging-instance.yaml
