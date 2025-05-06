@@ -9,6 +9,7 @@ resources:
   - application-ocp-dist-tracing.yaml
   - application-ocp-logging.yaml
   - application-ocp-monitoring.yaml
+  - application-ocp-network-obs.yaml
   # - application-ocp-network-policies.yaml
   - application-quarkus-observability.yaml
  
