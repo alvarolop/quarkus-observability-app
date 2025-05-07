@@ -324,14 +324,19 @@ In the previous diagram, there are several components that take part in Network 
 
 * **eBPF Agent**: A lightweight agent that runs on each node to capture network flows directly from the kernel using eBPF technology, ensuring minimal performance overhead.
 * **FlowCollector processing**: A central component that aggregates, processes, and enriches network flow data collected from eBPF agents before forwarding it to storage or analytics systems.
+    ** `flowlogs-pipeline` pods collect flows, enriches the collected flows, then send flows to the Loki storage. 
+    ** `netobserv-plugin` pods create a visualization plugin for the OpenShift Container Platform Console.
+    ** `netobserv-ebpf-agent` pods monitor network interfaces of the nodes to get flows and send them to `Avisa` pods.
 * **Loki**: A log aggregation system used to store full network flows, enabling efficient querying and visualization of network traffic data.
 * **Prometheus**: A monitoring system that generates metrics based on network flows, providing insights into network performance and usage patterns.
 * **Kafka**: A distributed messaging system used to send flows to Kafka topics, ensuring better resiliency, scalability, and fault tolerance in handling large volumes of network data.
 
 
+
+
 ==== Useful Links
 
-If you want to know more about the metrics that the operator exports in Prometheus format, you can use these docs[https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/network_observability/index#metrics-dashboards-alerts].
+If you want to know more about the metrics that the operator exports in Prometheus format, you can use these https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/network_observability/index#metrics-dashboards-alerts[docs].
 
 
 
