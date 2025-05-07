@@ -5,6 +5,11 @@ metadata:
   name: cluster
 spec:
   namespace: netobserv
+  # networkPolicy:
+  #   enable: true
+  #   additionalNamespaces:
+  #     - "openshift-console"
+  #     - "openshift-monitoring"
   deploymentModel: Direct # Or Kafka for resiliency
   agent:
     ebpf:
@@ -15,6 +20,10 @@ spec:
             insecureSkipVerify: false
             type: Disabled
       cacheMaxFlows: 100000
+      # https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/network_observability/index#network-observability-dns-tracking_nw-observe-network-traffic
+      features:
+       - DNSTracking
+      #  - FlowRTT
       sampling: 50
       imagePullPolicy: IfNotPresent
       excludeInterfaces:
@@ -52,6 +61,7 @@ spec:
     enable: true
     portNaming:
       enable: true
+    # https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html-single/network_observability/index#network-observability-config-quick-filters_network_observability
     quickFilters:
       - default: true
         filter:
@@ -73,5 +83,23 @@ spec:
       maxReplicas: 3
       status: Disabled
     replicas: 1
-
+  # exporters:
+  #   - type: Kafka
+  #       kafka:
+  #         address: "kafka-cluster-kafka-bootstrap.netobserv"
+  #         topic: netobserv-flows-export
+  #         tls:
+  #           enable: false
+  #   - type: OpenTelemetry
+  #       openTelemetry:
+  #         targetHost: my-otelcol-collector-headless.otlp.svc
+  #         targetPort: 4317
+  #         type: grpc
+  #         logs:
+  #           enable: true
+  #         metrics:
+  #           enable: true
+  #           prefix: netobserv
+  #           pushTimeInterval: 20s
+  #           expiryTime: 2m
 
