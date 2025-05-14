@@ -186,4 +186,4 @@ echo -e "=     GITOPS     ="
 echo -e "==================\n"
 
 echo -e "Trigger the app of apps creation"
-oc apply -f app-of-apps.yaml
+oc apply -k apps
