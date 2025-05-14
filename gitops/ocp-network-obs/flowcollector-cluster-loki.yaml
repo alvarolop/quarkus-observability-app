@@ -45,10 +45,9 @@ spec:
       conversationEndTimeout: 10s
       conversationHeartbeatInterval: 30s
   loki:
-    enable: false
+    mode: LokiStack
   prometheus:
     querier:
-      enable: true
       mode: Auto
       timeout: 30s
   consolePlugin:
