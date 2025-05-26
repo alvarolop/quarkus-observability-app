@@ -9,5 +9,5 @@ roleRef:
   name: cluster-logging-write-application-logs
 subjects:
 - kind: ServiceAccount
-  name: cluster-logging-operator
+  name: logging-collector
   namespace: openshift-logging

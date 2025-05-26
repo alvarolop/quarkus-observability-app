@@ -8,8 +8,6 @@ metadata:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     # observability.openshift.io/log-level: debug
 spec:
-  serviceAccount: 
-    name: cluster-logging-operator
   collector:
     resources:
       # limits:
@@ -19,6 +17,17 @@ spec:
         memory: 1Gi
     # nodeSelector: {}
     # tolerations: {}
+  filters:
+    # Available: openshiftLabels, detectMultilineException, drop, kubeAPIAudit, parse, prune
+    - name: detectexception
+      type: detectMultilineException
+    - name: parse-json
+      type: parse
+    - name: labels
+      openshiftLabels:
+        test: alvaro
+      type: openshiftLabels
+  managementState: Managed
   # inputs:
   #   - name: quarkus-observability-logs
   #     application:
@@ -53,16 +62,6 @@ spec:
     #     region: ${AWS_DEFAULT_REGION}
     #   secret:
     #       name: ${AWS_SECRET_NAME} 
-  filters:
-    # Available: openshiftLabels, detectMultilineException, drop, kubeAPIAudit, parse, prune
-    - name: detectexception
-      type: detectMultilineException
-    - name: parse-json
-      type: parse
-    - name: labels
-      type: openshiftLabels
-      openshiftLabels:
-        test: "alvaro"
   pipelines:
     # - name: audit-logs-to-rsyslog
     #   inputRefs:
@@ -93,3 +92,5 @@ spec:
         - parse-json
       outputRefs:
         - default-lokistack
+  serviceAccount:
+    name: logging-collector

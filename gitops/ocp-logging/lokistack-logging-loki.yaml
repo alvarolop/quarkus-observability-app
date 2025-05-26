@@ -11,6 +11,19 @@ spec:
     global:
       retention:
         days: 7
+        # tenants:
+        #   application:
+        #     retention:
+        #       days: 1
+        #       streams:
+        #         - days: 4
+        #           selector: '{kubernetes_namespace_name=~"test.+"}'
+        #   infrastructure:
+        #     retention:
+        #       days: 5
+        #       streams:
+        #         - days: 1
+        #           selector: '{kubernetes_namespace_name=~"openshift-cluster.+"}'
   size: 1x.demo # Could even use 1x.demo, 1x.extra-small
   replication:
     factor: 1

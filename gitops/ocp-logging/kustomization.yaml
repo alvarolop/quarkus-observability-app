@@ -6,9 +6,8 @@ resources:
   - 01-clo-operator
   - 02-loki-operator
 
-  # S3 Bucket alterative if using ODF
+  ## S3 Bucket alterative if using ODF
   # - obc-loki-bucket-odf.yaml
-  # - 04-create-odf-s3-secret
 
   # Logs Storage
   - lokistack-logging-loki.yaml
@@ -25,10 +24,8 @@ resources:
   # - crb-clo-write-infrastructure-logs.yaml
 
   # Log Forwarding
+  - sa-logging-collector.yaml
   - clusterlogforwarder-collector.yaml
 
   # Enable better metrics on the collector
   - lfme-instance.yaml
-
-  # # Logs Collection and Visualization
-  # - clusterlogging-instance.yaml
