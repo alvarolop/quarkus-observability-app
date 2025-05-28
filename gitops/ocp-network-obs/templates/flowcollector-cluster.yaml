@@ -5,6 +5,7 @@ metadata:
   name: cluster
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-wave: "10"
 spec:
   namespace: netobserv
   # networkPolicy:
@@ -45,7 +46,8 @@ spec:
       conversationEndTimeout: 10s
       conversationHeartbeatInterval: 30s
   loki:
-    enable: false
+    enable: {{ .Values.loki.enabled }}
+    mode: {{ .Values.loki.mode | quote }}
   prometheus:
     querier:
       enable: true
@@ -79,15 +81,38 @@ spec:
     imagePullPolicy: IfNotPresent
     autoscaler:
       maxReplicas: 3
+      metrics:
+        - resource:
+            target:
+              averageUtilization: 50
+              type: Utilization
+            name: cpu
+          type: Resource
+      minReplicas: 1
       status: Disabled
     replicas: 1
-  # exporters:
-  #   - type: Kafka
-  #       kafka:
-  #         address: "kafka-cluster-kafka-bootstrap.netobserv"
-  #         topic: netobserv-flows-export
-  #         tls:
-  #           enable: false
+  {{- if and .Values.kafkaExporter ( .Values.kafkaExporter.enabled ) }}
+  exporters:
+    - type: Kafka
+      kafka:
+        address: "{{ .Values.kafkaExporter.serviceName }}.{{ .Values.kafkaExporter.namespace }}:{{ .Values.kafkaExporter.port }}"
+        topic: {{ .Values.kafkaExporter.topic | quote }}
+        sasl:
+          # Type of SASL authentication to use, or Disabled if SASL is not used
+          type: ScramSHA512
+          clientIDReference:
+            type: configmap
+            name: sasl-username
+            namespace: kafka
+            file: sasl-username.conf
+          clientSecretReference:
+            type: secret
+            file: password
+            name: {{ .Values.kafkaExporter.username }}
+            namespace: kafka
+        tls:
+          enable: false
+          insecureSkipVerify: false
   #   - type: OpenTelemetry
   #       openTelemetry:
   #         targetHost: my-otelcol-collector-headless.otlp.svc
@@ -100,4 +125,7 @@ spec:
   #           prefix: netobserv
   #           pushTimeInterval: 20s
   #           expiryTime: 2m
+  {{- else }}
+  exporters: []
+  {{- end }}
 

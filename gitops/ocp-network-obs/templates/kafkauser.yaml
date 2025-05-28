@@ -1,0 +1,34 @@
+{{- if .Values.kafkaExporter.enabled }}
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaUser
+metadata:
+  name: {{ .Values.kafkaExporter.username }}
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: cluster
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  authentication:
+    type: scram-sha-512
+  authorization:
+    type: simple
+    acls:
+    - operations:
+      - Read
+      resource:
+        name: {{ .Values.kafkaExporter.username }}
+        patternType: literal
+        type: group
+    - operations:
+      - Read
+      - Describe
+      - Write
+      - Create
+      resource:
+        name: {{ .Values.kafkaExporter.topic }}
+        patternType: prefix
+        type: topic
+{{- end }}

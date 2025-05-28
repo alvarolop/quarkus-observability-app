@@ -1,0 +1,16 @@
+# Default values for netobserv.
+
+loki:
+  enabled: false
+  mode: Manual  # Manual (Disabled) or LokiStack (Enabled)
+
+kafkaExporter:
+  enabled: true
+  serviceName: cluster-kafka-bootstrap
+  port: 9095
+  namespace: kafka
+  topic: monitor.flows
+  username: "netobserv"
+
+networkPolicy:
+  enabled: false

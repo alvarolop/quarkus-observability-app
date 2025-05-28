@@ -1,0 +1,19 @@
+{{- if .Values.kafkaExporter.enabled }}
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: monitor-flows
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: cluster
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  # config:
+  #   retention.ms: 604800000
+  # partitions: 10
+  # replicas: 3
+  topicName: {{ .Values.kafkaExporter.topic }}
+{{- end }}

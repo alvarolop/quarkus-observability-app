@@ -1,0 +1,12 @@
+{{- if .Values.kafkaExporter.enabled }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: netobserv-reader
+  namespace: {{ .Values.kafkaExporter.namespace }}
+rules:
+- apiGroups: [""]
+  resources: ["secrets", "configmaps"]
+  verbs: ["get", "list", "watch"]
+{{- end }}

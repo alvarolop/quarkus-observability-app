@@ -1,3 +1,4 @@
+{{- if .Values.loki.enabled }}
 ---
 apiVersion: loki.grafana.com/v1
 kind: LokiStack
@@ -6,6 +7,7 @@ metadata:
   namespace: netobserv
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   limits:
     global:
@@ -109,4 +111,4 @@ spec:
       - effect: NoExecute
         key: node-role.kubernetes.io/infra
         value: reserved
-    
+{{- end }}
