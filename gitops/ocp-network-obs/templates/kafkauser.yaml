@@ -16,19 +16,20 @@ spec:
   authorization:
     type: simple
     acls:
-    - operations:
-      - Read
-      resource:
-        name: {{ .Values.kafkaExporter.username }}
-        patternType: literal
-        type: group
-    - operations:
-      - Read
-      - Describe
-      - Write
-      - Create
-      resource:
-        name: {{ .Values.kafkaExporter.topic }}
-        patternType: prefix
-        type: topic
+      - resource:
+          type: topic
+          name: {{ .Values.kafkaExporter.topic }}
+          patternType: prefix
+        operations:
+          - All
+        # - Read
+        # - Describe
+        # - Write
+        # - Create
+      - resource:
+          type: group
+          name: {{ .Values.kafkaExporter.username }}
+          patternType: literal
+        operations:
+          - Read
 {{- end }}

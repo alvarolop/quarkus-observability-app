@@ -101,18 +101,18 @@ spec:
           # Type of SASL authentication to use, or Disabled if SASL is not used
           type: ScramSHA512
           clientIDReference:
-            type: configmap
-            name: sasl-username
+            type: secret
+            name: kafka-sasl-username
             namespace: kafka
-            file: sasl-username.conf
+            file: username
           clientSecretReference:
             type: secret
             file: password
             name: {{ .Values.kafkaExporter.username }}
             namespace: kafka
         tls:
-          enable: false
-          insecureSkipVerify: false
+          enable: true
+          insecureSkipVerify: true
   #   - type: OpenTelemetry
   #       openTelemetry:
   #         targetHost: my-otelcol-collector-headless.otlp.svc

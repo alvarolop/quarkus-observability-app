@@ -11,9 +11,9 @@ metadata:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     argocd.argoproj.io/sync-wave: "5"
 spec:
-  # config:
-  #   retention.ms: 604800000
-  # partitions: 10
-  # replicas: 3
+  config:
+    retention.ms: 604800000
+  partitions: 3
+  replicas: 2
   topicName: {{ .Values.kafkaExporter.topic }}
 {{- end }}

@@ -332,6 +332,12 @@ In the previous diagram, there are several components that take part in Network 
 * **Kafka**: A distributed messaging system used to send flows to Kafka topics, ensuring better resiliency, scalability, and fault tolerance in handling large volumes of network data.
 
 
+If you don't want to store the NetworkFlows in Loki to visualize them in the OpenShift Console, you can use the exporter to send them to a Kafka topic. Later, you will need a solution to consume those flows from Kafka and visualize them. For example, you can use the following:
+
+* https://www.elastiflow.com/[Elastiflow] is a non-open source project that provides a solution to visualize network flows in Kibana.
+* https://gitlab.com/thart/flowanalyzer[FlowAnalyzer] from Manito Networks, is an open-source project that provides a solution to visualize network flows in Grafana.
+* Elastic provides the https://www.elastic.co/docs/reference/beats/filebeat/filebeat-module-netflow[NetFlow module] and the https://www.elastic.co/docs/reference/beats/filebeat/filebeat-input-netflow[NetFlow input], to provide a similar soluton in their stack. I see some examples of NetFlow in Kibana https://help.mikrotik.com/docs/spaces/ROS/pages/282132674/NetFlow+analysis+with+Elasticsearch[like this one], but I haven't tested it yet.
+
 
 
 ==== Useful Links

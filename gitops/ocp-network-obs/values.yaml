@@ -1,11 +1,11 @@
 # Default values for netobserv.
 
 loki:
-  enabled: false
-  mode: Manual  # Manual (Disabled) or LokiStack (Enabled)
+  enabled: true
+  mode: LokiStack  # Manual (Disabled) or LokiStack (Enabled)
 
 kafkaExporter:
-  enabled: true
+  enabled: false
   serviceName: cluster-kafka-bootstrap
   port: 9095
   namespace: kafka
