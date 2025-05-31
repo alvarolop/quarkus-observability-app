@@ -4,6 +4,8 @@ kind: Subscription
 metadata:
   name: tempo-product
   namespace: openshift-tempo-operator
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
 spec:
   channel: stable
   installPlanApproval: Automatic
