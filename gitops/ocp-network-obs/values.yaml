@@ -1,5 +1,8 @@
 # Default values for netobserv.
 
+flowCollector:
+  enabled: true
+
 loki:
   enabled: true
   mode: LokiStack  # Manual (Disabled) or LokiStack (Enabled)

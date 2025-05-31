@@ -1,3 +1,4 @@
+{{- if .Values.flowCollector.enabled }}
 ---
 apiVersion: flows.netobserv.io/v1beta2
 kind: FlowCollector
@@ -130,4 +131,4 @@ spec:
   {{- else }}
   exporters: []
   {{- end }}
-
+{{- end }}
