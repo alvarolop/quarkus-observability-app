@@ -15,8 +15,15 @@ spec:
       requests:
         cpu: 200m
         memory: 1Gi
-    # nodeSelector: {}
-    # tolerations: {}
+    # nodeSelector:
+    #   node-role.kubernetes.io/infra: ""
+    tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/infra
+      value: reserved
+    - effect: NoExecute
+      key: node-role.kubernetes.io/infra
+      value: reserved
   filters:
     # Available: openshiftLabels, detectMultilineException, drop, kubeAPIAudit, parse, prune
     - name: detectexception
