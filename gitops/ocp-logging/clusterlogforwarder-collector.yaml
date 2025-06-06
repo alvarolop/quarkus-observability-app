@@ -15,8 +15,6 @@ spec:
       requests:
         cpu: 200m
         memory: 1Gi
-    # nodeSelector:
-    #   node-role.kubernetes.io/infra: ""
     tolerations:
     - effect: NoSchedule
       key: node-role.kubernetes.io/infra
