@@ -24,9 +24,9 @@ spec:
         #       streams:
         #         - days: 1
         #           selector: '{kubernetes_namespace_name=~"openshift-cluster.+"}'
-  size: 1x.demo # Could even use 1x.demo, 1x.extra-small
-  replication:
-    factor: 1
+  size: 1x.demo # Could even use 1x.demo, 1x.pico, 1x.extra-small
+  # replication:
+  #   factor: 1
   managementState: Managed
   storage:
     schemas:
@@ -39,6 +39,8 @@ spec:
   storageClassName: gp3-csi
   tenants:
     mode: openshift-logging
+  # If you want to use customized alerting and recording rules using LogQL,
+  # you must enable the LokiStack ruler component
   rules:
     enabled: true
   template:
