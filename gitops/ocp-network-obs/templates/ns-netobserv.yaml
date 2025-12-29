@@ -1,3 +1,4 @@
+{{- if .Values.flowCollector.enabled }}
 ---
 apiVersion: v1
 kind: Namespace
@@ -12,3 +13,4 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "-10"
   name: netobserv
+{{- end }}
