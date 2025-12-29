@@ -7,6 +7,11 @@ flowCollector:
   deploymentModel: Direct
   # kafkaBatchSize is only used when deploymentModel is Kafka
   kafkaBatchSize: 1048576
+  # Run the netobserv operator and Loki on infra nodes
+  runOnInfraNodes: false
+
+networkPolicy:
+  enabled: false
 
 loki:
   enabled: false
@@ -19,12 +24,6 @@ kafkaExporter:
   namespace: kafka
   topic: monitor.flows
   username: "netobserv"
-
-networkPolicy:
-  enabled: false
-
-# Run the netobserv operator and Loki on infra nodes
-runOnInfraNodes: false
 
 # eBPF Agent Features
 # https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/network_observability/index#network-observability-dns-tracking_nw-observe-network-traffic

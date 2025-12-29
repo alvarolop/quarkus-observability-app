@@ -13,7 +13,7 @@ spec:
   name: netobserv-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
-  {{- if .Values.runOnInfraNodes }}
+  {{- if .Values.flowCollector.runOnInfraNodes }}
   config:
     nodeSelector:
       node-role.kubernetes.io/infra: ""

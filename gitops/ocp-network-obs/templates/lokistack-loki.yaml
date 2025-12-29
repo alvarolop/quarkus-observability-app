@@ -28,12 +28,11 @@ spec:
     # openshift:
     #   adminGroups:
     #   - cluster-admins
+  {{- if .Values.flowCollector.runOnInfraNodes }}
   template:
     compactor:
-      {{- if .Values.runOnInfraNodes }}
       nodeSelector:
         node-role.kubernetes.io/infra: ""
-      {{- end }}
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/infra
@@ -42,10 +41,8 @@ spec:
         key: node-role.kubernetes.io/infra
         value: reserved
     distributor:
-      {{- if .Values.runOnInfraNodes }}
       nodeSelector:
         node-role.kubernetes.io/infra: ""
-      {{- end }}
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/infra
@@ -54,10 +51,8 @@ spec:
         key: node-role.kubernetes.io/infra
         value: reserved
     gateway:
-      {{- if .Values.runOnInfraNodes }}
       nodeSelector:
         node-role.kubernetes.io/infra: ""
-      {{- end }}
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/infra
@@ -66,10 +61,8 @@ spec:
         key: node-role.kubernetes.io/infra
         value: reserved
     indexGateway:
-      {{- if .Values.runOnInfraNodes }}
       nodeSelector:
         node-role.kubernetes.io/infra: ""
-      {{- end }}
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/infra
@@ -78,10 +71,8 @@ spec:
         key: node-role.kubernetes.io/infra
         value: reserved
     ingester:
-      {{- if .Values.runOnInfraNodes }}
       nodeSelector:
         node-role.kubernetes.io/infra: ""
-      {{- end }}
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/infra
@@ -90,10 +81,8 @@ spec:
         key: node-role.kubernetes.io/infra
         value: reserved
     querier:
-      {{- if .Values.runOnInfraNodes }}
       nodeSelector:
         node-role.kubernetes.io/infra: ""
-      {{- end }}
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/infra
@@ -102,10 +91,8 @@ spec:
         key: node-role.kubernetes.io/infra
         value: reserved
     queryFrontend:
-      {{- if .Values.runOnInfraNodes }}
       nodeSelector:
         node-role.kubernetes.io/infra: ""
-      {{- end }}
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/infra
@@ -114,10 +101,8 @@ spec:
         key: node-role.kubernetes.io/infra
         value: reserved
     ruler:
-      {{- if .Values.runOnInfraNodes }}
       nodeSelector:
         node-role.kubernetes.io/infra: ""
-      {{- end }}
       tolerations:
       - effect: NoSchedule
         key: node-role.kubernetes.io/infra
@@ -125,4 +110,5 @@ spec:
       - effect: NoExecute
         key: node-role.kubernetes.io/infra
         value: reserved
+  {{- end }}
 {{- end }}

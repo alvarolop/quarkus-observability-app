@@ -26,6 +26,18 @@ spec:
             insecureSkipVerify: false
             type: Disabled
       cacheMaxFlows: 100000
+      # eBPF flow filtering - Filters flows at the kernel level BEFORE any processing.
+      # https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/network_observability/index#network-observability-filtering-ebpf-flow-data-using-multiple-rules_network_observability
+      # Current config: Drop ALL traffic (IPv4 + IPv6)
+      flowFilter:
+        enabled: true
+        rules:
+          - action: Drop
+            cidr: 0.0.0.0/0
+            sampling: 1
+          - action: Drop
+            cidr: ::/0
+            sampling: 1
       # Privileged mode required for: UDNMapping, PacketDrop, NetworkEvents
       # https://issues.redhat.com/browse/NETOBSERV-2268
       # privileged: {{ or .Values.ebpfFeatures.udnMapping .Values.ebpfFeatures.packetDrop .Values.ebpfFeatures.networkEvents }}
@@ -73,6 +85,16 @@ spec:
     advanced:
       conversationEndTimeout: 10s
       conversationHeartbeatInterval: 30s
+    # Filter flowlogs at ingestion to reduce data volume stored in Loki or exported.
+    # This feature was introduced in Network Observability Operator 1.9.0.
+    # https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/network_observability/index#network-observability-filtering-ingestion_network_observability
+    # Example below: Filters traffic where source namespace is "netobserv" OR traffic from
+    # "openshift-ingress" destined to "netobserv", sends it to Loki with 1:10 sampling.
+    # filters:
+    #   - query: '(SrcK8S_Namespace="netobserv" OR (SrcK8S_Namespace="openshift-ingress" AND DstK8S_Namespace="netobserv"))'
+    #     matchType: Match
+    #     outputTarget: Loki
+    #     sampling: 10
   loki:
     enable: {{ .Values.loki.enabled }}
     mode: {{ .Values.loki.mode | quote }}
