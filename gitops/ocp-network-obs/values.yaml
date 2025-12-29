@@ -4,7 +4,7 @@ flowCollector:
   enabled: true
 
 loki:
-  enabled: true
+  enabled: false
   mode: LokiStack  # Manual (Disabled) or LokiStack (Enabled)
 
 kafkaExporter:
