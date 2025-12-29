@@ -7,7 +7,6 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
     argocd.argoproj.io/sync-wave: "10"
-    argocd.argoproj.io/delete-wave: "-10"
 spec:
   namespace: netobserv
   # https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/network_observability/index#network-observability-deploy-network-policy_network_observability

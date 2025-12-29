@@ -6,5 +6,4 @@ metadata:
     openshift.io/cluster-monitoring: "true"
   annotations:
     argocd.argoproj.io/sync-wave: "-10"
-    argocd.argoproj.io/delete-wave: "20"
   name: openshift-netobserv-operator
