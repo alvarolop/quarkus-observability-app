@@ -2,6 +2,11 @@
 
 flowCollector:
   enabled: true
+  # Direct: eBPF agent sends flows directly to the processor (simpler, lower latency)
+  # Kafka: eBPF agent sends flows via Kafka (more resilient, handles backpressure)
+  deploymentModel: Direct
+  # kafkaBatchSize is only used when deploymentModel is Kafka
+  kafkaBatchSize: 1048576
 
 loki:
   enabled: false
@@ -17,3 +22,21 @@ kafkaExporter:
 
 networkPolicy:
   enabled: false
+
+# eBPF Agent Features
+# https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/network_observability/index#network-observability-dns-tracking_nw-observe-network-traffic
+ebpfFeatures:
+  # DNSTracking: Captures DNS queries and responses to identify DNS latency, errors and resolution patterns. Enable when troubleshooting DNS issues or monitoring DNS traffic.
+  dnsTracking: true
+  # FlowRTT: Measures TCP Round Trip Time (RTT) to detect network latency between endpoints. Enable when diagnosing slow connections or performance bottlenecks.
+  flowRTT: false
+  # PacketDrop: Tracks dropped packets with drop reasons and TCP state info. Requires OVN-Kubernetes CNI. Enable to troubleshoot connectivity issues and NetworkPolicy problems.
+  packetDrop: false
+  # Tech-Preview: NetworkEvents: Correlates OVN-Kubernetes events (e.g., NetworkPolicy updates, pod events) with network flows. Requires OVN-Kubernetes. Enable for deeper network debugging (new in 1.8+).
+  networkEvents: false
+  # UDNMapping: Enables User Defined Network (UDN) mapping to track traffic across multiple network segments. Requires privileged mode.
+  udnMapping: false
+  # PacketTranslation: Tracks NAT (xlat) translations showing original Zone IDs and ICMP info before translation. Enable to debug Service routing, NodePort, and LoadBalancer traffic (new in 1.8+).
+  packetTranslation: false
+  # EbpfManager: Uses eBPF Manager Operator (bpfman) to manage eBPF programs lifecycle. Reduces agent privileges and improves security. Requires installing the eBPF Manager Operator.
+  ebpfManager: false

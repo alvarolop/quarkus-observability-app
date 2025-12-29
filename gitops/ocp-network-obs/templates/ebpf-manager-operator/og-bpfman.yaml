@@ -1,0 +1,12 @@
+{{- if .Values.ebpfFeatures.ebpfManager }}
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: bpfman
+  namespace: bpfman
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
+spec:
+  upgradeStrategy: Default
+{{- end }}

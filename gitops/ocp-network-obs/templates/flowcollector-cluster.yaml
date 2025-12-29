@@ -16,7 +16,7 @@ spec:
       - openshift-console
       - openshift-monitoring
       - kafka
-  deploymentModel: Direct # Or Kafka for resiliency
+  deploymentModel: {{ .Values.flowCollector.deploymentModel }}
   agent:
     ebpf:
       logLevel: info
@@ -26,15 +26,38 @@ spec:
             insecureSkipVerify: false
             type: Disabled
       cacheMaxFlows: 100000
+      # Privileged mode required for: UDNMapping, PacketDrop, NetworkEvents
+      privileged: {{ or .Values.ebpfFeatures.udnMapping .Values.ebpfFeatures.packetDrop .Values.ebpfFeatures.networkEvents }}
       # https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/network_observability/index#network-observability-dns-tracking_nw-observe-network-traffic
       features:
-       - DNSTracking
-      #  - FlowRTT
+        {{- if .Values.ebpfFeatures.dnsTracking }}
+        - DNSTracking
+        {{- end }}
+        {{- if .Values.ebpfFeatures.flowRTT }}
+        - FlowRTT
+        {{- end }}
+        {{- if .Values.ebpfFeatures.packetDrop }}
+        - PacketDrop
+        {{- end }}
+        {{- if .Values.ebpfFeatures.networkEvents }}
+        - NetworkEvents
+        {{- end }}
+        {{- if .Values.ebpfFeatures.udnMapping }}
+        - UDNMapping
+        {{- end }}
+        {{- if .Values.ebpfFeatures.packetTranslation }}
+        - PacketTranslation
+        {{- end }}
+        {{- if .Values.ebpfFeatures.ebpfManager }}
+        - EbpfManager
+        {{- end }}
       sampling: 50
       imagePullPolicy: IfNotPresent
       excludeInterfaces:
         - lo
-      kafkaBatchSize: 1048576
+      {{- if eq .Values.flowCollector.deploymentModel "Kafka" }}
+      kafkaBatchSize: {{ .Values.flowCollector.kafkaBatchSize }}
+      {{- end }}
       cacheActiveTimeout: 5s
   processor:
     logLevel: info
