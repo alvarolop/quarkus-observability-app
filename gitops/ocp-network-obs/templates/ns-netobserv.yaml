@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    openshift.io/cluster-monitoring: "true"
+    netobserv-managed: "false"
+  annotations:
+    argocd.argoproj.io/sync-wave: "-10"
+  name: netobserv
