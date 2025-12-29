@@ -14,9 +14,10 @@ spec:
     path: gitops/ocp-network-obs
     repoURL: https://github.com/alvarolop/quarkus-observability-app.git
     targetRevision: main
-    # helm:
-    #   values: |
-    #     enabled: true
+    helm:
+      values: |
+        flowCollector:
+          enabled: false
     #     runOnInfraNodes: false
   syncPolicy:
     automated:

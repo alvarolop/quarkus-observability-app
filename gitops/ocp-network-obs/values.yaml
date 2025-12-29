@@ -1,7 +1,7 @@
 # Default values for netobserv.
 
 flowCollector:
-  enabled: true
+  enabled: false
   # Direct: eBPF agent sends flows directly to the processor (simpler, lower latency)
   # Kafka: eBPF agent sends flows via Kafka (more resilient, handles backpressure)
   deploymentModel: Direct
