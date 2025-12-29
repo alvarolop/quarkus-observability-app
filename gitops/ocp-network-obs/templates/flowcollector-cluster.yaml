@@ -1,4 +1,4 @@
-
+{{- if .Values.flowCollector.enabled }}
 ---
 apiVersion: flows.netobserv.io/v1beta2
 kind: FlowCollector
@@ -17,7 +17,6 @@ spec:
       - openshift-monitoring
       - kafka
   deploymentModel: {{ .Values.flowCollector.deploymentModel }}
-  {{- if .Values.flowCollector.enabled }}
   agent:
     ebpf:
       logLevel: info
@@ -61,8 +60,6 @@ spec:
       kafkaBatchSize: {{ .Values.flowCollector.kafkaBatchSize }}
       {{- end }}
       cacheActiveTimeout: 5s
-  {{- end }}
-  {{- if .Values.flowCollector.enabled }}
   processor:
     logLevel: info
     resources:
@@ -76,7 +73,6 @@ spec:
     advanced:
       conversationEndTimeout: 10s
       conversationHeartbeatInterval: 30s
-  {{- end }}
   loki:
     enable: {{ .Values.loki.enabled }}
     mode: {{ .Values.loki.mode | quote }}
@@ -160,3 +156,4 @@ spec:
   {{- else }}
   exporters: []
   {{- end }}
+{{- end }}
