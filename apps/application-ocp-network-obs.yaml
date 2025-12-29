@@ -17,7 +17,7 @@ spec:
     helm:
       values: |
         flowCollector:
-          enabled: false
+          enabled: true
     #     runOnInfraNodes: false
   syncPolicy:
     automated:

@@ -32,10 +32,10 @@ spec:
       flowFilter:
         enabled: true
         rules:
-          - action: Drop
+          - action: Reject
             cidr: 0.0.0.0/0
             sampling: 1
-          - action: Drop
+          - action: Reject
             cidr: ::/0
             sampling: 1
       # Privileged mode required for: UDNMapping, PacketDrop, NetworkEvents
