@@ -6,6 +6,7 @@ metadata:
   namespace: openshift-netobserv-operator
   annotations:
     argocd.argoproj.io/sync-wave: "-5"
+    argocd.argoproj.io/delete-wave: "10"
 spec:
   channel: stable
   installPlanApproval: Automatic

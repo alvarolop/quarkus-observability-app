@@ -6,5 +6,6 @@ metadata:
   namespace: openshift-netobserv-operator
   annotations:
     argocd.argoproj.io/sync-wave: "-5"
+    argocd.argoproj.io/delete-wave: "15"
 spec:
   upgradeStrategy: Default
