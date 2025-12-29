@@ -14,7 +14,9 @@ networkPolicy:
   enabled: false
 
 loki:
-  enabled: false
+  enabled: true
+  operator:
+    enabled: true
   mode: LokiStack  # Manual (Disabled) or LokiStack (Enabled)
 
 kafkaExporter:
