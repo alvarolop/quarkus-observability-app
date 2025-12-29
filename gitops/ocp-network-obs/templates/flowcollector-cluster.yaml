@@ -30,7 +30,7 @@ spec:
       # https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/network_observability/index#network-observability-filtering-ebpf-flow-data-using-multiple-rules_network_observability
       # Current config: Drop ALL traffic (IPv4 + IPv6)
       flowFilter:
-        enabled: true
+        enable: true
         rules:
           - action: Reject
             cidr: 0.0.0.0/0
