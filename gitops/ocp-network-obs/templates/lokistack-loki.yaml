@@ -14,8 +14,6 @@ spec:
       retention:
         days: 7
   size: 1x.demo # Could even use 1x.demo, 1x.extra-small
-  replication:
-    factor: 1
   managementState: Managed
   storage:
     schemas:
