@@ -23,6 +23,9 @@ kafkaExporter:
 networkPolicy:
   enabled: false
 
+# Run the netobserv operator and Loki on infra nodes
+runOnInfraNodes: false
+
 # eBPF Agent Features
 # https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/network_observability/index#network-observability-dns-tracking_nw-observe-network-traffic
 ebpfFeatures:

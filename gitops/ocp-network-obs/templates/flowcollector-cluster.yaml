@@ -6,7 +6,6 @@ metadata:
   name: cluster
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
-    argocd.argoproj.io/sync-wave: "10"
 spec:
   namespace: netobserv
   # https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/network_observability/index#network-observability-deploy-network-policy_network_observability
@@ -27,6 +26,7 @@ spec:
             type: Disabled
       cacheMaxFlows: 100000
       # Privileged mode required for: UDNMapping, PacketDrop, NetworkEvents
+      # https://issues.redhat.com/browse/NETOBSERV-2268
       privileged: {{ or .Values.ebpfFeatures.udnMapping .Values.ebpfFeatures.packetDrop .Values.ebpfFeatures.networkEvents }}
       # https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/network_observability/index#network-observability-dns-tracking_nw-observe-network-traffic
       features:

@@ -6,9 +6,22 @@ metadata:
   namespace: openshift-netobserv-operator
   annotations:
     argocd.argoproj.io/sync-wave: "-5"
+    argocd.argoproj.io/sync-options: Delete=false
 spec:
   channel: stable
   installPlanApproval: Automatic
   name: netobserv-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
+  {{- if .Values.runOnInfraNodes }}
+  config:
+    nodeSelector:
+      node-role.kubernetes.io/infra: ""
+    tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/infra
+          value: reserved
+        - effect: NoExecute
+          key: node-role.kubernetes.io/infra
+          value: reserved
+  {{- end }}
