@@ -7,8 +7,6 @@ metadata:
     openshift.io/cluster-monitoring: "true"
   annotations:
     argocd.argoproj.io/sync-wave: "-10"
-    # Delete=false: Operator must stay alive to clean up FlowCollector finalizers.
-    # After deleting the ArgoCD app, manually run: oc delete ns openshift-netobserv-operator
-    argocd.argoproj.io/sync-options: Delete={{ .Values.operator.keepOnUninstall | default true | not | toString }}
+    argocd.argoproj.io/sync-options: Delete={{ .Values.operator.keepOnUninstall | default true | not }}
   name: openshift-netobserv-operator
 {{- end }}

@@ -14,6 +14,7 @@ operator:
   # Whether to install the Network Observability Operator
   enabled: true
   # If true, the operator will NOT be uninstalled when the Helm release is removed
+  # After deleting the ArgoCD app, manually run: oc delete ns openshift-netobserv-operator
   keepOnUninstall: true
 
 networkPolicy:
