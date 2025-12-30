@@ -7,6 +7,6 @@ metadata:
     openshift.io/cluster-monitoring: "true"
   annotations:
     argocd.argoproj.io/sync-wave: "-10"
-    argocd.argoproj.io/sync-options: Delete={{ .Values.operator.keepOnUninstall | default true | not }}
+    argocd.argoproj.io/sync-options: Delete={{ not .Values.operator.keepOnUninstall }}
   name: openshift-netobserv-operator
 {{- end }}
