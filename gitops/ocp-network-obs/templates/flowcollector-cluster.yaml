@@ -1,4 +1,3 @@
-{{- if .Values.flowCollector.enabled }}
 ---
 apiVersion: flows.netobserv.io/v1beta2
 kind: FlowCollector
@@ -29,6 +28,7 @@ spec:
       # eBPF flow filtering - Filters flows at the kernel level BEFORE any processing.
       # https://docs.redhat.com/en/documentation/openshift_container_platform/4.20/html-single/network_observability/index#network-observability-filtering-ebpf-flow-data-using-multiple-rules_network_observability
       # Current config: Drop ALL traffic (IPv4 + IPv6)
+      {{- if .Values.flowCollector.enabled }}
       flowFilter:
         enable: true
         rules:
@@ -38,6 +38,7 @@ spec:
           - action: Reject
             cidr: ::/0
             sampling: 1
+      {{- end }}
       # Privileged mode required for: UDNMapping, PacketDrop, NetworkEvents
       # https://issues.redhat.com/browse/NETOBSERV-2268
       # privileged: {{ or .Values.ebpfFeatures.udnMapping .Values.ebpfFeatures.packetDrop .Values.ebpfFeatures.networkEvents }}
@@ -178,4 +179,3 @@ spec:
   {{- else }}
   exporters: []
   {{- end }}
-{{- end }}

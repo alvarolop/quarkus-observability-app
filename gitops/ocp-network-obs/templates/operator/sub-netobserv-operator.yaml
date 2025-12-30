@@ -14,16 +14,4 @@ spec:
   name: netobserv-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
-  {{- if .Values.flowCollector.runOnInfraNodes }}
-  config:
-    nodeSelector:
-      node-role.kubernetes.io/infra: ""
-    tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/infra
-          value: reserved
-        - effect: NoExecute
-          key: node-role.kubernetes.io/infra
-          value: reserved
-  {{- end }}
 {{- end }}

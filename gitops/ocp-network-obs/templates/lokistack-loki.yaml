@@ -28,7 +28,7 @@ spec:
     # openshift:
     #   adminGroups:
     #   - cluster-admins
-  {{- if .Values.flowCollector.runOnInfraNodes }}
+  {{- if .Values.loki.runOnInfraNodes }}
   template:
     compactor:
       nodeSelector:

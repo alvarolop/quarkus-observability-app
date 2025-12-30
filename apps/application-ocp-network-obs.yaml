@@ -19,7 +19,7 @@ spec:
         flowCollector:
           enabled: true
         operator:
-          keepOnUninstall: false
+          keepOnUninstall: true
     #     runOnInfraNodes: false
   syncPolicy:
     automated:

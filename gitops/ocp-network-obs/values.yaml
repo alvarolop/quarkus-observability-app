@@ -1,30 +1,27 @@
 # Default values for netobserv.
 
 flowCollector:
-  enabled: false
+  enabled: true
   # Direct: eBPF agent sends flows directly to the processor (simpler, lower latency)
   # Kafka: eBPF agent sends flows via Kafka (more resilient, handles backpressure)
   deploymentModel: Direct
   # kafkaBatchSize is only used when deploymentModel is Kafka
   kafkaBatchSize: 1048576
-  # Run the netobserv operator and Loki on infra nodes
-  runOnInfraNodes: false
 
 operator:
   # Whether to install the Network Observability Operator
   enabled: true
-  # If true, the operator will NOT be uninstalled when the Helm release is removed
+  # If true, the operator will NOT be uninstalled when the ArgoCD app is removed
   # After deleting the ArgoCD app, manually run: oc delete ns openshift-netobserv-operator
   keepOnUninstall: true
 
 networkPolicy:
-  enabled: false
+  enabled: false # Only enable on OVN-Kubernetes
 
 loki:
   enabled: true
-  operator:
-    enabled: true
   mode: LokiStack  # Manual (Disabled) or LokiStack (Enabled)
+  runOnInfraNodes: false
 
 kafkaExporter:
   enabled: false
