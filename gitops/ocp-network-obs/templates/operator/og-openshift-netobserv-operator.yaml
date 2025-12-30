@@ -1,3 +1,4 @@
+{{- if .Values.operator.enabled }}
 ---
 apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
@@ -6,6 +7,7 @@ metadata:
   namespace: openshift-netobserv-operator
   annotations:
     argocd.argoproj.io/sync-wave: "-5"
-    argocd.argoproj.io/sync-options: Delete=false
+    argocd.argoproj.io/sync-options: Delete={{ not .Values.operator.keepOnUninstall | default true | toString }}
 spec:
   upgradeStrategy: Default
+{{- end }}

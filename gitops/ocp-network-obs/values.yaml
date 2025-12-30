@@ -10,6 +10,12 @@ flowCollector:
   # Run the netobserv operator and Loki on infra nodes
   runOnInfraNodes: false
 
+operator:
+  # Whether to install the Network Observability Operator
+  enabled: true
+  # If true, the operator will NOT be uninstalled when the Helm release is removed
+  keepOnUninstall: true
+
 networkPolicy:
   enabled: false
 

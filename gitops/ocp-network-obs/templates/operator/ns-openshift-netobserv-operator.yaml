@@ -1,3 +1,4 @@
+{{- if .Values.operator.enabled }}
 ---
 apiVersion: v1
 kind: Namespace
@@ -8,5 +9,6 @@ metadata:
     argocd.argoproj.io/sync-wave: "-10"
     # Delete=false: Operator must stay alive to clean up FlowCollector finalizers.
     # After deleting the ArgoCD app, manually run: oc delete ns openshift-netobserv-operator
-    argocd.argoproj.io/sync-options: Delete=false
+    argocd.argoproj.io/sync-options: Delete={{ not .Values.operator.keepOnUninstall | default true | toString }}
   name: openshift-netobserv-operator
+{{- end }}
