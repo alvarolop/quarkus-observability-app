@@ -23,5 +23,5 @@ spec:
     #     runOnInfraNodes: false
   syncPolicy:
     automated:
-      prune: true
+      prune: false
       selfHeal: false
