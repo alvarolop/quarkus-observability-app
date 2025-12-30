@@ -7,7 +7,7 @@ metadata:
   namespace: openshift-netobserv-operator
   annotations:
     argocd.argoproj.io/sync-wave: "-5"
-    argocd.argoproj.io/sync-options: Delete={{ not .Values.operator.keepOnUninstall | default true | toString }}
+    argocd.argoproj.io/sync-options: Delete={{ .Values.operator.keepOnUninstall | default true | not | toString }}
 spec:
   channel: stable
   installPlanApproval: Automatic
