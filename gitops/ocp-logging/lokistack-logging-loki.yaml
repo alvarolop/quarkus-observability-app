@@ -25,6 +25,8 @@ spec:
         #         - days: 1
         #           selector: '{kubernetes_namespace_name=~"openshift-cluster.+"}'
   size: 1x.demo # Could even use 1x.demo, 1x.pico, 1x.extra-small
+  networkPolicies:
+    ruleSet: RestrictIngressEgress
   # replication:
   #   factor: 1
   managementState: Managed
