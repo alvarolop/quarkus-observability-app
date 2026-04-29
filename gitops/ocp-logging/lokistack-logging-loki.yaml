@@ -40,6 +40,8 @@ spec:
   # storageClassName: ocs-storagecluster-ceph-rbd # This is for ODF
   storageClassName: gp3-csi
   tenants:
+    # https://docs.redhat.com/en/documentation/red_hat_openshift_logging/6.5/html/release_notes/logging-release-notes
+    disableIngress: true
     mode: openshift-logging
   # If you want to use customized alerting and recording rules using LogQL,
   # you must enable the LokiStack ruler component
