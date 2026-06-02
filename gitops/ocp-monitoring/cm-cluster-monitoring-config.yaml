@@ -16,8 +16,8 @@ data:
       enforcedBodySizeLimit: 40MB
       retention: 24h
       retentionSize: 10GB
-    #   nodeSelector:
-    #     node-role.kubernetes.io/infra: ""
+      # nodeSelector:
+      #   node-role.kubernetes.io/infra: ""
     # prometheusOperator:
     #   nodeSelector:
     #     node-role.kubernetes.io/infra: ""
@@ -36,9 +36,9 @@ data:
     #     node-role.kubernetes.io/infra: ""
     # thanosQuerier:
     #   nodeSelector:
-        node-role.kubernetes.io/infra: ""
-    monitoringPlugin:
-      nodeSelector:
-        node-role.kubernetes.io/infra: ""
+    #     node-role.kubernetes.io/infra: ""
+    # monitoringPlugin:
+    #   nodeSelector:
+    #     node-role.kubernetes.io/infra: ""
     # nodeExporter:
     #   collectors: 
